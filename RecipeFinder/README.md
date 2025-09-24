@@ -2,6 +2,12 @@
 
 A modern web application that helps you find delicious recipes based on the ingredients you have available. Built with TypeScript, Express.js, and SQLite, featuring intelligent ingredient matching and comprehensive recipe search capabilities.
 
+## 🌐 Live Demo
+
+**Try the app live:** [https://recipe-finder-beta-three.vercel.app](https://recipe-finder-beta-three.vercel.app)
+
+The app is deployed on Vercel and ready to use! Search for recipes using ingredients like "chicken", "pasta", "salmon", or any combination of ingredients you have available.
+
 ## ✨ Features
 
 - **Smart Ingredient Search**: Find recipes using fuzzy matching and ingredient normalization
