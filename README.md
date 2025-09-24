@@ -17,10 +17,13 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 
 ## 📋 Challenge Structure
 
-### [Week 1: Recipe Finder App](./RecipeFinder/)
+### [Challenge 1: Recipe Finder](./RecipeFinder/) (Built in 3 hours)
 **Prompt**: *"Build a recipe finder app where users input ingredients and get matching recipes, using HTML, CSS, and vanilla JavaScript"*
 
-### Future Weeks
+### [Challenge 2: Invoce Generator](./InvoiceGenerator/)
+**Prompt**: *"Build an invoice generator that lets users enter client details and items and download as PDF, using React, CSS, and jsPDF."*
+
+### Future Challenges
 The difficulty will gradually increase with more complex prompts and requirements.
 
 
@@ -34,15 +37,6 @@ This challenge demonstrates:
 4. **API-First Design**: Building robust, testable APIs
 5. **Quality Engineering**: Constitutional gates and best practices
 6. **Full-Stack Development**: Complete application architecture
-
-## 🔮 Future Challenges
-
-The difficulty will increase with:
-
-- **Week 2**: Multi-user features, authentication, real-time updates
-- **Week 3**: Advanced algorithms, machine learning integration
-- **Week 4**: Microservices architecture, distributed systems
-- **Week 5**: Mobile app development, cross-platform solutions
 
 
 ## 🤝 Contributing
