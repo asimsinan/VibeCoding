@@ -2,6 +2,12 @@
 
 A modern, full-stack invoice management application built with React, TypeScript, and Node.js. Create, manage, and download professional invoices with a beautiful, responsive interface.
 
+## 🌐 Live Demo
+
+**Try it now**: [https://invoice-generator-three-weld.vercel.app/](https://invoice-generator-three-weld.vercel.app/)
+
+The application is deployed on Vercel and ready to use immediately!
+
 ## 🚀 Features
 
 ### 📄 Invoice Management
