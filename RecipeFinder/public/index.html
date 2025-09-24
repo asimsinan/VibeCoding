@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder App</title>
+    <meta name="description" content="Find delicious recipes based on the ingredients you have available">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link sr-only">Skip to main content</a>
+    
+    <!-- Header -->
+    <header role="banner">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <a href="/" aria-label="Recipe Finder App - Home">
+                        <span class="logo-icon">🍳</span>
+                        <span class="logo-text">Recipe Finder</span>
+                    </a>
+                </h1>
+                
+                <!-- Desktop Navigation -->
+                <nav class="desktop-nav" role="navigation" aria-label="Main navigation">
+                    <ul class="nav-list">
+                        <li><a href="/" class="nav-link" aria-current="page">Home</a></li>
+                        <li><a href="/about" class="nav-link">About</a></li>
+                        <li><a href="/contact" class="nav-link">Contact</a></li>
+                        <li><a href="/privacy" class="nav-link">Privacy</a></li>
+                        <li><a href="/terms" class="nav-link">Terms</a></li>
+                        <li><a href="#" class="nav-link" data-enhanced="favorites-link">❤️ Favorites</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Mobile Navigation -->
+                <nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+                    <button class="hamburger" aria-label="Toggle mobile menu" aria-expanded="false" data-responsive="hamburger">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <ul class="mobile-nav-list" data-responsive="mobile-nav">
+                        <li><a href="/" class="mobile-nav-link" aria-current="page">Home</a></li>
+                        <li><a href="/about" class="mobile-nav-link">About</a></li>
+                        <li><a href="/contact" class="mobile-nav-link">Contact</a></li>
+                        <li><a href="/privacy" class="mobile-nav-link">Privacy</a></li>
+                        <li><a href="/terms" class="mobile-nav-link">Terms</a></li>
+                        <li><a href="#" class="mobile-nav-link" data-enhanced="favorites-link">❤️ Favorites</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h2 id="hero-title" class="hero-title">Find Your Perfect Recipe</h2>
+                    <p class="hero-description">
+                        Enter the ingredients you have available and discover delicious recipes you can make right now!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section" aria-labelledby="search-title">
+            <div class="container">
+                <h2 id="search-title" class="search-title">What ingredients do you have?</h2>
+                
+                <!-- Search Form -->
+                <form class="search-form" data-enhanced="search" novalidate>
+                    <div class="form-group">
+                        <label for="ingredients" class="form-label">Ingredients (comma-separated)</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="ingredients" 
+                                name="ingredients" 
+                                class="form-input" 
+                                data-enhanced="search-input"
+                                placeholder="e.g., chicken, tomato, onion, garlic"
+                                autocomplete="off"
+                                aria-describedby="ingredients-help"
+                                required
+                            >
+                            <div class="autocomplete-container" data-enhanced="autocomplete" role="listbox" aria-label="Ingredient suggestions" style="display: none;">
+                                <!-- Autocomplete items will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div id="ingredients-help" class="form-help">
+                            Separate multiple ingredients with commas
+                        </div>
+                    </div>
+
+                    <!-- Search Filters -->
+                    <div class="filters-section" data-enhanced="filters">
+                        <h3 class="filters-title">Filters</h3>
+                        <div class="filters-grid">
+                            <div class="filter-group">
+                                <label for="cooking-time" class="filter-label">Cooking Time</label>
+                                <select id="cooking-time" name="cooking_time" class="filter-select" data-enhanced="filter" data-filter-type="cooking-time">
+                                    <option value="">Any time</option>
+                                    <option value="15">Under 15 minutes</option>
+                                    <option value="30">Under 30 minutes</option>
+                                    <option value="60">Under 1 hour</option>
+                                    <option value="120">Under 2 hours</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="difficulty" class="filter-label">Difficulty</label>
+                                <select id="difficulty" name="difficulty" class="filter-select" data-enhanced="filter" data-filter-type="difficulty">
+                                    <option value="">Any level</option>
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="dietary" class="filter-label">Dietary</label>
+                                <select id="dietary" name="dietary" class="filter-select" data-enhanced="filter" data-filter-type="dietary">
+                                    <option value="">Any diet</option>
+                                    <option value="vegetarian">Vegetarian</option>
+                                    <option value="vegan">Vegan</option>
+                                    <option value="gluten-free">Gluten-free</option>
+                                    <option value="keto">Keto</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Actions -->
+                    <div class="search-actions">
+                        <button type="submit" class="btn btn-primary btn-search" data-enhanced="search-submit">
+                            <span class="btn-text">Search Recipes</span>
+                            <span class="btn-loading" style="display: none;">
+                                <span class="spinner" aria-hidden="true"></span>
+                                Searching...
+                            </span>
+                        </button>
+                        
+                        <button type="button" class="btn btn-secondary btn-clear" data-enhanced="clear-search" style="display: none;">
+                            Clear Search
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Search Results -->
+                <div class="search-results" data-testid="search-results" data-enhanced="search-results" style="display: none;">
+                    <div class="results-header">
+                        <h3 class="results-title">Search Results</h3>
+                        <div class="results-controls">
+                            <div class="sort-controls">
+                                <label for="sort-by" class="sort-label">Sort by:</label>
+                                <select id="sort-by" class="sort-select" data-enhanced="sort" data-sort-type="relevance">
+                                    <option value="relevance">Relevance</option>
+                                    <option value="cooking-time">Cooking Time</option>
+                                    <option value="difficulty">Difficulty</option>
+                                    <option value="rating">Rating</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="results-content">
+                        <div class="results-list" data-enhanced="results-list">
+                            <!-- Recipe cards will be populated by JavaScript -->
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <nav class="pagination" aria-label="Search results pagination" data-testid="pagination" style="display: none;">
+                            <button class="pagination-btn pagination-prev" data-testid="pagination-prev" aria-label="Previous page" disabled>
+                                <span aria-hidden="true">←</span> Previous
+                            </button>
+                            
+                            <div class="pagination-pages">
+                                <!-- Page numbers will be populated by JavaScript -->
+                            </div>
+                            
+                            <button class="pagination-btn pagination-next" data-testid="pagination-next" aria-label="Next page">
+                                Next <span aria-hidden="true">→</span>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- No Results Message -->
+                <div class="no-results" data-testid="empty-results" style="display: none;">
+                    <div class="no-results-content">
+                        <h3>No recipes found</h3>
+                        <p>Try adjusting your search criteria or adding more ingredients.</p>
+                        <button class="btn btn-secondary" data-enhanced="clear-search">Clear Search</button>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div class="error-message" role="alert" data-testid="error-message" style="display: none;">
+                    <h3>Something went wrong</h3>
+                    <p class="error-text">We couldn't process your search. Please try again.</p>
+                    <button class="btn btn-secondary" data-enhanced="retry-search">Try Again</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Recipes Section -->
+        <section class="popular-section" aria-labelledby="popular-title">
+            <div class="container">
+                <h2 id="popular-title" class="section-title">Popular Recipes</h2>
+                <div class="popular-grid" data-enhanced="popular-recipes">
+                    <!-- Popular recipes will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Favorites Section -->
+        <section class="favorites-section" data-enhanced="favorites-section" style="display: none;">
+            <div class="container">
+                <div class="favorites-header">
+                    <div class="favorites-header-content">
+                        <button class="btn btn-secondary back-to-search" data-enhanced="back-to-search" aria-label="Back to search">
+                            <span aria-hidden="true">←</span> Back to Search
+                        </button>
+                        <div class="favorites-title-section">
+                            <h2 class="favorites-title">Your Favorite Recipes</h2>
+                            <p class="favorites-subtitle">Recipes you've saved for later</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="favorites-content">
+                    <div class="favorites-empty" data-testid="favorites-empty" style="display: none;">
+                        <div class="empty-state">
+                            <span class="empty-icon">❤️</span>
+                            <h3>No favorites yet</h3>
+                            <p>Start exploring recipes and save your favorites!</p>
+                            <button class="btn btn-primary" data-enhanced="start-exploring">Start Exploring</button>
+                        </div>
+                    </div>
+                    
+                    <div class="favorites-grid" data-enhanced="favorites-grid">
+                        <!-- Favorite recipes will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Recipe Finder</h3>
+                    <p class="footer-description">
+                        Discover amazing recipes based on the ingredients you have available.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about" class="footer-link">About Us</a></li>
+                        <li><a href="/contact" class="footer-link">Contact</a></li>
+                        <li><a href="/privacy" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="/terms" class="footer-link">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link" aria-label="Follow us on Twitter">Twitter</a></li>
+                        <li><a href="#" class="footer-link" aria-label="Follow us on Facebook">Facebook</a></li>
+                        <li><a href="#" class="footer-link" aria-label="Follow us on Instagram">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    &copy; 2024 Recipe Finder App. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Recipe Detail Modal -->
+    <div class="modal" id="recipe-modal" role="dialog" aria-labelledby="recipe-modal-title" aria-hidden="true" data-testid="recipe-detail">
+        <div class="modal-backdrop" data-enhanced="close-modal"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="recipe-modal-title" class="modal-title" data-testid="recipe-title">Recipe Details</h2>
+                <button class="modal-close" aria-label="Close recipe details" data-enhanced="close-modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="recipe-detail">
+                    <div class="recipe-image-container">
+                        <img class="recipe-image" data-testid="recipe-image" src="" alt="" loading="lazy">
+                        <div class="placeholder-image" data-testid="placeholder-image" style="display: none;">
+                            <span class="placeholder-icon">🍳</span>
+                            <span class="placeholder-text">No image available</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recipe-description" data-testid="recipe-description">
+                        <!-- Recipe description will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="recipe-info">
+                        <div class="recipe-meta">
+                            <div class="recipe-meta-item">
+                                <span class="meta-label">Cooking Time:</span>
+                                <span class="meta-value cooking-time" data-testid="recipe-cooking-time">-</span>
+                            </div>
+                            <div class="recipe-meta-item">
+                                <span class="meta-label">Difficulty:</span>
+                                <span class="meta-value difficulty" data-testid="recipe-difficulty">-</span>
+                            </div>
+                            <div class="recipe-meta-item">
+                                <span class="meta-label">Servings:</span>
+                                <span class="meta-value servings" data-testid="recipe-servings">-</span>
+                            </div>
+                            <div class="recipe-meta-item">
+                                <span class="meta-label">Rating:</span>
+                                <div class="rating" data-testid="recipe-rating">
+                                    <span class="rating-stars">
+                                        <span class="rating-star" data-testid="rating-star">★</span>
+                                        <span class="rating-star" data-testid="rating-star">★</span>
+                                        <span class="rating-star" data-testid="rating-star">★</span>
+                                        <span class="rating-star" data-testid="rating-star">★</span>
+                                        <span class="rating-star" data-testid="rating-star">★</span>
+                                    </span>
+                                    <span class="rating-value">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recipe-tags" data-testid="recipe-tags">
+                            <!-- Tags will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="recipe-content">
+                        <div class="recipe-section">
+                            <h3 class="recipe-section-title">Ingredients</h3>
+                            <ul class="ingredients" data-testid="recipe-ingredients">
+                                <!-- Ingredients will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                        
+                        <div class="recipe-section">
+                            <h3 class="recipe-section-title">Instructions</h3>
+                            <ol class="instructions" data-testid="recipe-instructions">
+                                <!-- Instructions will be populated by JavaScript -->
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="recipe-actions">
+                        <button class="btn btn-primary" data-action="print" data-testid="print-button">
+                            <span aria-hidden="true">🖨️</span> Print Recipe
+                        </button>
+                        <button class="btn btn-secondary" data-action="share" data-testid="share-button">
+                            <span aria-hidden="true">📤</span> Share
+                        </button>
+                        <button class="btn btn-secondary" data-action="favorite" data-testid="favorite-button">
+                            <span aria-hidden="true">❤️</span> Save to Favorites
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" data-enhanced="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner" aria-hidden="true"></div>
+            <p class="loading-text">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Live Region for Screen Readers -->
+    <div class="sr-only" aria-live="polite" aria-atomic="true" id="live-region">
+        <!-- Screen reader announcements will be populated by JavaScript -->
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/js/app.js" defer></script>
+</body>
+</html>

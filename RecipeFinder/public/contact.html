@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Recipe Finder</title>
+    <link rel="stylesheet" href="/css/styles.css?v=1">
+    <meta name="description" content="Get in touch with Recipe Finder team - we'd love to hear from you">
+</head>
+<body>
+    <header role="banner">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <a href="/" aria-label="Recipe Finder App - Home">
+                        <span class="logo-icon">🍳</span>
+                        <span class="logo-text">Recipe Finder</span>
+                    </a>
+                </h1>
+                
+                <!-- Desktop Navigation -->
+                <nav class="desktop-nav" role="navigation" aria-label="Main navigation">
+                    <ul class="nav-list">
+                        <li><a href="/" class="nav-link">Home</a></li>
+                        <li><a href="/about" class="nav-link">About</a></li>
+                        <li><a href="/contact" class="nav-link" aria-current="page">Contact</a></li>
+                        <li><a href="/privacy" class="nav-link">Privacy</a></li>
+                        <li><a href="/terms" class="nav-link">Terms</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Mobile Navigation -->
+                <nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+                    <button class="hamburger" aria-label="Toggle mobile menu" aria-expanded="false" data-responsive="hamburger">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <ul class="mobile-nav-list" data-responsive="mobile-nav">
+                        <li><a href="/" class="mobile-nav-link">Home</a></li>
+                        <li><a href="/about" class="mobile-nav-link">About</a></li>
+                        <li><a href="/contact" class="mobile-nav-link" aria-current="page">Contact</a></li>
+                        <li><a href="/privacy" class="mobile-nav-link">Privacy</a></li>
+                        <li><a href="/terms" class="mobile-nav-link">Terms</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="page-header">
+                <h1>Contact Us</h1>
+                <p class="page-subtitle">We'd love to hear from you</p>
+            </section>
+
+            <div class="contact-grid">
+                <section class="contact-form-section">
+                    <h2>Send us a Message</h2>
+                    <form class="contact-form" action="/contact" method="POST" data-enhanced="contact-form">
+                        <div class="form-group">
+                            <label for="name">Name *</label>
+                            <input type="text" id="name" name="name" required aria-label="Your name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required aria-label="Your email address">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" required aria-label="Message subject">
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="bug">Bug Report</option>
+                                <option value="feature">Feature Request</option>
+                                <option value="recipe">Recipe Suggestion</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="6" required aria-label="Your message"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </section>
+
+                <section class="contact-info-section">
+                    <h2>Get in Touch</h2>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <p>hello@recipefinder.com</p>
+                                <p>support@recipefinder.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">💬</div>
+                            <div class="contact-details">
+                                <h3>Social Media</h3>
+                                <p>Follow us for recipe tips and updates</p>
+                                <div class="social-links">
+                                    <a href="#" aria-label="Twitter">Twitter</a>
+                                    <a href="#" aria-label="Facebook">Facebook</a>
+                                    <a href="#" aria-label="Instagram">Instagram</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">⏰</div>
+                            <div class="contact-details">
+                                <h3>Response Time</h3>
+                                <p>We typically respond within 24 hours</p>
+                                <p>Monday - Friday, 9 AM - 5 PM EST</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="faq-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3>How do I suggest a new recipe?</h3>
+                        <p>Use the contact form above and select "Recipe Suggestion" as your subject. Include the recipe details, ingredients, and instructions.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Can I report a bug or issue?</h3>
+                        <p>Absolutely! Select "Bug Report" in the contact form and describe the issue you encountered. Include details about your device and browser.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Do you have a mobile app?</h3>
+                        <p>Recipe Finder is a web application that works great on mobile devices. No app installation required!</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Is Recipe Finder free to use?</h3>
+                        <p>Yes! Recipe Finder is completely free to use. No registration or payment required.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>How can I contribute to Recipe Finder?</h3>
+                        <p>We welcome contributions! Contact us with "Feature Request" to suggest improvements or new features.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Do you store my search history?</h3>
+                        <p>No, we don't store your search history or personal data. Your privacy is important to us. See our <a href="/privacy">Privacy Policy</a> for details.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Favorites Section -->
+        <section class="favorites-section" data-enhanced="favorites-section" style="display: none;">
+            <div class="container">
+                <div class="favorites-header">
+                    <div class="favorites-header-content">
+                        <button class="btn btn-secondary back-to-search" data-enhanced="back-to-search" aria-label="Back to search">
+                            <span aria-hidden="true">←</span> Back to Search
+                        </button>
+                        <div class="favorites-title-section">
+                            <h2 class="favorites-title">Your Favorite Recipes</h2>
+                            <p class="favorites-subtitle">Recipes you've saved for later</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="favorites-content">
+                    <div class="favorites-empty" data-testid="favorites-empty" style="display: none;">
+                        <div class="empty-state">
+                            <span class="empty-icon">❤️</span>
+                            <h3>No favorites yet</h3>
+                            <p>Start exploring recipes and save your favorites!</p>
+                            <button class="btn btn-primary" data-enhanced="start-exploring">Start Exploring</button>
+                        </div>
+                    </div>
+                    
+                    <div class="favorites-grid" data-enhanced="favorites-grid">
+                        <!-- Favorite recipes will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Recipe Finder</h3>
+                    <p class="footer-description">
+                        Discover amazing recipes based on the ingredients you have available.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about" class="footer-link">About Us</a></li>
+                        <li><a href="/contact" class="footer-link">Contact</a></li>
+                        <li><a href="/privacy" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="/terms" class="footer-link">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link" aria-label="Follow us on Twitter">Twitter</a></li>
+                        <li><a href="#" class="footer-link" aria-label="Follow us on Facebook">Facebook</a></li>
+                        <li><a href="#" class="footer-link" aria-label="Follow us on Instagram">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    &copy; 2024 Recipe Finder App. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

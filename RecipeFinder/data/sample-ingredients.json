@@ -1,0 +1,198 @@
+[
+  {
+    "name": "chicken breast",
+    "normalizedName": "chicken breast",
+    "category": "protein",
+    "variations": ["chicken", "chicken breast meat", "boneless chicken breast"],
+    "synonyms": ["chicken fillet", "chicken cutlet"]
+  },
+  {
+    "name": "bell peppers",
+    "normalizedName": "bell peppers",
+    "category": "vegetable",
+    "variations": ["bell pepper", "sweet peppers", "capsicum"],
+    "synonyms": ["peppers", "sweet bell peppers"]
+  },
+  {
+    "name": "onion",
+    "normalizedName": "onion",
+    "category": "vegetable",
+    "variations": ["onions", "yellow onion", "white onion"],
+    "synonyms": ["bulb onion", "common onion"]
+  },
+  {
+    "name": "garlic",
+    "normalizedName": "garlic",
+    "category": "vegetable",
+    "variations": ["garlic cloves", "fresh garlic"],
+    "synonyms": ["garlic bulb", "garlic head"]
+  },
+  {
+    "name": "soy sauce",
+    "normalizedName": "soy sauce",
+    "category": "condiment",
+    "variations": ["light soy sauce", "dark soy sauce"],
+    "synonyms": ["shoyu", "soya sauce"]
+  },
+  {
+    "name": "vegetable oil",
+    "normalizedName": "vegetable oil",
+    "category": "oil",
+    "variations": ["canola oil", "sunflower oil", "corn oil"],
+    "synonyms": ["cooking oil", "neutral oil"]
+  },
+  {
+    "name": "spaghetti",
+    "normalizedName": "spaghetti",
+    "category": "pasta",
+    "variations": ["spaghetti pasta", "spaghetti noodles"],
+    "synonyms": ["pasta", "noodles"]
+  },
+  {
+    "name": "eggs",
+    "normalizedName": "eggs",
+    "category": "protein",
+    "variations": ["egg", "large eggs", "fresh eggs"],
+    "synonyms": ["hen eggs", "chicken eggs"]
+  },
+  {
+    "name": "parmesan cheese",
+    "normalizedName": "parmesan cheese",
+    "category": "dairy",
+    "variations": ["parmesan", "parmigiano reggiano"],
+    "synonyms": ["parmesan grated", "italian cheese"]
+  },
+  {
+    "name": "pancetta",
+    "normalizedName": "pancetta",
+    "category": "protein",
+    "variations": ["italian pancetta", "cured pancetta"],
+    "synonyms": ["italian bacon", "cured pork belly"]
+  },
+  {
+    "name": "black pepper",
+    "normalizedName": "black pepper",
+    "category": "spice",
+    "variations": ["pepper", "ground black pepper"],
+    "synonyms": ["peppercorns", "freshly ground pepper"]
+  },
+  {
+    "name": "carrots",
+    "normalizedName": "carrots",
+    "category": "vegetable",
+    "variations": ["carrot", "baby carrots"],
+    "synonyms": ["orange carrots", "root vegetables"]
+  },
+  {
+    "name": "celery",
+    "normalizedName": "celery",
+    "category": "vegetable",
+    "variations": ["celery stalks", "celery ribs"],
+    "synonyms": ["celery sticks", "fresh celery"]
+  },
+  {
+    "name": "potatoes",
+    "normalizedName": "potatoes",
+    "category": "vegetable",
+    "variations": ["potato", "russet potatoes", "yukon gold potatoes"],
+    "synonyms": ["spuds", "tubers"]
+  },
+  {
+    "name": "vegetable broth",
+    "normalizedName": "vegetable broth",
+    "category": "liquid",
+    "variations": ["vegetable stock", "veggie broth"],
+    "synonyms": ["vegetable bouillon", "vegetable base"]
+  },
+  {
+    "name": "tomatoes",
+    "normalizedName": "tomatoes",
+    "category": "vegetable",
+    "variations": ["tomato", "fresh tomatoes", "roma tomatoes"],
+    "synonyms": ["tomato fruit", "red tomatoes"]
+  },
+  {
+    "name": "herbs",
+    "normalizedName": "herbs",
+    "category": "seasoning",
+    "variations": ["fresh herbs", "dried herbs"],
+    "synonyms": ["herb mixture", "mixed herbs"]
+  },
+  {
+    "name": "ground beef",
+    "normalizedName": "ground beef",
+    "category": "protein",
+    "variations": ["beef mince", "hamburger meat"],
+    "synonyms": ["beef ground", "minced beef"]
+  },
+  {
+    "name": "taco shells",
+    "normalizedName": "taco shells",
+    "category": "grain",
+    "variations": ["taco shells hard", "taco shells soft"],
+    "synonyms": ["taco tortillas", "taco wraps"]
+  },
+  {
+    "name": "lettuce",
+    "normalizedName": "lettuce",
+    "category": "vegetable",
+    "variations": ["iceberg lettuce", "romaine lettuce"],
+    "synonyms": ["leaf lettuce", "salad greens"]
+  },
+  {
+    "name": "cheese",
+    "normalizedName": "cheese",
+    "category": "dairy",
+    "variations": ["cheddar cheese", "mozzarella cheese"],
+    "synonyms": ["dairy cheese", "cheese product"]
+  },
+  {
+    "name": "taco seasoning",
+    "normalizedName": "taco seasoning",
+    "category": "spice",
+    "variations": ["taco spice mix", "mexican seasoning"],
+    "synonyms": ["taco spice", "mexican spices"]
+  },
+  {
+    "name": "flour",
+    "normalizedName": "flour",
+    "category": "grain",
+    "variations": ["all-purpose flour", "white flour"],
+    "synonyms": ["wheat flour", "plain flour"]
+  },
+  {
+    "name": "butter",
+    "normalizedName": "butter",
+    "category": "dairy",
+    "variations": ["unsalted butter", "salted butter"],
+    "synonyms": ["dairy butter", "cow butter"]
+  },
+  {
+    "name": "sugar",
+    "normalizedName": "sugar",
+    "category": "sweetener",
+    "variations": ["white sugar", "granulated sugar"],
+    "synonyms": ["table sugar", "refined sugar"]
+  },
+  {
+    "name": "vanilla",
+    "normalizedName": "vanilla",
+    "category": "flavoring",
+    "variations": ["vanilla extract", "vanilla essence"],
+    "synonyms": ["vanilla flavoring", "pure vanilla"]
+  },
+  {
+    "name": "chocolate chips",
+    "normalizedName": "chocolate chips",
+    "category": "sweet",
+    "variations": ["chocolate chips semi-sweet", "chocolate chips dark"],
+    "synonyms": ["chocolate morsels", "chocolate pieces"]
+  },
+  {
+    "name": "baking soda",
+    "normalizedName": "baking soda",
+    "category": "leavening",
+    "variations": ["sodium bicarbonate", "bicarbonate of soda"],
+    "synonyms": ["baking powder", "soda"]
+  }
+]

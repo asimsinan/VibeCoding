@@ -1,0 +1,89 @@
+[
+  {
+    "id": "recipe-1",
+    "title": "Chicken Stir Fry",
+    "description": "A delicious and quick chicken stir fry with vegetables",
+    "image": "/images/recipes/chicken-stir-fry.jpg",
+    "cookingTime": 30,
+    "difficulty": "easy",
+    "ingredients": ["chicken breast", "bell peppers", "onion", "garlic", "soy sauce", "vegetable oil"],
+    "instructions": [
+      "Cut chicken breast into bite-sized pieces",
+      "Heat oil in a large pan or wok",
+      "Add chicken and cook until golden brown",
+      "Add vegetables and stir fry for 5 minutes",
+      "Add soy sauce and garlic",
+      "Serve hot over rice"
+    ]
+  },
+  {
+    "id": "recipe-2",
+    "title": "Spaghetti Carbonara",
+    "description": "Classic Italian pasta dish with eggs, cheese, and pancetta",
+    "image": "/images/recipes/pasta-carbonara.jpg",
+    "cookingTime": 25,
+    "difficulty": "medium",
+    "ingredients": ["spaghetti", "eggs", "parmesan cheese", "pancetta", "black pepper", "garlic"],
+    "instructions": [
+      "Cook spaghetti according to package directions",
+      "Cook pancetta in a large pan until crispy",
+      "Beat eggs with parmesan cheese and black pepper",
+      "Add cooked pasta to pancetta pan",
+      "Remove from heat and quickly stir in egg mixture",
+      "Serve immediately with extra parmesan"
+    ]
+  },
+  {
+    "id": "recipe-3",
+    "title": "Vegetable Soup",
+    "description": "Hearty vegetable soup perfect for cold days",
+    "image": "/images/recipes/vegetable-soup.jpg",
+    "cookingTime": 45,
+    "difficulty": "easy",
+    "ingredients": ["carrots", "celery", "onion", "potatoes", "vegetable broth", "tomatoes", "herbs"],
+    "instructions": [
+      "Dice all vegetables into small pieces",
+      "Heat oil in a large pot",
+      "Add onions and cook until translucent",
+      "Add carrots, celery, and potatoes",
+      "Pour in vegetable broth and bring to boil",
+      "Add tomatoes and herbs",
+      "Simmer for 30 minutes until vegetables are tender"
+    ]
+  },
+  {
+    "id": "recipe-4",
+    "title": "Beef Tacos",
+    "description": "Flavorful beef tacos with fresh toppings",
+    "image": "/images/recipes/beef-tacos.jpg",
+    "cookingTime": 35,
+    "difficulty": "easy",
+    "ingredients": ["ground beef", "taco shells", "lettuce", "tomatoes", "cheese", "onion", "taco seasoning"],
+    "instructions": [
+      "Brown ground beef in a large pan",
+      "Add taco seasoning and water",
+      "Simmer until sauce thickens",
+      "Warm taco shells in oven",
+      "Fill shells with beef mixture",
+      "Top with lettuce, tomatoes, cheese, and onion"
+    ]
+  },
+  {
+    "id": "recipe-5",
+    "title": "Chocolate Chip Cookies",
+    "description": "Soft and chewy chocolate chip cookies",
+    "image": "/images/recipes/recipe-placeholder.jpg",
+    "cookingTime": 20,
+    "difficulty": "easy",
+    "ingredients": ["flour", "butter", "sugar", "eggs", "vanilla", "chocolate chips", "baking soda"],
+    "instructions": [
+      "Preheat oven to 375°F",
+      "Cream butter and sugar together",
+      "Beat in eggs and vanilla",
+      "Mix in flour and baking soda",
+      "Fold in chocolate chips",
+      "Drop spoonfuls onto baking sheet",
+      "Bake for 9-11 minutes until golden"
+    ]
+  }
+]

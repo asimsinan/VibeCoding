@@ -1,0 +1,119 @@
+{
+  "name": "recipe-finder-app",
+  "version": "1.0.0",
+  "description": "Recipe Finder App - Find recipes based on available ingredients",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:contract": "jest tests/contract",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "jest tests/e2e",
+    "test:unit": "jest tests/unit",
+    "test:api:contract": "jest tests/api/contract",
+    "test:api:integration": "jest tests/api/integration",
+    "test:api:e2e": "jest tests/api/e2e",
+    "test:api:unit": "jest tests/api/unit",
+    "test:web:contract": "jest tests/web/contract",
+    "test:web:integration": "jest tests/web/integration",
+    "test:web:e2e": "jest tests/web/e2e",
+    "test:web:unit": "jest tests/web/unit",
+    "build": "tsc",
+    "lint": "eslint src tests --ext .ts,.js",
+    "lint:fix": "eslint src tests --ext .ts,.js --fix",
+    "dev": "ts-node src/index.ts",
+    "start": "node server.js",
+    "server": "node server.js",
+    "dev:server": "nodemon server.js",
+    "vercel-build": "npm run build"
+  },
+  "keywords": [
+    "recipe",
+    "search",
+    "ingredients",
+    "cooking"
+  ],
+  "author": "Recipe Finder Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^29.5.0",
+    "@types/jsdom": "^21.1.7",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^20.0.0",
+    "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^30.1.2",
+    "jsdom": "^27.0.0",
+    "nodemon": "^3.0.0",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "sqlite3": "^5.1.6"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,js}",
+      "!src/**/*.d.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 95,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    },
+    "testMatch": [
+      "**/tests/**/*.test.{ts,js}"
+    ],
+    "projects": [
+      {
+        "displayName": "node",
+        "testEnvironment": "node",
+        "testMatch": [
+          "<rootDir>/tests/api/**/*.test.{ts,js}",
+          "<rootDir>/tests/contract/**/*.test.{ts,js}",
+          "<rootDir>/tests/integration/**/*.test.{ts,js}",
+          "<rootDir>/tests/e2e/**/*.test.{ts,js}",
+          "<rootDir>/tests/unit/**/*.test.{ts,js}"
+        ]
+      },
+      {
+        "displayName": "jsdom",
+        "preset": "ts-jest",
+        "testEnvironment": "jsdom",
+        "testMatch": [
+          "<rootDir>/tests/web/**/*.test.{ts,js}"
+        ],
+        "setupFiles": [
+          "<rootDir>/tests/web/polyfills.ts"
+        ],
+        "setupFilesAfterEnv": [
+          "<rootDir>/tests/web/setup.ts"
+        ],
+        "testEnvironmentOptions": {
+          "resources": "usable"
+        }
+      }
+    ]
+  }
+}
