@@ -1,0 +1,210 @@
+/**
+ * PDFDownloadButton Component Styles
+ * 
+ * Accessible button with loading states and feedback messages
+ */
+
+.pdf-download-button__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pdf-download-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.875rem 1.75rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 160px;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-download-button:hover:not(:disabled) {
+  background: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.pdf-download-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+}
+
+.pdf-download-button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.pdf-download-button--loading {
+  background: #f39c12;
+  cursor: wait;
+}
+
+.pdf-download-button--success {
+  background: #27ae60;
+}
+
+.pdf-download-button--error {
+  background: #e74c3c;
+}
+
+.pdf-download-button__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.pdf-download-button__text {
+  font-weight: inherit;
+}
+
+.pdf-download-button__message {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  max-width: 300px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.pdf-download-button__message--success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.pdf-download-button__message--error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus indicators for accessibility */
+.pdf-download-button:focus-visible {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .pdf-download-button {
+    border: 2px solid #000000;
+  }
+  
+  .pdf-download-button:disabled {
+    border-color: #666666;
+  }
+  
+  .pdf-download-button__message {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .pdf-download-button {
+    transition: none;
+  }
+  
+  .pdf-download-button:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .pdf-download-button__spinner {
+    animation: none;
+  }
+  
+  .pdf-download-button__message {
+    animation: none;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .pdf-download-button {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .pdf-download-button__message {
+    max-width: 100%;
+    font-size: 0.85rem;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pdf-download-button {
+    min-width: 180px;
+    padding: 1rem 2rem;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .pdf-download-button {
+    min-width: 200px;
+    padding: 1rem 2.5rem;
+  }
+  
+  .pdf-download-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+  }
+}
+
+/* Print styles */
+@media print {
+  .pdf-download-button__container {
+    display: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pdf-download-button__message--success {
+    background: #1e4d2b;
+    color: #d4edda;
+    border-color: #2d5a3d;
+  }
+  
+  .pdf-download-button__message--error {
+    background: #4d1e1e;
+    color: #f8d7da;
+    border-color: #5a2d2d;
+  }
+}

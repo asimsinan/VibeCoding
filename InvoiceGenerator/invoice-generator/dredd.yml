@@ -1,0 +1,21 @@
+reporter: apiary
+custom:
+  apiaryApiKey: null
+  apiaryApiName: null
+dry-run: null
+hookfiles: null
+language: nodejs
+sandbox: false
+server: null
+server-wait: 3
+init: false
+custom:
+  apiaryApiKey: null
+  apiaryApiName: null
+dry-run: null
+hookfiles: null
+language: nodejs
+sandbox: false
+server: null
+server-wait: 3
+init: false

@@ -1,0 +1,294 @@
+/**
+ * LineItemsManager Component Styles
+ * 
+ * Mobile-first responsive design with drag-and-drop support
+ */
+
+.line-items-manager {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  overflow: visible; /* Allow table to extend beyond container if needed */
+}
+
+.line-items-manager__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.line-items-manager__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.line-items-manager__add-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.line-items-manager__add-button:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+}
+
+.line-items-manager__add-button:active {
+  transform: translateY(0);
+}
+
+.line-items-manager__table-container {
+  overflow-x: auto;
+  border-radius: 6px;
+  border: 1px solid #e1e8ed;
+  width: 100%;
+  max-width: 100%;
+  min-width: 600px; /* Ensure enough space for all columns */
+}
+
+.line-items-manager__table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  table-layout: auto;
+  min-width: 600px; /* Ensure table is wide enough for all columns */
+}
+
+.line-items-manager__header-cell {
+  background: #f8f9fa;
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #e1e8ed;
+  font-size: 0.9rem;
+}
+
+.line-items-manager__header-cell:nth-child(1) { min-width: 200px; } /* Description */
+.line-items-manager__header-cell:nth-child(2) { width: 80px; } /* Quantity */
+.line-items-manager__header-cell:nth-child(3) { width: 100px; } /* Unit Price */
+.line-items-manager__header-cell:nth-child(4) { width: 100px; } /* Total */
+.line-items-manager__header-cell:nth-child(5) { width: 80px; } /* Actions */
+
+.line-items-manager__row {
+  border-bottom: 1px solid #e1e8ed;
+  transition: all 0.2s ease;
+  cursor: move;
+}
+
+.line-items-manager__row:hover {
+  background: #f8f9fa;
+}
+
+.line-items-manager__row--dragging {
+  opacity: 0.5;
+  transform: rotate(2deg);
+}
+
+.line-items-manager__row--drag-over {
+  background: #e3f2fd;
+  border-top: 2px solid #3498db;
+}
+
+.line-items-manager__cell {
+  padding: 0.75rem;
+  vertical-align: top;
+}
+
+.line-items-manager__cell:nth-child(1) { min-width: 200px; } /* Description */
+.line-items-manager__cell:nth-child(2) { width: 80px; } /* Quantity */
+.line-items-manager__cell:nth-child(3) { width: 100px; } /* Unit Price */
+.line-items-manager__cell:nth-child(4) { width: 100px; } /* Total */
+.line-items-manager__cell:nth-child(5) { width: 80px; } /* Actions */
+
+.line-items-manager__input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e1e8ed;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.line-items-manager__input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+}
+
+.line-items-manager__input--description {
+  min-width: 200px;
+}
+
+.line-items-manager__input--quantity,
+.line-items-manager__input--unit-price {
+  width: 80px;
+  text-align: right;
+}
+
+.line-items-manager__total {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.line-items-manager__remove-button {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.line-items-manager__remove-button:hover:not(:disabled) {
+  background: #c0392b;
+}
+
+.line-items-manager__remove-button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.line-items-manager__empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .line-items-manager {
+    padding: 1rem;
+  }
+  
+  .line-items-manager__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .line-items-manager__add-button {
+    width: 100%;
+  }
+  
+  .line-items-manager__table {
+    font-size: 0.8rem;
+  }
+  
+  .line-items-manager__header-cell,
+  .line-items-manager__cell {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .line-items-manager__input--description {
+    min-width: 150px;
+  }
+  
+  .line-items-manager__input--quantity,
+  .line-items-manager__input--unit-price {
+    width: 60px;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .line-items-manager__input--description {
+    min-width: 250px;
+  }
+  
+  .line-items-manager__input--quantity,
+  .line-items-manager__input--unit-price {
+    width: 90px;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .line-items-manager__input--description {
+    min-width: 300px;
+  }
+  
+  .line-items-manager__input--quantity,
+  .line-items-manager__input--unit-price {
+    width: 100px;
+  }
+}
+
+/* Focus indicators for accessibility */
+.line-items-manager__input:focus-visible,
+.line-items-manager__add-button:focus-visible,
+.line-items-manager__remove-button:focus-visible {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .line-items-manager__table {
+    border: 2px solid #000000;
+  }
+  
+  .line-items-manager__input {
+    border-width: 2px;
+  }
+  
+  .line-items-manager__row {
+    border-bottom-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .line-items-manager__row,
+  .line-items-manager__input,
+  .line-items-manager__add-button,
+  .line-items-manager__remove-button {
+    transition: none;
+  }
+  
+  .line-items-manager__row--dragging {
+    transform: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .line-items-manager {
+    box-shadow: none;
+    border: 1px solid #000000;
+    padding: 1rem;
+  }
+  
+  .line-items-manager__add-button,
+  .line-items-manager__remove-button {
+    display: none;
+  }
+  
+  .line-items-manager__table {
+    border: 1px solid #000000;
+  }
+  
+  .line-items-manager__input {
+    border: none;
+    background: transparent;
+    padding: 0;
+  }
+}

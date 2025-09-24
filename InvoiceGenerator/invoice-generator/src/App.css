@@ -1,0 +1,439 @@
+/* Mobile-first responsive design */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.app {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.app-header {
+  background-color: #2c3e50;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.api-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.status-indicator {
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.status-indicator.connected {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.status-indicator.disconnected {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.status-indicator.checking {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.saved-indicator {
+  font-size: 0.8rem;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.app-main {
+  display: grid;
+  grid-template-columns: minmax(400px, 1fr) minmax(400px, 1fr);
+  gap: 2rem;
+  padding: 1rem;
+  width: 100vw;
+  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
+  margin: 0;
+  /* Ensure stable grid layout - prevent shrinking */
+  grid-template-rows: 1fr;
+  align-items: start;
+}
+
+.invoice-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 0;
+  overflow-x: auto; /* Allow horizontal scroll if needed */
+  overflow-y: visible;
+}
+
+.invoice-preview {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 400px;
+  min-width: 400px; /* Ensure minimum width for preview */
+  overflow: hidden;
+}
+
+/* Form sections */
+.client-section,
+.line-items-section,
+.tax-section,
+.totals-section,
+.actions-section {
+  margin-bottom: 2rem;
+}
+
+.client-section h2,
+.line-items-section h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.form-group input[type="number"] {
+  text-align: right;
+}
+
+/* Line items */
+.line-item {
+  border: 1px solid #eee;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  background-color: #fafafa;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.line-item .form-group {
+  margin-bottom: 0.5rem;
+}
+
+.line-item button {
+  grid-column: 1 / -1;
+  justify-self: start;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.line-item button:hover {
+  background-color: #c0392b;
+}
+
+/* Add line item button */
+#add-line-item {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+#add-line-item:hover {
+  background-color: #229954;
+}
+
+/* Totals section */
+.totals-section {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.total-final {
+  font-weight: bold;
+  font-size: 1.125rem;
+  border-top: 1px solid #dee2e6;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Actions section */
+.actions-section {
+  text-align: center;
+}
+
+#download-pdf {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+#download-pdf:hover {
+  background-color: #2980b9;
+}
+
+#download-pdf:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* Error messages */
+.error {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.error-message {
+  background-color: #fdf2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+/* Preview section */
+.preview-content {
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.preview-client h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.preview-client p {
+  margin: 0 0 0.25rem 0;
+}
+
+.preview-items {
+  margin: 1rem 0;
+}
+
+.preview-line-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.preview-line-item:last-child {
+  border-bottom: none;
+}
+
+.preview-totals {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #2c3e50;
+}
+
+.preview-totals div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.preview-totals div:last-child {
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+
+/* Responsive design */
+@media (max-width: 767px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-main {
+    padding: 2rem;
+    gap: 3rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .app-main {
+    padding: 3rem;
+    gap: 4rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .line-item {
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    align-items: end;
+  }
+
+  .line-item button {
+    grid-column: auto;
+    align-self: center;
+  }
+
+  .preview-line-item {
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-main {
+    padding: 3rem;
+  }
+
+  .invoice-form {
+    padding: 2rem;
+  }
+
+  .invoice-preview {
+    padding: 2rem;
+  }
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.save-button {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+}
+
+.save-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+}
+
+.save-button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus indicators */
+button:focus,
+input:focus,
+textarea:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .app {
+    background-color: white;
+  }
+
+  .invoice-form,
+  .invoice-preview {
+    border: 2px solid #000;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    border: 2px solid #000;
+  }
+}

@@ -1,0 +1,172 @@
+/**
+ * ClientForm Component Styles
+ * 
+ * Mobile-first responsive design with accessibility compliance
+ */
+
+.client-form {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.client-form__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 1.5rem 0;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+.client-form__fields {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.client-form__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.client-form__label {
+  font-weight: 500;
+  color: #34495e;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.client-form__input,
+.client-form__textarea {
+  padding: 0.75rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.client-form__input:focus,
+.client-form__textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.client-form__input--error,
+.client-form__textarea--error {
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+.client-form__input--error:focus,
+.client-form__textarea--error:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.client-form__textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.client-form__error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* Focus indicators for accessibility */
+.client-form__input:focus-visible,
+.client-form__textarea:focus-visible {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .client-form__input,
+  .client-form__textarea {
+    border-width: 3px;
+  }
+  
+  .client-form__input--error,
+  .client-form__textarea--error {
+    border-color: #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .client-form__input,
+  .client-form__textarea {
+    transition: none;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .client-form {
+    padding: 2rem;
+  }
+  
+  .client-form__fields {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  .client-form__field:first-child {
+    grid-column: 1 / -1;
+  }
+  
+  .client-form__field:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .client-form {
+    padding: 2.5rem;
+  }
+  
+  .client-form__title {
+    font-size: 1.75rem;
+  }
+  
+  .client-form__fields {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+  
+  .client-form__field:first-child {
+    grid-column: 1 / -1;
+  }
+  
+  .client-form__field:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Print styles */
+@media print {
+  .client-form {
+    box-shadow: none;
+    border: 1px solid #000000;
+    padding: 1rem;
+  }
+  
+  .client-form__input,
+  .client-form__textarea {
+    border: 1px solid #000000;
+    background-color: transparent;
+  }
+  
+  .client-form__error {
+    display: none;
+  }
+}

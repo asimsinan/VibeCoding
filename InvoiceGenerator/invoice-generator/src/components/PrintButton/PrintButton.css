@@ -1,0 +1,87 @@
+.print-button {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.print-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.4);
+}
+
+.print-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+.print-button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+.print-button--small {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.print-button--large {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+.print-button--outline {
+  background: transparent;
+  color: #6c757d;
+  border: 2px solid #6c757d;
+  box-shadow: none;
+}
+
+.print-button--outline:hover:not(:disabled) {
+  background: #6c757d;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+.print-button--icon-only {
+  padding: 0.75rem;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.print-button--icon-only.print-button--small {
+  width: 36px;
+  height: 36px;
+  padding: 0.5rem;
+}
+
+.print-button--icon-only.print-button--large {
+  width: 56px;
+  height: 56px;
+  padding: 1rem;
+}
+
+/* Print-specific styles */
+@media print {
+  .print-button {
+    display: none !important;
+  }
+}

@@ -1,0 +1,140 @@
+.navigation {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navigation__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.navigation__brand {
+  flex: 0 0 auto;
+}
+
+.navigation__logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navigation__logo:hover {
+  color: #3498db;
+}
+
+.navigation__menu {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.navigation__link {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  position: relative;
+}
+
+.navigation__link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #3498db;
+}
+
+.navigation__link--active {
+  background: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.navigation__badge {
+  background: #e74c3c;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+  line-height: 1;
+}
+
+.navigation__status {
+  flex: 0 0 auto;
+}
+
+.status-indicator {
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.status-indicator.connected {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.status-indicator.disconnected {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.status-indicator.checking {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .navigation__container {
+    padding: 0 0.5rem;
+    height: 50px;
+  }
+
+  .navigation__menu {
+    gap: 0.5rem;
+  }
+
+  .navigation__link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .navigation__link span {
+    display: none; /* Hide emoji on mobile */
+  }
+
+  .navigation__status {
+    display: none; /* Hide status on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation__menu {
+    gap: 0.25rem;
+  }
+
+  .navigation__link {
+    padding: 0.25rem;
+    font-size: 0.8rem;
+  }
+}

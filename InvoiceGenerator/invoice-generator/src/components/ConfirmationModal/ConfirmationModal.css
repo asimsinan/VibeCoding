@@ -1,0 +1,64 @@
+.confirmation-modal {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.confirmation-modal__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.confirmation-modal__content {
+  margin-bottom: 2rem;
+}
+
+.confirmation-modal__message {
+  color: #2c3e50;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.confirmation-modal__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.confirmation-modal--danger .confirmation-modal__icon {
+  color: #e74c3c;
+}
+
+.confirmation-modal--warning .confirmation-modal__icon {
+  color: #f39c12;
+}
+
+.confirmation-modal--info .confirmation-modal__icon {
+  color: #3498db;
+}
+
+.confirmation-modal--danger .confirmation-modal__message {
+  color: #721c24;
+}
+
+.confirmation-modal--warning .confirmation-modal__message {
+  color: #856404;
+}
+
+.confirmation-modal--info .confirmation-modal__message {
+  color: #0c5460;
+}
+
+@media (max-width: 768px) {
+  .confirmation-modal__actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .confirmation-modal__actions .btn {
+    width: 100%;
+    max-width: 200px;
+  }
+}

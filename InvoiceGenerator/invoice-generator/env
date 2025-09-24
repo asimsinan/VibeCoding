@@ -1,0 +1,6 @@
+# Frontend Environment Variables
+VITE_API_URL=https://api-mocha-iota-21.vercel.app/
+
+# Backend Environment Variables
+PORT=3000
+NODE_ENV=production

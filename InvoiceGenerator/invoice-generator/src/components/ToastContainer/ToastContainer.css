@@ -1,0 +1,23 @@
+.toast-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 10000;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.toast-container > * {
+  pointer-events: auto;
+  margin-bottom: 0.5rem;
+}
+
+.toast-container > *:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .toast-container {
+    padding: 10px;
+  }
+}

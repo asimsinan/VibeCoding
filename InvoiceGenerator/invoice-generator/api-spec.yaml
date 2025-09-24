@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: Invoice Generator API
+  version: 1.0.0
+  description: API for generating and managing invoices
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+paths:
+  /invoices:
+    post:
+      summary: Create new invoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceRequest'
+      responses:
+        '201':
+          description: Invoice created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /invoices/{id}:
+    get:
+      summary: Get invoice by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invoice retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '404':
+          description: Invoice not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update invoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceRequest'
+      responses:
+        '200':
+          description: Invoice updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '404':
+          description: Invoice not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /invoices/{id}/pdf:
+    post:
+      summary: Generate PDF for invoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PDF generated successfully
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Invoice not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    InvoiceRequest:
+      type: object
+      required: [client, items]
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+        taxRate:
+          type: number
+          minimum: 0
+          maximum: 100
+          default: 0
+    Client:
+      type: object
+      required: [name, address, email]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          example: "John Doe"
+        address:
+          type: string
+          maxLength: 200
+          example: "123 Main St, City, State 12345"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        phone:
+          type: string
+          maxLength: 20
+          example: "+1-555-123-4567"
+    LineItem:
+      type: object
+      required: [description, quantity, unitPrice]
+      properties:
+        description:
+          type: string
+          maxLength: 200
+          example: "Web Development Services"
+        quantity:
+          type: number
+          minimum: 0.01
+          example: 10
+        unitPrice:
+          type: number
+          minimum: 0
+          example: 75.00
+    InvoiceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "inv_1234567890"
+        client:
+          $ref: '#/components/schemas/Client'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+        subtotal:
+          type: number
+          example: 750.00
+        taxAmount:
+          type: number
+          example: 75.00
+        total:
+          type: number
+          example: 825.00
+        invoiceNumber:
+          type: string
+          example: "INV-2024-001"
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        dueDate:
+          type: string
+          format: date
+          example: "2024-02-15"
+        status:
+          type: string
+          enum: [draft, sent, paid, overdue]
+          example: "draft"
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "ValidationError"
+        message:
+          type: string
+          example: "Invalid input data"
+        field:
+          type: string
+          example: "client.email"
+        code:
+          type: string
+          example: "INVALID_EMAIL_FORMAT"
