@@ -204,5 +204,15 @@ app.use((req, res) => {
   });
 });
 
+// For local development, start the server
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Recipe Finder App server running on port ${PORT}`);
+    console.log(`📱 Open http://localhost:${PORT} to view the app`);
+    console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
+
 // Export the app for Vercel
 module.exports = app;
