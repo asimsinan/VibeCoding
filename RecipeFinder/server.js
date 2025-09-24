@@ -15,6 +15,7 @@ const rateLimit = require('express-rate-limit');
 // Import our existing API components
 const { createApp } = require('./dist/api/app');
 const { SQLiteDatabase } = require('./dist/lib/database/SQLiteDatabase');
+const { ServerlessDatabase } = require('./dist/lib/database/ServerlessDatabase');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -63,15 +64,20 @@ app.use(express.static(path.join(__dirname, 'public'), {
   lastModified: true
 }));
 
-// Initialize database with persistent file
-const database = new SQLiteDatabase('./recipe-finder.db');
+// Initialize database - use serverless for Vercel, SQLite for local development
+const isVercel = process.env.VERCEL === '1';
+const database = isVercel 
+  ? new ServerlessDatabase()
+  : new SQLiteDatabase('./recipe-finder.db');
 
 // Initialize the database
 database.initialize().then(() => {
-  console.log('✅ Database initialized successfully');
+  console.log(`✅ Database initialized successfully (${isVercel ? 'serverless' : 'SQLite'})`);
 }).catch((error) => {
   console.error('❌ Database initialization failed:', error);
-  process.exit(1);
+  if (!isVercel) {
+    process.exit(1);
+  }
 });
 
 // Health check endpoint
