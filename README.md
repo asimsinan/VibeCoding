@@ -20,7 +20,7 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 ### [Challenge 1: Recipe Finder](./RecipeFinder/) (Built in 3 hours)
 **Prompt**: *"Build a recipe finder app where users input ingredients and get matching recipes, using HTML, CSS, and vanilla JavaScript"*
 
-### [Challenge 2: Invoce Generator](./InvoiceGenerator/)
+### [Challenge 2: Invoce Generator](./InvoiceGenerator/) (Built in 5.5 hours)
 **Prompt**: *"Build an invoice generator that lets users enter client details and items and download as PDF, using React, CSS, and jsPDF."*
 
 ### Future Challenges

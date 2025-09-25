@@ -116,20 +116,8 @@ This will start both the frontend (React) and backend (API) servers:
 - Frontend: http://localhost:5173
 - API: http://localhost:3000
 
-## 🌐 Deployment
 
-### Deploy to Vercel (Recommended)
-
-1. **Quick Deploy**:
-   ```bash
-   # Make deployment script executable
-   chmod +x deploy.sh
-   
-   # Run deployment script
-   ./deploy.sh
-   ```
-
-2. **Manual Deploy**:
+2. **Deploy to Vercel**:
    ```bash
    # Install Vercel CLI
    npm i -g vercel
@@ -145,7 +133,6 @@ This will start both the frontend (React) and backend (API) servers:
    - Frontend: `VITE_API_URL` (your backend URL)
    - Backend: `PORT=3000`, `NODE_ENV=production`
 
-📖 **Detailed deployment guide**: See [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## 📖 Detailed Setup Guide
 
