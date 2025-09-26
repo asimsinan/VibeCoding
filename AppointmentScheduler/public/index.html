@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Appointment Scheduler - Book and manage appointments easily">
+    <meta name="keywords" content="appointment, scheduler, booking, calendar">
+    <meta name="author" content="Appointment Scheduler Team">
+    
+    <!-- Progressive Enhancement -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Appointment Scheduler">
+    
+    <!-- Security -->
+    <!-- CSP completely removed for development -->
+    
+    <title>Appointment Scheduler</title>
+    
+    <!-- Preload critical resources -->
+    <!-- Bundle will be injected by HtmlWebpackPlugin -->
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+    <!-- Progressive Enhancement: Basic content without JavaScript -->
+    <noscript>
+        <div class="no-javascript">
+            <h1>Appointment Scheduler</h1>
+            <p>This application requires JavaScript to function properly.</p>
+            <p>Please enable JavaScript in your browser and refresh the page.</p>
+            <a href="/" class="refresh-link">Refresh Page</a>
+        </div>
+    </noscript>
+    
+    <!-- React app root -->
+    <div id="root">
+        <!-- Fallback content for users without JavaScript -->
+        <div class="app">
+            <header class="app-header">
+                <h1 class="app-title">Appointment Scheduler</h1>
+                <nav class="app-navigation">
+                    <button class="nav-button active">Calendar</button>
+                    <button class="nav-button">Appointments</button>
+                </nav>
+            </header>
+            
+            <main class="app-main">
+                <div class="calendar-loading">
+                    <div class="loading-spinner"></div>
+                    <span>Loading calendar...</span>
+                </div>
+            </main>
+            
+            <footer class="app-footer">
+                <div class="footer-content">
+                    <p>&copy; 2025 Appointment Scheduler. All rights reserved.</p>
+                    <div class="footer-links">
+                        <a href="#help" class="footer-link">Help</a>
+                        <a href="#privacy" class="footer-link">Privacy Policy</a>
+                        <a href="#terms" class="footer-link">Terms of Service</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    
+<script defer src="/static/js/bundle.js"></script></body>
+</html>

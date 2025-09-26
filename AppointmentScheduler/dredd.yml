@@ -1,0 +1,36 @@
+# Dredd configuration for API contract testing
+# This file configures Dredd to test our OpenAPI specification
+
+language: nodejs
+sandbox: false
+server: npm start
+server-wait: 3
+init: false
+custom:
+  apiaryApiKey: ''
+  apiaryApiName: ''
+reporter: apiary
+output: []
+header: []
+sorted: false
+user: null
+inline-errors: false
+details: true
+method: []
+color: true
+level: info
+timestamp: false
+silent: false
+path: []
+hooks-worker-timeout: 5000
+hooks-worker-connect-timeout: 1500
+hooks-worker-connect-retry: 500
+hooks-worker-after-connect-wait: 100
+hooks-worker-term-timeout: 5000
+hooks-worker-term-retry: 500
+hooks-worker-docker-connect-timeout: 1500
+hooks-worker-docker-connect-retry: 500
+hooks-worker-docker-after-connect-wait: 100
+config: ./dredd.yml
+blueprint: ./docs/api/openapi.yaml
+endpoint: 'http://localhost:3000'

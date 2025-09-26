@@ -1,0 +1,680 @@
+openapi: 3.0.3
+info:
+  title: Appointment Scheduler API
+  description: |
+    A comprehensive API for managing appointments and calendar scheduling.
+    This API provides endpoints for calendar viewing, appointment booking,
+    time slot management, and conflict prevention.
+  version: 1.0.0
+  contact:
+    name: AppointmentScheduler Team
+    email: support@appointmentscheduler.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.appointmentscheduler.com/v1
+    description: Production server
+
+tags:
+  - name: Calendar
+    description: Calendar view and time slot management
+  - name: Appointments
+    description: Appointment booking and management
+  - name: Availability
+    description: Slot availability checking
+
+paths:
+  /calendar/{year}/{month}:
+    get:
+      tags:
+        - Calendar
+      summary: Get calendar view for a specific month
+      description: |
+        Retrieves the calendar view for a specific year and month,
+        including available time slots and existing appointments.
+        Maps to FR-001: Calendar View requirement.
+      operationId: getCalendarView
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: Year (4 digits)
+          schema:
+            type: integer
+            format: int32
+            minimum: 2024
+            maximum: 2030
+            example: 2024
+        - name: month
+          in: path
+          required: true
+          description: Month (1-12)
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 12
+            example: 12
+        - name: timezone
+          in: query
+          required: false
+          description: Timezone for the calendar view
+          schema:
+            type: string
+            default: "UTC"
+            example: "America/New_York"
+      responses:
+        '200':
+          description: Calendar view retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarResponse'
+              examples:
+                december_2024:
+                  summary: December 2024 Calendar
+                  value:
+                    year: 2024
+                    month: 12
+                    timezone: "UTC"
+                    days:
+                      - date: "2024-12-01"
+                        dayOfWeek: 0
+                        isAvailable: true
+                        timeSlots:
+                          - startTime: "09:00"
+                            endTime: "10:00"
+                            isAvailable: true
+                            appointmentId: null
+                          - startTime: "10:00"
+                            endTime: "11:00"
+                            isAvailable: false
+                            appointmentId: "apt_123"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /appointments:
+    post:
+      tags:
+        - Appointments
+      summary: Create a new appointment
+      description: |
+        Creates a new appointment booking. Validates time slot availability
+        and prevents double-booking conflicts.
+        Maps to FR-002: Appointment Booking requirement.
+      operationId: createAppointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointmentRequest'
+            examples:
+              basic_appointment:
+                summary: Basic appointment booking
+                value:
+                  startTime: "2024-12-15T10:00:00Z"
+                  endTime: "2024-12-15T11:00:00Z"
+                  userEmail: "john.doe@example.com"
+                  userName: "John Doe"
+                  notes: "Regular checkup appointment"
+      responses:
+        '201':
+          description: Appointment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+              examples:
+                created_appointment:
+                  summary: Created appointment
+                  value:
+                    id: "apt_123"
+                    startTime: "2024-12-15T10:00:00Z"
+                    endTime: "2024-12-15T11:00:00Z"
+                    userEmail: "john.doe@example.com"
+                    userName: "John Doe"
+                    notes: "Regular checkup appointment"
+                    status: "confirmed"
+                    createdAt: "2024-12-01T08:00:00Z"
+                    updatedAt: "2024-12-01T08:00:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Time slot conflict - appointment already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+              examples:
+                conflict_error:
+                  summary: Time slot conflict
+                  value:
+                    error: "CONFLICT"
+                    message: "Time slot is already booked"
+                    code: "SLOT_CONFLICT"
+                    details:
+                      conflictingAppointmentId: "apt_456"
+                      requestedTime: "2024-12-15T10:00:00Z"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /appointments/{id}:
+    get:
+      tags:
+        - Appointments
+      summary: Get appointment details
+      description: |
+        Retrieves detailed information about a specific appointment.
+        Maps to FR-003: Appointment Management requirement.
+      operationId: getAppointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique appointment identifier
+          schema:
+            type: string
+            pattern: '^apt_[a-zA-Z0-9]+$'
+            example: "apt_123"
+      responses:
+        '200':
+          description: Appointment details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: Appointment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - Appointments
+      summary: Update an existing appointment
+      description: |
+        Updates an existing appointment. Validates new time slot availability
+        and prevents conflicts with other appointments.
+        Maps to FR-003: Appointment Management requirement.
+      operationId: updateAppointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique appointment identifier
+          schema:
+            type: string
+            pattern: '^apt_[a-zA-Z0-9]+$'
+            example: "apt_123"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAppointmentRequest'
+      responses:
+        '200':
+          description: Appointment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: Appointment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '409':
+          description: Time slot conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - Appointments
+      summary: Cancel an appointment
+      description: |
+        Cancels an existing appointment, making the time slot available again.
+        Maps to FR-003: Appointment Management requirement.
+      operationId: cancelAppointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique appointment identifier
+          schema:
+            type: string
+            pattern: '^apt_[a-zA-Z0-9]+$'
+            example: "apt_123"
+      responses:
+        '204':
+          description: Appointment cancelled successfully
+        '404':
+          description: Appointment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /slots/availability:
+    get:
+      tags:
+        - Availability
+      summary: Check time slot availability
+      description: |
+        Checks the availability of specific time slots for appointment booking.
+        Maps to FR-004: Time Slot Management requirement.
+      operationId: checkSlotAvailability
+      parameters:
+        - name: startTime
+          in: query
+          required: true
+          description: Start time of the slot to check
+          schema:
+            type: string
+            format: date-time
+            example: "2024-12-15T10:00:00Z"
+        - name: endTime
+          in: query
+          required: true
+          description: End time of the slot to check
+          schema:
+            type: string
+            format: date-time
+            example: "2024-12-15T11:00:00Z"
+        - name: excludeAppointmentId
+          in: query
+          required: false
+          description: Appointment ID to exclude from conflict check (for updates)
+          schema:
+            type: string
+            pattern: '^apt_[a-zA-Z0-9]+$'
+            example: "apt_123"
+      responses:
+        '200':
+          description: Slot availability checked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailabilityResponse'
+              examples:
+                available_slot:
+                  summary: Available slot
+                  value:
+                    startTime: "2024-12-15T10:00:00Z"
+                    endTime: "2024-12-15T11:00:00Z"
+                    isAvailable: true
+                    conflictingAppointments: []
+                unavailable_slot:
+                  summary: Unavailable slot
+                  value:
+                    startTime: "2024-12-15T10:00:00Z"
+                    endTime: "2024-12-15T11:00:00Z"
+                    isAvailable: false
+                    conflictingAppointments:
+                      - id: "apt_456"
+                        userEmail: "jane.doe@example.com"
+                        userName: "Jane Doe"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    CalendarResponse:
+      type: object
+      required:
+        - year
+        - month
+        - timezone
+        - days
+      properties:
+        year:
+          type: integer
+          format: int32
+          example: 2024
+        month:
+          type: integer
+          format: int32
+          example: 12
+        timezone:
+          type: string
+          example: "UTC"
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarDay'
+
+    CalendarDay:
+      type: object
+      required:
+        - date
+        - dayOfWeek
+        - isAvailable
+        - timeSlots
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2024-12-15"
+        dayOfWeek:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 6
+          description: "0 = Sunday, 1 = Monday, ..., 6 = Saturday"
+          example: 0
+        isAvailable:
+          type: boolean
+          description: "Whether this day has any available time slots"
+          example: true
+        timeSlots:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+
+    TimeSlot:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - isAvailable
+      properties:
+        startTime:
+          type: string
+          format: time
+          example: "10:00"
+        endTime:
+          type: string
+          format: time
+          example: "11:00"
+        isAvailable:
+          type: boolean
+          example: true
+        appointmentId:
+          type: string
+          nullable: true
+          pattern: '^apt_[a-zA-Z0-9]+$'
+          example: "apt_123"
+
+    CreateAppointmentRequest:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - userEmail
+        - userName
+      properties:
+        startTime:
+          type: string
+          format: date-time
+          description: "Start time in ISO 8601 format"
+          example: "2024-12-15T10:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          description: "End time in ISO 8601 format"
+          example: "2024-12-15T11:00:00Z"
+        userEmail:
+          type: string
+          format: email
+          description: "User's email address"
+          example: "john.doe@example.com"
+        userName:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: "User's full name"
+          example: "John Doe"
+        notes:
+          type: string
+          maxLength: 500
+          description: "Optional notes for the appointment"
+          example: "Regular checkup appointment"
+
+    UpdateAppointmentRequest:
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: date-time
+          example: "2024-12-15T14:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          example: "2024-12-15T15:00:00Z"
+        userEmail:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        userName:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: "John Doe"
+        notes:
+          type: string
+          maxLength: 500
+          example: "Updated appointment notes"
+        status:
+          type: string
+          enum: [confirmed, cancelled, rescheduled]
+          example: "confirmed"
+
+    AppointmentResponse:
+      type: object
+      required:
+        - id
+        - startTime
+        - endTime
+        - userEmail
+        - userName
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          pattern: '^apt_[a-zA-Z0-9]+$'
+          example: "apt_123"
+        startTime:
+          type: string
+          format: date-time
+          example: "2024-12-15T10:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          example: "2024-12-15T11:00:00Z"
+        userEmail:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        userName:
+          type: string
+          example: "John Doe"
+        notes:
+          type: string
+          nullable: true
+          example: "Regular checkup appointment"
+        status:
+          type: string
+          enum: [confirmed, cancelled, rescheduled]
+          example: "confirmed"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-12-01T08:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-12-01T08:00:00Z"
+
+    AvailabilityResponse:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - isAvailable
+        - conflictingAppointments
+      properties:
+        startTime:
+          type: string
+          format: date-time
+          example: "2024-12-15T10:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          example: "2024-12-15T11:00:00Z"
+        isAvailable:
+          type: boolean
+          example: true
+        conflictingAppointments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConflictingAppointment'
+
+    ConflictingAppointment:
+      type: object
+      required:
+        - id
+        - userEmail
+        - userName
+      properties:
+        id:
+          type: string
+          pattern: '^apt_[a-zA-Z0-9]+$'
+          example: "apt_456"
+        userEmail:
+          type: string
+          format: email
+          example: "jane.doe@example.com"
+        userName:
+          type: string
+          example: "Jane Doe"
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+        - code
+      properties:
+        error:
+          type: string
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          example: "Invalid request data"
+        code:
+          type: string
+          example: "INVALID_INPUT"
+        details:
+          type: object
+          description: "Additional error details"
+          additionalProperties: true
+
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              type: string
+              example: "CONFLICT"
+            code:
+              type: string
+              example: "SLOT_CONFLICT"
+            details:
+              type: object
+              properties:
+                conflictingAppointmentId:
+                  type: string
+                  example: "apt_456"
+                requestedTime:
+                  type: string
+                  format: date-time
+                  example: "2024-12-15T10:00:00Z"
+
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              type: string
+              example: "NOT_FOUND"
+            code:
+              type: string
+              example: "APPOINTMENT_NOT_FOUND"
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            validation_error:
+              summary: Validation error
+              value:
+                error: "VALIDATION_ERROR"
+                message: "Invalid request data"
+                code: "INVALID_INPUT"
+                details:
+                  field: "userEmail"
+                  reason: "Invalid email format"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            server_error:
+              summary: Server error
+              value:
+                error: "INTERNAL_ERROR"
+                message: "An unexpected error occurred"
+                code: "SERVER_ERROR"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+
+security:
+  - ApiKeyAuth: []
+
+# Traceability to Requirements
+# FR-001: Calendar View - GET /calendar/{year}/{month}
+# FR-002: Appointment Booking - POST /appointments
+# FR-003: Appointment Management - GET/PUT/DELETE /appointments/{id}
+# FR-004: Time Slot Management - GET /slots/availability
+# FR-005: Conflict Prevention - Built into all appointment operations
+# FR-006: User Interface - API provides data for UI components
+# FR-007: Data Persistence - All operations persist to database
