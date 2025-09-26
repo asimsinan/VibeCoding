@@ -22,7 +22,16 @@ import axios from 'axios';
 
 class ApiClient {
   constructor(config = {}) {
-    this.baseURL = config.baseURL || process.env.API_BASE_URL || 'http://localhost:3000/api/v1';
+    // Determine base URL with smart defaults
+    if (config.baseURL) {
+      this.baseURL = config.baseURL;
+    } else if (typeof window !== 'undefined') {
+      // In browser - use current origin (works for both localhost dev and production)
+      this.baseURL = window.location.origin + '/api/v1';
+    } else {
+      // In Node.js environment - use localhost for development
+      this.baseURL = 'http://localhost:3000/api/v1';
+    }
     this.timeout = config.timeout || 30000;
     this.retryAttempts = config.retryAttempts || 3;
     this.retryDelay = config.retryDelay || 1000;

@@ -9,10 +9,10 @@ module.exports = {
   mode: 'production',
   entry: './src/client/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'),
     filename: 'static/js/bundle.[contenthash].js', // Content hash for production
     publicPath: '/',
-    clean: true // Clean dist folder for production
+    clean: true // Clean public folder for production
   },
   optimization: {
     moduleIds: 'deterministic',
@@ -61,8 +61,7 @@ module.exports = {
       filename: 'static/css/[name].[contenthash].css',
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.API_BASE_URL': JSON.stringify('https://your-production-api.com/api/v1')
+      'process.env.NODE_ENV': JSON.stringify('production')
     })
   ],
   devtool: 'source-map', // Keep source maps for production debugging

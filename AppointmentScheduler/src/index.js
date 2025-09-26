@@ -41,9 +41,55 @@ class AppointmentCore {
     try {
       this.config = this._mergeConfig(config);
       
-      // Initialize database connection
-      this.databaseConnection = new DatabaseConnection(this.config.database);
-      await this.databaseConnection.connect();
+      // Initialize database connection with proper configuration
+      let databaseConfig;
+      // Try Neon database first, then fallback to DATABASE_URL
+      const neonUrl = process.env.NEON_DATABASE_URL || process.env.DATABASE_URL;
+      if (neonUrl) {
+        // For Vercel, use Neon database URL
+        databaseConfig = {
+          connectionString: neonUrl,
+          ssl: { rejectUnauthorized: false },
+          connectionTimeoutMillis: 30000, // 30 seconds
+          idleTimeoutMillis: 30000,
+          max: 10,
+          min: 1
+        };
+        console.log('🔗 Using Neon database:', neonUrl.includes('neon') ? 'Yes' : 'No');
+      } else {
+        // For local development
+        databaseConfig = {
+          host: process.env.DB_HOST || 'localhost',
+          port: process.env.DB_PORT || 5432,
+          database: process.env.DB_NAME || 'appointment_scheduler',
+          user: process.env.DB_USER || 'postgres',
+          password: process.env.DB_PASSWORD || 'password',
+          ssl: false
+        };
+      }
+      
+      console.log('🔗 Initializing database connection...');
+      console.log('📊 Database config:', {
+        hasConnectionString: !!databaseConfig.connectionString,
+        ssl: databaseConfig.ssl,
+        connectionTimeout: databaseConfig.connectionTimeoutMillis
+      });
+      
+      this.databaseConnection = new DatabaseConnection(databaseConfig);
+      
+      // Try to connect to the database
+      try {
+        await Promise.race([
+          this.databaseConnection.connect(),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Connection timeout')), 15000)
+          )
+        ]);
+        console.log('✅ Database connected successfully');
+      } catch (error) {
+        console.warn('⚠️ Database connection failed, will retry on first use:', error.message);
+        // Don't throw error, just log it and continue
+      }
       
       // Initialize repository
       this.appointmentRepository = new AppointmentRepository(this.databaseConnection);
@@ -64,6 +110,8 @@ class AppointmentCore {
       
       this.isInitialized = true;
     } catch (error) {
+      console.error('❌ Database connection failed:', error.message);
+      console.error('❌ Error details:', error);
       throw new Error(`Failed to initialize appointment core: ${error.message}`);
     }
   }
@@ -135,7 +183,14 @@ class AppointmentCore {
         };
       }
 
-      const dbHealth = await this.databaseConnection.healthCheck();
+      // Try to check database health, but don't fail if it's not ready
+      let dbHealth = { healthy: false, error: 'Database not connected' };
+      try {
+        dbHealth = await this.databaseConnection.healthCheck();
+      } catch (error) {
+        console.warn('⚠️ Database health check failed:', error.message);
+        dbHealth = { healthy: false, error: error.message };
+      }
       
       return {
         healthy: dbHealth.healthy,

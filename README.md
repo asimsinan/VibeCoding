@@ -23,6 +23,9 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 ### [Challenge 2: Invoce Generator](./InvoiceGenerator/) (Built in 5.5 hours)
 **Prompt**: *"Build an invoice generator that lets users enter client details and items and download as PDF, using React, CSS, and jsPDF."*
 
+### [Challenge 3: Appointment Scheduler](./AppointmentScheduler/) (Built in 3.5 hours)
+**Prompt**: *"Create an appointment scheduler with a calendar view and booking slots, using React, Tailwind CSS, and date-handling library like date-fns"*
+
 ### Future Challenges
 The difficulty will gradually increase with more complex prompts and requirements.
 

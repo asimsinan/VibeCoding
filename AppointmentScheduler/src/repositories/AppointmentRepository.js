@@ -67,6 +67,18 @@ class AppointmentRepository {
     try {
       const dbRow = this._transformAppointmentToDbRow(appointment);
       
+      // Ensure status has a default value
+      if (!dbRow.status) {
+        dbRow.status = 'pending';
+      }
+      
+      console.log('🔍 Creating appointment with data:', {
+        id: dbRow.id,
+        status: dbRow.status,
+        userEmail: dbRow.user_email,
+        startTime: dbRow.start_time
+      });
+      
       const query = `
         INSERT INTO appointments (
           id, start_time, end_time, user_email, user_name, 
@@ -92,6 +104,7 @@ class AppointmentRepository {
       
       return this._transformDbRowToAppointment(createdRow);
     } catch (error) {
+      console.error('❌ Database error details:', error);
       throw new Error(`Failed to create appointment: ${error.message}`);
     }
   }
@@ -128,6 +141,7 @@ class AppointmentRepository {
       
       return result.rows.map(row => this._transformDbRowToAppointment(row));
     } catch (error) {
+      console.error('❌ AppointmentRepository.find error:', error);
       throw new Error(`Failed to find appointments: ${error.message}`);
     }
   }

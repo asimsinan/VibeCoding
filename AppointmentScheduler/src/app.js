@@ -108,6 +108,9 @@ class AppointmentServer {
     // Statistics endpoints
     this.app.get('/api/v1/stats', this.handleGetStats.bind(this));
 
+    // Debug endpoint to check environment variables
+    this.app.get('/api/v1/debug', this.handleDebug.bind(this));
+
     // 404 handler for undefined routes
     this.app.use('*', (req, res) => {
       res.status(404).json(this.createErrorResponse(
@@ -201,6 +204,22 @@ class AppointmentServer {
         req.requestId
       ));
     }
+  }
+
+  /**
+   * Handle debug endpoint
+   */
+  handleDebug(req, res) {
+    res.json({
+      NODE_ENV: process.env.NODE_ENV,
+      DATABASE_URL: process.env.DATABASE_URL ? 'SET' : 'NOT SET',
+      PORT: process.env.PORT,
+      DEFAULT_TIMEZONE: process.env.DEFAULT_TIMEZONE,
+      BUSINESS_START_HOUR: process.env.BUSINESS_START_HOUR,
+      BUSINESS_END_HOUR: process.env.BUSINESS_END_HOUR,
+      APPOINTMENT_DURATION_MINUTES: process.env.APPOINTMENT_DURATION_MINUTES,
+      ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS
+    });
   }
 
   /**
@@ -796,5 +815,14 @@ if (require.main === module) {
 }
 
 // Export the Express app for Vercel
-module.exports = AppointmentServer;
-module.exports.app = new AppointmentServer().app;
+const server = new AppointmentServer();
+// Initialize the appointment core for Vercel synchronously
+(async () => {
+  try {
+    await server.initialize();
+    console.log('✅ Appointment core initialized for Vercel');
+  } catch (error) {
+    console.error('❌ Failed to initialize appointment core for Vercel:', error);
+  }
+})();
+module.exports = server.app;

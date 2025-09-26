@@ -53,7 +53,7 @@ class TimeSlotService {
         startDate: startOfDay,
         endDate: endOfDay,
         // Include both CONFIRMED and PENDING appointments to mark slots as unavailable
-        status: [AppointmentStatus.CONFIRMED, AppointmentStatus.PENDING]
+        status: ['confirmed', 'pending']
       });
       
       // Mark slots as available/unavailable based on existing appointments
@@ -220,7 +220,7 @@ class TimeSlotService {
       startDate: startTime,
       endDate: endTime,
       // Check for both CONFIRMED and PENDING appointments to prevent conflicts
-      status: [AppointmentStatus.CONFIRMED, AppointmentStatus.PENDING]
+      status: ['confirmed', 'pending']
     };
     
     if (excludeAppointmentId) {

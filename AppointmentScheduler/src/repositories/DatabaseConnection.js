@@ -31,18 +31,30 @@ class DatabaseConnection {
         return this.pool;
       }
 
-      this.pool = new Pool({
-        host: this.config.host,
-        port: this.config.port,
-        database: this.config.database,
-        user: this.config.user,
-        password: this.config.password,
-        max: this.config.maxConnections || 20,
-        min: this.config.minConnections || 5,
-        idleTimeoutMillis: this.config.idleTimeout || 30000,
-        connectionTimeoutMillis: this.config.connectionTimeout || 10000,
-        ssl: this.config.ssl || false
-      });
+      // Use connectionString if available (for Vercel), otherwise use individual parameters
+      if (this.config.connectionString) {
+        this.pool = new Pool({
+          connectionString: this.config.connectionString,
+          ssl: this.config.ssl || { rejectUnauthorized: false },
+          max: this.config.maxConnections || 20,
+          min: this.config.minConnections || 5,
+          idleTimeoutMillis: this.config.idleTimeout || 30000,
+          connectionTimeoutMillis: this.config.connectionTimeout || 10000
+        });
+      } else {
+        this.pool = new Pool({
+          host: this.config.host,
+          port: this.config.port,
+          database: this.config.database,
+          user: this.config.user,
+          password: this.config.password,
+          max: this.config.maxConnections || 20,
+          min: this.config.minConnections || 5,
+          idleTimeoutMillis: this.config.idleTimeout || 30000,
+          connectionTimeoutMillis: this.config.connectionTimeout || 10000,
+          ssl: this.config.ssl || false
+        });
+      }
 
       // Test connection
       const client = await this.pool.connect();

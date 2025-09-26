@@ -23,22 +23,33 @@ async function migrate() {
     const schemaPath = path.join(__dirname, '../src/schema/appointments.sql');
     const schema = fs.readFileSync(schemaPath, 'utf8');
 
-    // Split by semicolon and execute each statement
-    const statements = schema
-      .split(';')
-      .map(stmt => stmt.trim())
-      .filter(stmt => stmt.length > 0);
+    // Execute the entire schema as one statement to handle dollar-quoted strings
+    try {
+      await pool.query(schema);
+      console.log('✅ Executed schema successfully');
+    } catch (error) {
+      // If the entire schema fails, try to execute individual statements
+      console.log('⚠️  Full schema execution failed, trying individual statements...');
+      
+      // Split by semicolon and execute each statement
+      const statements = schema
+        .split(';')
+        .map(stmt => stmt.trim())
+        .filter(stmt => stmt.length > 0);
 
-    for (const statement of statements) {
-      if (statement.trim()) {
-        try {
-          await pool.query(statement);
-          console.log('✅ Executed statement');
-        } catch (error) {
-          // Ignore "already exists" errors
-          if (!error.message.includes('already exists')) {
-            console.error('❌ Error executing statement:', error.message);
-            throw error;
+      for (const statement of statements) {
+        if (statement.trim()) {
+          try {
+            await pool.query(statement);
+            console.log('✅ Executed statement');
+          } catch (error) {
+            // Ignore "already exists" errors
+            if (!error.message.includes('already exists') && !error.message.includes('already defined')) {
+              console.error('❌ Error executing statement:', error.message);
+              throw error;
+            } else {
+              console.log('⚠️  Statement already exists, skipping');
+            }
           }
         }
       }

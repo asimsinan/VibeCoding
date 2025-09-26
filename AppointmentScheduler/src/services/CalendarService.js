@@ -50,8 +50,9 @@ class CalendarService {
         startDate,
         endDate,
         // Include both CONFIRMED and PENDING appointments to show unavailable slots
-        status: [AppointmentStatus.CONFIRMED, AppointmentStatus.PENDING]
+        status: ['confirmed', 'pending']
       });
+      
       
       // Generate time slots for each day
       const calendarDays = await Promise.all(
@@ -67,6 +68,8 @@ class CalendarService {
           const dayAppointments = appointments.filter(appointment => {
             const appointmentDate = new Date(appointment.startTime);
             const dayDate = day.date; // day.date is already a Date object
+            
+            
             return appointmentDate.getFullYear() === dayDate.getFullYear() &&
                    appointmentDate.getMonth() === dayDate.getMonth() &&
                    appointmentDate.getDate() === dayDate.getDate();

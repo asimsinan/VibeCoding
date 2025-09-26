@@ -88,4 +88,4 @@ class DatabaseConfig {
   }
 }
 
-module.exports = new DatabaseConfig();
+module.exports = DatabaseConfig;
