@@ -24,6 +24,9 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 **Prompt**: *"Build an invoice generator that lets users enter client details and items and download as PDF, using React, CSS, and jsPDF."*
 
 ### [Challenge 3: Appointment Scheduler](./AppointmentScheduler/) (Built in 3.5 hours)
+**Prompt**: *"Build a personal finance dasboard to track spending categories and visualize with charts using React, Typescript, Tailwind, Chartjs."*
+
+### [Challenge 4: Personal Finance Dashboard](./PersonalFinanceDashboard/) (Built in 3 hours)
 **Prompt**: *"Create an appointment scheduler with a calendar view and booking slots, using React, Tailwind CSS, and date-handling library like date-fns"*
 
 ### Future Challenges

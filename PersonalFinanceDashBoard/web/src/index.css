@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for the Personal Finance Dashboard */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+}
+
+/* Custom component styles */
+.transaction-item {
+  @apply flex justify-between items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 mb-2;
+}
+
+.category-card {
+  @apply p-4 rounded-lg border-l-4 shadow-sm;
+}
+
+.category-income {
+  @apply border-green-500 bg-green-50;
+}
+
+.category-expense {
+  @apply border-red-500 bg-red-50;
+}

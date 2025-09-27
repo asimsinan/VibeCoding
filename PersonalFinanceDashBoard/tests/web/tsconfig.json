@@ -1,0 +1,22 @@
+{
+  "extends": "../../web/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "../../web",
+    "typeRoots": ["../../web/node_modules/@types", "../../node_modules/@types"],
+    "paths": {
+      "@/*": ["./src/*", "../src/*"]
+    },
+    "types": ["react", "jest", "node"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "module": "commonjs",
+    "target": "es2020"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "jest-setup.d.ts"
+  ]
+}

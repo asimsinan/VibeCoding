@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "rootDir": ".",
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts", "contracts/**/*.yaml", "knexfile.ts"],
+  "exclude": ["node_modules", "dist", "web"]
+}

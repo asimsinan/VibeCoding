@@ -1,0 +1,25 @@
+{
+  "name": "personal-finance-dashboard",
+  "version": "1.0.0",
+  "description": "Personal Finance Dashboard application",
+  "scripts": {
+    "start:api": "node api/server.js",
+    "start:web": "cd web && npm run dev",
+    "build": "cd web && npm run build",
+    "deploy": "vercel",
+    "deploy:prod": "vercel --prod",
+    "setup:db": "node setup-database.js",
+    "debug:db": "node debug-db.js"
+  },
+  "workspaces": [
+    "web",
+    "api"
+  ],
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "vercel": "33.1.0"
+  }
+}
