@@ -3,10 +3,16 @@
   "buildCommand": "cd web && npm run build",
   "outputDirectory": "web/dist",
   "framework": "vite",
-  "routes": [
-    { "src": "/api/(.*)", "dest": "api/$1.js" },
-    { "src": "/api/auth/login", "dest": "api/routes/auth.js" },
-    { "src": "/(.*)", "dest": "/web/dist/index.html" }
+  "rewrites": [
+    { "source": "/api/auth/login", "destination": "api/auth.js" },
+    { "source": "/api/categories", "destination": "api/categories.js" },
+    { "source": "/api/categories/:id", "destination": "api/categories.js" },
+    { "source": "/api/(.*)", "destination": "api/$1.js" },
+    { "source": "/", "destination": "/web/dist/index.html" },
+    { "source": "/login", "destination": "/web/dist/index.html" },
+    { "source": "/dashboard", "destination": "/web/dist/index.html" },
+    { "source": "/categories", "destination": "/web/dist/index.html" },
+    { "source": "/(.*)", "destination": "/web/dist/index.html" }
   ],
   "headers": [
     {
@@ -18,8 +24,5 @@
         { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" }
       ]
     }
-  ],
-  "env": {
-    "NEON_DATABASE_URL": "@neon_database_url"
-  }
+  ]
 }

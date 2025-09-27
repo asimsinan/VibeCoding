@@ -14,37 +14,37 @@ console.log('Environment Variables:', {
   NEON_DATABASE_URL: process.env.NEON_DATABASE_URL ? '[PRESENT]' : '[MISSING]'
 });
 
-// Create Knex connection
-const db = knex({
-  client: 'pg',
-  connection: {
-    connectionString: process.env.NEON_DATABASE_URL || FALLBACK_DATABASE_URL,
-    ssl: { 
-      rejectUnauthorized: false 
-    }
-  },
-  pool: {
-    min: 0,
-    max: 5,
-    createTimeoutMillis: 3000,
-    acquireTimeoutMillis: 30000,
-    idleTimeoutMillis: 30000,
-    reapIntervalMillis: 1000,
-    createRetryIntervalMillis: 100,
-    propagateCreateError: false
-  },
-  debug: true // Enable Knex debug logging
-});
+// Create a global variable to store the Knex instance
+let cachedDb = null;
 
-// Test connection
-db.raw('SELECT 1')
-  .then(() => console.log('Database connection successful'))
-  .catch((err) => {
-    console.error('Database connection error:', err);
-    console.error('Connection details:', {
-      connectionString: process.env.NEON_DATABASE_URL ? '[REDACTED]' : 'MISSING',
-      fallbackUsed: !process.env.NEON_DATABASE_URL
-    });
+// Function to create a new Knex instance
+function createKnexInstance() {
+  return knex({
+    client: 'pg',
+    connection: {
+      connectionString: process.env.NEON_DATABASE_URL || FALLBACK_DATABASE_URL,
+      ssl: { 
+        rejectUnauthorized: false 
+      }
+    },
+    pool: {
+      min: 0,
+      max: 2,  // Reduced for serverless environment
+      createTimeoutMillis: 3000,
+      acquireTimeoutMillis: 10000,
+      idleTimeoutMillis: 10000,
+      reapIntervalMillis: 1000,
+      createRetryIntervalMillis: 100,
+      propagateCreateError: false
+    },
+    debug: true // Enable Knex debug logging
   });
+}
 
-module.exports = db;
+// Export a function to get or create a Knex instance
+module.exports = () => {
+  if (!cachedDb) {
+    cachedDb = createKnexInstance();
+  }
+  return cachedDb;
+};

@@ -1,140 +1,157 @@
-const knex = require('knex');
+const getKnex = require('./db');
 
-// Create a connection pool outside the handler to reuse connections
-let dbPool = null;
-
-function getDbConnection() {
-  if (!dbPool) {
-    console.log('Creating new database connection pool');
-    dbPool = knex({
-      client: 'pg',
-      connection: {
-        connectionString: process.env.NEON_DATABASE_URL,
-        ssl: { 
-          rejectUnauthorized: false,
-          // Add additional SSL options if needed
-        }
-      },
-      pool: {
-        min: 0,
-        max: 5,
-        createTimeoutMillis: 3000,
-        acquireTimeoutMillis: 30000,
-        idleTimeoutMillis: 30000,
-        reapIntervalMillis: 1000,
-        createRetryIntervalMillis: 100,
-        propagateCreateError: false
-      }
-    });
+// Predefined demo users for testing
+const DEMO_USERS = [
+  {
+    email: 'demo@example.com',
+    password: 'demo_password_hash',
+    userId: 'a22002ba-8d08-41d4-8c07-62784123244a'
+  },
+  {
+    email: 'user2@example.com',
+    password: 'user2_password_hash',
+    userId: 'b33113cb-9d09-5d5f-9c07-73834123245b'
   }
-  return dbPool;
-}
+];
 
-module.exports = async function handler(req, res) {
-  // Log the full request details
-  console.log('Received request:', {
-    method: req.method,
-    headers: req.headers,
-    body: req.body,
-    query: req.query,
-    env: {
-      NEON_DATABASE_URL: process.env.NEON_DATABASE_URL ? 'SET' : 'UNSET'
-    }
-  });
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Credentials': 'true',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+  'Access-Control-Allow-Headers': 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
+};
 
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
-  );
-
-  // Handle OPTIONS request for CORS preflight
+// Vercel serverless function handler
+module.exports = async (req, res) => {
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
+    res.status(200).json({
+      headers: corsHeaders
+    });
     return;
   }
 
   // Only allow POST method for login
   if (req.method !== 'POST') {
-    console.warn('Invalid method for login', { method: req.method });
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
     return;
   }
 
-  // Ensure request body is parsed
-  if (!req.body) {
-    console.error('No request body received');
-    res.status(400).json({ error: 'Invalid request body' });
-    return;
-  }
+  // Set CORS headers
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
 
-  const { email, password } = req.body;
-
-  // Validate input
-  if (!email || !password) {
-    console.error('Missing email or password', { email: !!email, password: !!password });
-    res.status(400).json({ error: 'Email and password are required' });
-    return;
-  }
-
-  // Hardcode the demo credentials for now
-  const DEMO_EMAIL = 'demo@example.com';
-  const DEMO_PASSWORD = 'demo_password_hash';
-
-  let db;
   try {
-    // Get database connection
-    db = getDbConnection();
+    const { email, password } = req.body;
 
-    // Log database connection details
-    console.log('Database connection established');
+    console.log('Login attempt:', { 
+      email, 
+      password: password ? '[REDACTED]' : 'MISSING',
+      env: {
+        NODE_ENV: process.env.NODE_ENV,
+        NEON_DATABASE_URL: process.env.NEON_DATABASE_URL ? '[PRESENT]' : '[MISSING]'
+      }
+    });
 
-    // Find user by email
-    const user = await db('users')
-      .where({ email: DEMO_EMAIL })
-      .first();
-
-    // Log user lookup result
-    console.log('User lookup result:', user ? 'User found' : 'User not found', { email: DEMO_EMAIL });
-
-    // Simple password check (in a real app, use bcrypt)
-    if (!user || user.password_hash !== DEMO_PASSWORD) {
-      console.warn('Invalid login attempt', { email });
-      res.status(401).json({ error: 'Invalid credentials' });
+    // Validate input
+    if (!email || !password) {
+      console.error('Login failed: Missing email or password');
+      res.status(400).json({ error: 'Email and password are required' });
       return;
     }
 
-    // Generate a simple JWT (in a real app, use a proper JWT library)
-    const token = Buffer.from(JSON.stringify(user)).toString('base64');
+    // Get Knex instance
+    const knex = getKnex();
 
-    // Return user info and token
-    res.status(200).json({
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.username
-      }
+    // Check database connection
+    try {
+      await knex.raw('SELECT 1');
+      console.log('Database connection successful');
+    } catch (dbError) {
+      console.error('Database connection error:', dbError);
+      res.status(500).json({ 
+        error: 'Database connection failed', 
+        details: process.env.NODE_ENV === 'development' ? dbError.message : undefined 
+      });
+      return;
+    }
+
+    // Find user
+    let user;
+    try {
+      user = await knex('users')
+        .where({ 
+          email: email.toLowerCase()
+        })
+        .first();
+    } catch (queryError) {
+      console.error('User query error:', queryError);
+      res.status(500).json({ 
+        error: 'User lookup failed', 
+        details: process.env.NODE_ENV === 'development' ? queryError.message : undefined 
+      });
+      return;
+    }
+
+    console.log('User lookup result:', user ? 'User found' : 'User not found', 
+      user ? { 
+        id: user.id, 
+        email: user.email, 
+        passwordLength: user.password ? user.password.length : 'N/A' 
+      } : null
+    );
+
+    if (!user) {
+      res.status(401).json({ 
+        error: 'Invalid login attempt', 
+        details: { 
+          email, 
+          userCount: (await knex('users').count('* as count').first()).count 
+        } 
+      });
+      return;
+    }
+
+    // Check password (for demo, allow both hardcoded and current password)
+    const isValidPassword = 
+      password === user.password || 
+      DEMO_USERS.some(demoUser => 
+        demoUser.email === email && demoUser.password === password
+      );
+
+    console.log('Password validation:', {
+      inputPassword: password,
+      storedPassword: user.password,
+      isValidPassword,
+      demoUserMatch: DEMO_USERS.some(demoUser => 
+        demoUser.email === email && demoUser.password === password
+      )
+    });
+
+    if (!isValidPassword) {
+      res.status(401).json({ 
+        error: 'Invalid credentials', 
+        details: { 
+          email, 
+          passwordMatch: false 
+        } 
+      });
+      return;
+    }
+
+    // In a real app, generate JWT token here
+    res.status(200).json({ 
+      userId: user.id, 
+      email: user.email 
     });
   } catch (error) {
-    // Log full error details
-    console.error('Login error:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name,
-      env: {
-        NEON_DATABASE_URL: process.env.NEON_DATABASE_URL ? 'SET' : 'UNSET'
-      }
-    });
-
-    // Send generic error response
+    console.error('Unexpected login error:', error);
     res.status(500).json({ 
-      error: 'Internal server error',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: 'Login failed', 
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined 
     });
   }
 };
