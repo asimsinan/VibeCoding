@@ -4,18 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { setupApiClient } from '@/lib/api/apiClient';
 import { getApiBaseUrl } from '@/lib/config';
 
-// Demo users for testing
-const DEMO_USERS = [
-  {
-    email: 'demo@example.com',
-    password: 'demo_password_hash'
-  },
-  {
-    email: 'user2@example.com',
-    password: 'user2_password_hash'
-  }
-];
-
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>('demo@example.com');
   const [password, setPassword] = useState<string>('demo_password_hash');
@@ -32,67 +20,73 @@ const LoginPage: React.FC = () => {
     setError(null);
 
     try {
-      console.log('Attempting login with:', { email, apiBaseUrl: getApiBaseUrl() });
-
       const response = await apiClient.post('/auth/login', {
         email,
         password
+      }, {
+        // Explicitly set content type and handle different parsing scenarios
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
-      console.log('Login response:', response.data);
+      console.log('Login response:', {
+        status: response.status,
+        data: response.data
+      });
 
-      if (response.data.userId && response.data.email) {
-        // Modify login to use userId and email instead of token
-        login(response.data.userId, response.data.email);
+      if (response.data.token && response.data.user) {
+        login(response.data.token, response.data.user);
         navigate('/dashboard');
       } else {
-        console.error('Unexpected login response:', response.data);
-        setError('Login failed. Unexpected server response.');
+        // More detailed error handling
+        setError(
+          response.data.details?.loginAttempt === 'Successful' 
+            ? 'Login failed. Please try again.' 
+            : 'Invalid login credentials.'
+        );
       }
     } catch (error: any) {
-      console.error('Full login error:', error);
-      
-      // More detailed error logging
+      console.error('Login error:', {
+        name: error.name,
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+
+      // More comprehensive error handling
       if (error.response) {
         // The request was made and the server responded with a status code
-        console.error('Server responded with error:', {
-          status: error.response.status,
-          data: error.response.data
-        });
+        const errorDetails = error.response.data;
         
-        // More user-friendly error messages
-        switch (error.response.status) {
-          case 401:
-            setError('Invalid email or password. Please try again.');
-            break;
-          case 400:
-            setError('Please provide both email and password.');
-            break;
-          case 500:
-            setError('Server error. Please try again later.');
-            break;
-          default:
-            setError(error.response.data.error || 'Login failed. Please check your credentials.');
+        if (error.response.status === 401) {
+          setError(
+            errorDetails.details?.userFound === false 
+              ? 'User not found.' 
+              : 'Invalid email or password.'
+          );
+        } else if (error.response.status === 400) {
+          setError(
+            errorDetails.details?.emailProvided === false 
+              ? 'Email is required.' 
+              : 'Invalid login request.'
+          );
+        } else {
+          setError(
+            errorDetails.error || 
+            'An unexpected error occurred during login.'
+          );
         }
       } else if (error.request) {
         // The request was made but no response was received
-        console.error('No response received:', error.request);
-        setError('No response from server. Please check your network connection.');
+        setError('No response from server. Please check your connection.');
       } else {
         // Something happened in setting up the request
-        console.error('Error setting up login request:', error.message);
-        setError('An unexpected error occurred. Please try again.');
+        setError('Error setting up login request.');
       }
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Quick login helper for demo users
-  const quickLogin = (userIndex: number) => {
-    const user = DEMO_USERS[userIndex];
-    setEmail(user.email);
-    setPassword(user.password);
   };
 
   return (
@@ -153,11 +147,11 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex space-x-4">
+          <div>
             <button
               type="submit"
               disabled={isLoading}
-              className={`flex-grow flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
                 isLoading
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
@@ -175,18 +169,6 @@ const LoginPage: React.FC = () => {
                 'Sign in'
               )}
             </button>
-            <div className="flex space-x-2">
-              {DEMO_USERS.map((user, index) => (
-                <button
-                  key={user.email}
-                  type="button"
-                  onClick={() => quickLogin(index)}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md text-sm"
-                >
-                  Demo {index + 1}
-                </button>
-              ))}
-            </div>
           </div>
         </form>
       </div>

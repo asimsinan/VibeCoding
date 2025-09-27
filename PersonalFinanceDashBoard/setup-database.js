@@ -1,127 +1,102 @@
-const { Client } = require('pg');
-const dotenv = require('dotenv');
+#!/usr/bin/env node
+
+/**
+ * Database Setup Script for Personal Finance Dashboard
+ * This script sets up the database tables on your Neon PostgreSQL database
+ */
+
+const knex = require('knex');
 const path = require('path');
 
-// Load environment variables
-dotenv.config();
+// Database configuration
+const db = knex({
+  client: 'pg',
+  connection: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_iS8ZtyQvNOn9@ep-rough-pine-adxhszaa-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require',
+  migrations: {
+    directory: path.join(__dirname, 'database/migrations')
+  }
+});
 
 async function setupDatabase() {
-  console.log('🚀 Setting up Personal Finance Dashboard database...');
-
-  // Database connection configuration
-  const connectionConfig = {
-    connectionString: process.env.NEON_DATABASE_URL,
-    ssl: { 
-      rejectUnauthorized: false 
-    }
-  };
-
-  const client = new Client(connectionConfig);
-
   try {
-    // Connect to the database
-    await client.connect();
-    console.log('📦 Connected to database successfully');
-
-    // Drop existing tables if they exist (for clean setup)
-    await client.query('DROP TABLE IF EXISTS transactions');
-    await client.query('DROP TABLE IF EXISTS categories');
-    await client.query('DROP TABLE IF EXISTS users');
-
-    // Create users table with explicit password column
-    await client.query(`
-      CREATE TABLE users (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log('👥 Users table created');
-
-    // Create categories table
-    await client.query(`
-      CREATE TABLE categories (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        name VARCHAR(100) NOT NULL,
-        type VARCHAR(50) NOT NULL CHECK (type IN ('income', 'expense')),
-        user_id UUID REFERENCES users(id),
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log('📁 Categories table created');
-
-    // Create transactions table
-    await client.query(`
-      CREATE TABLE transactions (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        amount NUMERIC(10, 2) NOT NULL,
-        type VARCHAR(50) NOT NULL CHECK (type IN ('income', 'expense')),
-        date DATE NOT NULL,
-        description TEXT,
-        category_id UUID REFERENCES categories(id),
-        user_id UUID REFERENCES users(id),
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log('💰 Transactions table created');
-
-    // Create demo users
-    const users = [
-      {
-        id: 'a22002ba-8d08-41d4-8c07-62784123244a',
+    console.log('🚀 Setting up Personal Finance Dashboard database...');
+    
+    // Run migrations
+    console.log('📦 Running database migrations...');
+    await db.migrate.latest();
+    console.log('✅ Migrations completed successfully!');
+    
+    // Create a sample user first (required for foreign key constraint)
+    console.log('👤 Setting up default user...');
+    const defaultUserId = 'a22002ba-8d08-41d4-8c07-62784123244a';
+    const existingUser = await db('users').where('id', defaultUserId).first();
+    
+    if (!existingUser) {
+      await db('users').insert({
+        id: defaultUserId,
+        username: 'demo_user',
         email: 'demo@example.com',
-        password: 'demo_password_hash'
-      },
-      {
-        id: 'b33113cb-9d09-5d5f-9c07-73834123245b',
-        email: 'user2@example.com',
-        password: 'user2_password_hash'
-      }
-    ];
-
-    // Insert demo users
-    for (const user of users) {
-      await client.query(`
-        INSERT INTO users (id, email, password) 
-        VALUES ($1, $2, $3)
-      `, [user.id, user.email, user.password]);
-      console.log(`🧑 User created: ${user.email}`);
+        password_hash: 'demo_password_hash', // In production, this should be properly hashed
+        created_at: new Date(),
+        updated_at: new Date()
+      });
+      console.log('✅ Default user created successfully!');
+    } else {
+      console.log('ℹ️  Default user already exists, skipping...');
     }
-
-    // Seed default categories for demo users
+    
+    // Create some default categories
+    console.log('📝 Creating default categories...');
+    
     const defaultCategories = [
-      { name: 'Salary', type: 'income', userId: 'a22002ba-8d08-41d4-8c07-62784123244a' },
-      { name: 'Freelance', type: 'income', userId: 'a22002ba-8d08-41d4-8c07-62784123244a' },
-      { name: 'Groceries', type: 'expense', userId: 'a22002ba-8d08-41d4-8c07-62784123244a' },
-      { name: 'Dining Out', type: 'expense', userId: 'a22002ba-8d08-41d4-8c07-62784123244a' },
-      { name: 'Rent', type: 'expense', userId: 'a22002ba-8d08-41d4-8c07-62784123244a' },
-      
-      // Categories for the second user
-      { name: 'Consulting', type: 'income', userId: 'b33113cb-9d09-5d5f-9c07-73834123245b' },
-      { name: 'Investments', type: 'income', userId: 'b33113cb-9d09-5d5f-9c07-73834123245b' },
-      { name: 'Utilities', type: 'expense', userId: 'b33113cb-9d09-5d5f-9c07-73834123245b' },
-      { name: 'Transportation', type: 'expense', userId: 'b33113cb-9d09-5d5f-9c07-73834123245b' }
+      { name: 'Food & Dining', type: 'expense' },
+      { name: 'Transportation', type: 'expense' },
+      { name: 'Entertainment', type: 'expense' },
+      { name: 'Shopping', type: 'expense' },
+      { name: 'Bills & Utilities', type: 'expense' },
+      { name: 'Healthcare', type: 'expense' },
+      { name: 'Education', type: 'expense' },
+      { name: 'Travel', type: 'expense' },
+      { name: 'Salary', type: 'income' },
+      { name: 'Freelance', type: 'income' },
+      { name: 'Investment', type: 'income' },
+      { name: 'Other Income', type: 'income' }
     ];
 
-    for (const category of defaultCategories) {
-      await client.query(`
-        INSERT INTO categories (name, type, user_id) 
-        VALUES ($1, $2, $3)
-      `, [category.name, category.type, category.userId]);
+    // Check if categories already exist
+    const existingCategories = await db('categories').count('* as count').first();
+    
+    if (parseInt(existingCategories.count) === 0) {
+      // Insert default categories with the default user ID
+      const categoriesToInsert = defaultCategories.map(category => ({
+        ...category,
+        user_id: defaultUserId,
+        created_at: new Date(),
+        updated_at: new Date()
+      }));
+      
+      await db('categories').insert(categoriesToInsert);
+      console.log('✅ Default categories created successfully!');
+    } else {
+      console.log('ℹ️  Categories already exist, skipping...');
     }
-    console.log('📝 Default categories created');
-
-    console.log('✅ Database setup completed successfully!');
+    
+    console.log('🎉 Database setup completed successfully!');
+    console.log('');
+    console.log('📊 Your database is ready with:');
+    console.log('   - Users table');
+    console.log('   - Categories table (with default categories)');
+    console.log('   - Transactions table');
+    console.log('');
+    console.log('🔗 You can now deploy to Vercel!');
+    
   } catch (error) {
     console.error('❌ Error setting up database:', error);
-    throw error;
+    process.exit(1);
   } finally {
-    await client.end();
+    await db.destroy();
   }
 }
 
-setupDatabase().catch(console.error);
+// Run the setup
+setupDatabase();

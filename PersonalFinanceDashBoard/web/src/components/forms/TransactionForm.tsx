@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { setupApiClient } from '@/lib/api/apiClient';
 import { Transaction, Category, ensureNumber, formatDate } from '@/lib/finance-tracker/models';
@@ -6,18 +6,16 @@ import { ApiClient } from '@/lib/api/apiClient'; // Import ApiClient type
 import { getApiBaseUrl } from '@/lib/config';
 import { getCurrentUserId } from '@/lib/constants';
 
-// Define transaction creation type to ensure type safety
-type TransactionCreation = Omit<Transaction, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
-
 interface TransactionFormProps {
   apiClient?: ApiClient; // Optional apiClient prop for testing
 }
 
+// TODO: Replace with dynamic token and user ID from AuthContext 
+
 const TransactionForm: React.FC<TransactionFormProps> = ({ apiClient: injectedApiClient }) => {
   const queryClient = useQueryClient();
-  const currentApiClient = injectedApiClient || setupApiClient(getApiBaseUrl(), 'your-auth-token');
+  const currentApiClient = injectedApiClient || setupApiClient(getApiBaseUrl(), 'your-auth-token'); // Use injected or default client
 
-  // State with explicit types and initial values
   const [description, setDescription] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [type, setType] = useState<'expense' | 'income'>('expense');
@@ -27,62 +25,18 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ apiClient: injectedAp
   const [isError, setIsError] = useState<boolean>(false);
 
   // Fetch categories for the dropdown
-  const { 
-    data: categoriesData, 
-    isLoading: categoriesLoading,
-    error: categoriesError 
-  } = useQuery({
+  const { data: categories } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: async () => {
-      try {
-        console.log('Fetching categories with base URL:', getApiBaseUrl());
-        console.log('Current User ID:', getCurrentUserId());
-        
-        const response = await currentApiClient.get<Category[]>('/categories', {
-          params: { userId: getCurrentUserId() }
-        });
-        
-        console.log('Categories API Response:', response);
-        
-        // Ensure response is an array and has valid categories
-        const validCategories = Array.isArray(response.data) 
-          ? response.data.filter(category => 
-              category && 
-              typeof category === 'object' &&
-              typeof category.name === 'string' && 
-              (category.type === 'income' || category.type === 'expense')
-            ) 
-          : [];
-        
-        console.log('Valid Categories:', validCategories);
-        return validCategories;
-      } catch (error) {
-        console.error('Failed to fetch categories:', error);
-        throw error;
-      }
+      const response = await currentApiClient.get<Category[]>('/categories', {
+        params: { userId: getCurrentUserId() }
+      });
+      return response.data;
     },
-    // Use error option instead of onError
-    retry: 1,
-    refetchOnWindowFocus: false,
-    throwOnError: (error: Error) => {
-      console.error('Categories Query Error:', error.message);
-      return false;
-    }
   });
 
-  // Memoize filtered categories to improve performance
-  const filteredCategories = useMemo(() => {
-    // Ensure categoriesData is an array before filtering
-    return (categoriesData || []).filter((cat: Category) => cat.type === type);
-  }, [categoriesData, type]);
-
-  // Transaction creation mutation with improved type safety
-  const createTransactionMutation = useMutation<
-    Transaction,  // Return type
-    Error,        // Error type
-    TransactionCreation // Mutation input type
-  >({
-    mutationFn: async (newTransaction) => {
+  const createTransactionMutation = useMutation<Transaction, Error, Omit<Transaction, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>({
+    mutationFn: async (newTransaction: Omit<Transaction, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
       const response = await currentApiClient.post<Transaction>('/transactions', { 
         ...newTransaction, 
         amount: ensureNumber(newTransaction.amount), // Ensure amount is a number
@@ -97,8 +51,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ apiClient: injectedAp
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
       queryClient.invalidateQueries({ queryKey: ['spending-by-category'] });
-      
-      // Reset form state
       setMessage('Transaction created successfully!');
       setIsError(false);
       setDescription('');
@@ -112,7 +64,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ apiClient: injectedAp
     },
   });
 
-  // Form submission handler with comprehensive validation
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
@@ -120,15 +71,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ apiClient: injectedAp
 
     const processedAmount = ensureNumber(amount);
 
-    // Validation checks
-    if (!description || description.trim() === '') {
-      setMessage('Description is required.');
-      setIsError(true);
-      return;
-    }
-
-    if (processedAmount <= 0) {
-      setMessage('Amount must be a positive number.');
+    if (!description || processedAmount <= 0) {
+      setMessage('Description and Amount are required, and Amount must be positive.');
       setIsError(true);
       return;
     }
@@ -139,7 +83,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ apiClient: injectedAp
       return;
     }
 
-    // Proceed with transaction creation
     createTransactionMutation.mutate({
       description,
       amount: processedAmount,
@@ -148,24 +91,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ apiClient: injectedAp
       category_id: categoryId,
     });
   };
-
-  // Render loading state for categories
-  if (categoriesLoading) {
-    return (
-      <div className="text-center py-4 text-gray-500">
-        Loading categories...
-      </div>
-    );
-  }
-
-  // Render category fetch error
-  if (categoriesError) {
-    return (
-      <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded">
-        Failed to load categories. Please try again.
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -268,11 +193,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ apiClient: injectedAp
             required
           >
             <option value="">Select a category</option>
-            {filteredCategories.map((category: Category) => (
-              <option 
-                key={category.id || crypto.randomUUID()} 
-                value={category.id || ''}
-              >
+            {categories?.filter(cat => cat.type === type).map((category) => (
+              <option key={category.id} value={category.id}>
                 {category.name}
               </option>
             ))}

@@ -10,19 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors({
-  origin: ['http://localhost:5173', 'https://personalfinancedashboard.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 app.use(express.json());
-
-// Logging middleware
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
-  console.log('Request body:', req.body);
-  next();
-});
 
 // Routes
 const categoriesRoute = require('./routes/categories');
@@ -34,19 +23,9 @@ app.use('/api/categories', categoriesRoute);
 app.use('/api/transactions', transactionsRoute);
 app.use('/api/auth', authRoute);
 
-// 404 handler
-app.use((req, res, next) => {
-  console.error(`404 - Not Found: ${req.method} ${req.path}`);
-  res.status(404).json({ 
-    error: 'Not Found', 
-    path: req.path,
-    method: req.method 
-  });
-});
-
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Unhandled Error:', err);
+  console.error(err.stack);
   res.status(500).json({ 
     error: 'Something went wrong!',
     details: process.env.NODE_ENV === 'development' ? err.message : undefined
@@ -54,18 +33,8 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log('Environment:', process.env.NODE_ENV || 'development');
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server');
-  server.close(() => {
-    console.log('HTTP server closed');
-    process.exit(0);
-  });
 });
 
 module.exports = app;
