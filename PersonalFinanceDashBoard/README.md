@@ -3,6 +3,12 @@
 ## 🚀 Project Overview
 A comprehensive personal finance tracking application with features for managing transactions, categories, and financial insights.
 
+## 🌐 Live Demo
+
+**Try it now**: [https://personalfinancedashboard.vercel.app/](https://personalfinancedashboard.vercel.app/)
+
+The application is deployed on Vercel and ready to use immediately!
+
 ## 📋 Prerequisites
 - Node.js (v16+ recommended)
 - npm or yarn
