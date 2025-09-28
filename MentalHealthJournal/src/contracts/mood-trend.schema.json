@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mood Trend Schema",
+  "description": "JSON schema for mood trend validation",
+  "type": "object",
+  "required": ["period", "dataPoints", "statistics"],
+  "properties": {
+    "period": {
+      "type": "string",
+      "enum": ["7", "30", "90", "365"],
+      "description": "Time period for trend analysis in days"
+    },
+    "dataPoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "rating"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of the mood data point"
+          },
+          "rating": {
+            "type": "number",
+            "description": "Average mood rating for this date"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of entries for this date"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Array of mood data points for the trend"
+    },
+    "statistics": {
+      "type": "object",
+      "required": ["average", "min", "max", "totalEntries"],
+      "properties": {
+        "average": {
+          "type": "number",
+          "description": "Average mood rating for the period"
+        },
+        "min": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Minimum mood rating for the period"
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Maximum mood rating for the period"
+        },
+        "totalEntries": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of mood entries in the period"
+        },
+        "trend": {
+          "type": "string",
+          "enum": ["increasing", "decreasing", "stable"],
+          "description": "Overall trend direction"
+        }
+      },
+      "additionalProperties": false
+    },
+    "startDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Start date of the trend period"
+    },
+    "endDate": {
+      "type": "string",
+      "format": "date",
+      "description": "End date of the trend period"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,365 @@
+{
+  "entries": [
+    [
+      "entry-1",
+      {
+        "userId": "default-user",
+        "rating": 7,
+        "notes": "Had a great day at work!",
+        "entryDate": "2025-09-27",
+        "status": "active",
+        "tags": [
+          "work",
+          "productive"
+        ],
+        "metadata": {},
+        "id": "entry-1",
+        "createdAt": "2025-09-28T15:38:02.415Z",
+        "updatedAt": "2025-09-28T15:38:02.415Z"
+      }
+    ],
+    [
+      "entry-2",
+      {
+        "userId": "default-user",
+        "rating": 6,
+        "notes": "Went for a long walk in the park",
+        "entryDate": "2025-09-26",
+        "status": "active",
+        "tags": [
+          "exercise",
+          "nature"
+        ],
+        "metadata": {},
+        "id": "entry-2",
+        "createdAt": "2025-09-28T15:38:02.422Z",
+        "updatedAt": "2025-09-28T15:38:02.422Z"
+      }
+    ],
+    [
+      "entry-3",
+      {
+        "userId": "default-user",
+        "rating": 8,
+        "notes": "Spent time with family, very relaxing",
+        "entryDate": "2025-09-25",
+        "status": "active",
+        "tags": [
+          "family",
+          "relaxing"
+        ],
+        "metadata": {},
+        "id": "entry-3",
+        "createdAt": "2025-09-28T15:38:02.427Z",
+        "updatedAt": "2025-09-28T15:38:02.427Z"
+      }
+    ],
+    [
+      "entry-4",
+      {
+        "userId": "default-user",
+        "rating": 5,
+        "notes": "Completed a challenging project",
+        "entryDate": "2025-09-24",
+        "status": "active",
+        "tags": [
+          "work",
+          "challenge"
+        ],
+        "metadata": {},
+        "id": "entry-4",
+        "createdAt": "2025-09-28T15:38:02.431Z",
+        "updatedAt": "2025-09-28T15:38:02.431Z"
+      }
+    ],
+    [
+      "entry-5",
+      {
+        "userId": "default-user",
+        "rating": 9,
+        "notes": "Had coffee with a friend",
+        "entryDate": "2025-09-23",
+        "status": "active",
+        "tags": [
+          "social",
+          "friends"
+        ],
+        "metadata": {},
+        "id": "entry-5",
+        "createdAt": "2025-09-28T15:38:02.436Z",
+        "updatedAt": "2025-09-28T15:38:02.436Z"
+      }
+    ],
+    [
+      "entry-6",
+      {
+        "userId": "default-user",
+        "rating": 4,
+        "notes": "Read a good book",
+        "entryDate": "2025-09-22",
+        "status": "active",
+        "tags": [
+          "reading",
+          "quiet"
+        ],
+        "metadata": {},
+        "id": "entry-6",
+        "createdAt": "2025-09-28T15:38:02.441Z",
+        "updatedAt": "2025-09-28T15:38:02.441Z"
+      }
+    ],
+    [
+      "entry-7",
+      {
+        "userId": "default-user",
+        "rating": 6,
+        "notes": "Cooked a delicious meal",
+        "entryDate": "2025-09-21",
+        "status": "active",
+        "tags": [
+          "food",
+          "cooking"
+        ],
+        "metadata": {},
+        "id": "entry-7",
+        "createdAt": "2025-09-28T15:38:02.446Z",
+        "updatedAt": "2025-09-28T15:38:02.446Z"
+      }
+    ],
+    [
+      "entry-8",
+      {
+        "userId": "default-user",
+        "rating": 7,
+        "notes": "Exercised and felt strong",
+        "entryDate": "2025-09-20",
+        "status": "active",
+        "tags": [
+          "exercise",
+          "health"
+        ],
+        "metadata": {},
+        "id": "entry-8",
+        "createdAt": "2025-09-28T15:38:02.453Z",
+        "updatedAt": "2025-09-28T15:38:02.453Z"
+      }
+    ],
+    [
+      "entry-9",
+      {
+        "userId": "default-user",
+        "rating": 5,
+        "notes": "Watched a funny movie",
+        "entryDate": "2025-09-19",
+        "status": "active",
+        "tags": [
+          "entertainment",
+          "relaxing"
+        ],
+        "metadata": {},
+        "id": "entry-9",
+        "createdAt": "2025-09-28T15:38:02.457Z",
+        "updatedAt": "2025-09-28T15:38:02.457Z"
+      }
+    ],
+    [
+      "entry-10",
+      {
+        "userId": "default-user",
+        "rating": 8,
+        "notes": "Learned something new",
+        "entryDate": "2025-09-18",
+        "status": "active",
+        "tags": [
+          "learning",
+          "growth"
+        ],
+        "metadata": {},
+        "id": "entry-10",
+        "createdAt": "2025-09-28T15:38:02.460Z",
+        "updatedAt": "2025-09-28T15:38:02.460Z"
+      }
+    ],
+    [
+      "entry-11",
+      {
+        "userId": "default-user",
+        "rating": 6,
+        "notes": "Helped someone with their problem",
+        "entryDate": "2025-09-17",
+        "status": "active",
+        "tags": [
+          "helping",
+          "social"
+        ],
+        "metadata": {},
+        "id": "entry-11",
+        "createdAt": "2025-09-28T15:38:02.463Z",
+        "updatedAt": "2025-09-28T15:38:02.463Z"
+      }
+    ],
+    [
+      "entry-12",
+      {
+        "userId": "default-user",
+        "rating": 7,
+        "notes": "Enjoyed the beautiful weather",
+        "entryDate": "2025-09-16",
+        "status": "active",
+        "tags": [
+          "nature",
+          "outdoor"
+        ],
+        "metadata": {},
+        "id": "entry-12",
+        "createdAt": "2025-09-28T15:38:02.465Z",
+        "updatedAt": "2025-09-28T15:38:02.465Z"
+      }
+    ],
+    [
+      "entry-13",
+      {
+        "userId": "default-user",
+        "rating": 5,
+        "notes": "Had a productive meeting",
+        "entryDate": "2025-09-15",
+        "status": "active",
+        "tags": [
+          "work",
+          "productive"
+        ],
+        "metadata": {},
+        "id": "entry-13",
+        "createdAt": "2025-09-28T15:38:02.469Z",
+        "updatedAt": "2025-09-28T15:38:02.469Z"
+      }
+    ],
+    [
+      "entry-14",
+      {
+        "userId": "default-user",
+        "rating": 8,
+        "notes": "Received positive feedback",
+        "entryDate": "2025-09-14",
+        "status": "active",
+        "tags": [
+          "work",
+          "achievement"
+        ],
+        "metadata": {},
+        "id": "entry-14",
+        "createdAt": "2025-09-28T15:38:02.471Z",
+        "updatedAt": "2025-09-28T15:38:02.471Z"
+      }
+    ],
+    [
+      "entry-15",
+      {
+        "userId": "default-user",
+        "rating": 6,
+        "notes": "Made progress on my goals",
+        "entryDate": "2025-09-13",
+        "status": "active",
+        "tags": [
+          "goals",
+          "progress"
+        ],
+        "metadata": {},
+        "id": "entry-15",
+        "createdAt": "2025-09-28T15:38:02.473Z",
+        "updatedAt": "2025-09-28T15:38:02.473Z"
+      }
+    ],
+    [
+      "entry-16",
+      {
+        "userId": "default-user",
+        "rating": 7,
+        "notes": "Enjoyed a quiet evening",
+        "entryDate": "2025-09-12",
+        "status": "active",
+        "tags": [
+          "relaxing",
+          "quiet"
+        ],
+        "metadata": {},
+        "id": "entry-16",
+        "createdAt": "2025-09-28T15:38:02.476Z",
+        "updatedAt": "2025-09-28T15:38:02.476Z"
+      }
+    ],
+    [
+      "entry-17",
+      {
+        "userId": "default-user",
+        "rating": 5,
+        "notes": "Had a meaningful conversation",
+        "entryDate": "2025-09-11",
+        "status": "active",
+        "tags": [
+          "social",
+          "meaningful"
+        ],
+        "metadata": {},
+        "id": "entry-17",
+        "createdAt": "2025-09-28T15:38:02.478Z",
+        "updatedAt": "2025-09-28T15:38:02.478Z"
+      }
+    ],
+    [
+      "entry-18",
+      {
+        "userId": "default-user",
+        "rating": 8,
+        "notes": "Tried a new hobby",
+        "entryDate": "2025-09-10",
+        "status": "active",
+        "tags": [
+          "creative",
+          "learning"
+        ],
+        "metadata": {},
+        "id": "entry-18",
+        "createdAt": "2025-09-28T15:38:02.480Z",
+        "updatedAt": "2025-09-28T15:38:02.480Z"
+      }
+    ],
+    [
+      "entry-19",
+      {
+        "userId": "default-user",
+        "rating": 6,
+        "notes": "Volunteered for a good cause",
+        "entryDate": "2025-09-09",
+        "status": "active",
+        "tags": [
+          "helping",
+          "volunteer"
+        ],
+        "metadata": {},
+        "id": "entry-19",
+        "createdAt": "2025-09-28T15:38:02.483Z",
+        "updatedAt": "2025-09-28T15:38:02.483Z"
+      }
+    ],
+    [
+      "entry-20",
+      {
+        "userId": "default-user",
+        "rating": 7,
+        "notes": "Celebrated a small victory",
+        "entryDate": "2025-09-08",
+        "status": "active",
+        "tags": [
+          "celebration",
+          "achievement"
+        ],
+        "metadata": {},
+        "id": "entry-20",
+        "createdAt": "2025-09-28T15:38:02.485Z",
+        "updatedAt": "2025-09-28T15:38:02.485Z"
+      }
+    ]
+  ],
+  "nextId": 21
+}

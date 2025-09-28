@@ -1,0 +1,10 @@
+
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" fill="#3B82F6" rx="19.200000000000003"/>
+  <circle cx="57.599999999999994" cy="67.19999999999999" r="15.36" fill="white"/>
+  <circle cx="134.39999999999998" cy="67.19999999999999" r="15.36" fill="white"/>
+  <path d="M 48 115.19999999999999 Q 96 153.60000000000002 144 115.19999999999999" 
+        stroke="white" stroke-width="9.600000000000001" fill="none" stroke-linecap="round"/>
+  <text x="96" y="172.8" text-anchor="middle" fill="white" 
+        font-family="Arial, sans-serif" font-size="28.799999999999997" font-weight="bold">M</text>
+</svg>

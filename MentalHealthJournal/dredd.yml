@@ -1,0 +1,21 @@
+# Dredd configuration for contract testing
+# Generated from OpenAPI specification
+
+language: nodejs
+reporter: [cli, html]
+output: [reports/contract-test-results.html]
+color: true
+dry-run: false
+hookfiles: [src/tests/contract/hooks.js]
+sandbox: false
+require: [src/tests/contract/hooks.js]
+timeout: 5000
+exit: true
+sorted: false
+user: null
+inline-errors: false
+details: true
+method: [GET, POST, PUT, DELETE]
+header: [X-API-Key: test-api-key]
+path: [src/contracts/openapi.yaml]
+server: http://localhost:3000

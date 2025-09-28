@@ -1,0 +1,92 @@
+[
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "rating": 7,
+    "notes": "Feeling good today, had a great workout",
+    "date": "2024-01-28",
+    "createdAt": "2024-01-28T10:30:00Z",
+    "updatedAt": "2024-01-28T10:30:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174001",
+    "rating": 6,
+    "notes": "Okay day, work was stressful",
+    "date": "2024-01-27",
+    "createdAt": "2024-01-27T18:45:00Z",
+    "updatedAt": "2024-01-27T18:45:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174002",
+    "rating": 8,
+    "notes": "Great day! Spent time with family",
+    "date": "2024-01-26",
+    "createdAt": "2024-01-26T20:15:00Z",
+    "updatedAt": "2024-01-26T20:15:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174003",
+    "rating": 5,
+    "notes": "Tough day, feeling overwhelmed",
+    "date": "2024-01-25",
+    "createdAt": "2024-01-25T16:20:00Z",
+    "updatedAt": "2024-01-25T16:20:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174004",
+    "rating": 9,
+    "notes": "Amazing day! Got a promotion at work",
+    "date": "2024-01-24",
+    "createdAt": "2024-01-24T14:30:00Z",
+    "updatedAt": "2024-01-24T14:30:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174005",
+    "rating": 7,
+    "notes": "Good day, productive at work",
+    "date": "2024-01-23",
+    "createdAt": "2024-01-23T19:00:00Z",
+    "updatedAt": "2024-01-23T19:00:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174006",
+    "rating": 6,
+    "notes": "Average day, nothing special",
+    "date": "2024-01-22",
+    "createdAt": "2024-01-22T17:30:00Z",
+    "updatedAt": "2024-01-22T17:30:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174007",
+    "rating": 8,
+    "notes": "Great day! Went for a long walk",
+    "date": "2024-01-21",
+    "createdAt": "2024-01-21T21:00:00Z",
+    "updatedAt": "2024-01-21T21:00:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174008",
+    "rating": 4,
+    "notes": "Difficult day, feeling anxious",
+    "date": "2024-01-20",
+    "createdAt": "2024-01-20T15:45:00Z",
+    "updatedAt": "2024-01-20T15:45:00Z",
+    "synced": true
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174009",
+    "rating": 7,
+    "notes": "Good day, had a nice dinner with friends",
+    "date": "2024-01-19",
+    "createdAt": "2024-01-19T22:30:00Z",
+    "updatedAt": "2024-01-19T22:30:00Z",
+    "synced": true
+  }
+]

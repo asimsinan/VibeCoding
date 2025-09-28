@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mood Entry Schema",
+  "description": "JSON schema for mood entry validation",
+  "type": "object",
+  "required": ["rating", "date"],
+  "properties": {
+    "rating": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Mood rating on a scale of 1-10"
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Optional notes about the mood"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the mood entry in ISO 8601 format (YYYY-MM-DD)"
+    }
+  },
+  "additionalProperties": false
+}

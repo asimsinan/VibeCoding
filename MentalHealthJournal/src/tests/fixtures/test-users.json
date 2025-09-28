@@ -1,0 +1,65 @@
+[
+  {
+    "id": "user-123e4567-e89b-12d3-a456-426614174000",
+    "preferences": {
+      "theme": "auto",
+      "notifications": true,
+      "dataRetention": 365
+    },
+    "privacy": {
+      "dataSharing": false,
+      "cloudSync": true,
+      "exportData": true
+    },
+    "chartPreferences": {
+      "defaultPeriod": "30",
+      "chartType": "line",
+      "showGrid": true,
+      "showDataPoints": true
+    },
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-28T10:30:00Z"
+  },
+  {
+    "id": "user-123e4567-e89b-12d3-a456-426614174001",
+    "preferences": {
+      "theme": "dark",
+      "notifications": false,
+      "dataRetention": 180
+    },
+    "privacy": {
+      "dataSharing": true,
+      "cloudSync": false,
+      "exportData": false
+    },
+    "chartPreferences": {
+      "defaultPeriod": "7",
+      "chartType": "bar",
+      "showGrid": false,
+      "showDataPoints": false
+    },
+    "createdAt": "2024-01-15T00:00:00Z",
+    "updatedAt": "2024-01-28T10:30:00Z"
+  },
+  {
+    "id": "user-123e4567-e89b-12d3-a456-426614174002",
+    "preferences": {
+      "theme": "light",
+      "notifications": true,
+      "dataRetention": 730
+    },
+    "privacy": {
+      "dataSharing": false,
+      "cloudSync": true,
+      "exportData": true
+    },
+    "chartPreferences": {
+      "defaultPeriod": "90",
+      "chartType": "area",
+      "showGrid": true,
+      "showDataPoints": true
+    },
+    "createdAt": "2024-01-10T00:00:00Z",
+    "updatedAt": "2024-01-28T10:30:00Z"
+  }
+]
