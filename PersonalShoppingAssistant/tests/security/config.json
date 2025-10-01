@@ -1,0 +1,115 @@
+{
+  "security": {
+    "baseUrl": "http://localhost:3001",
+    "timeout": 10000,
+    "resultsDir": "./tests/security/results",
+    "testUser": {
+      "email": "securitytest@example.com",
+      "password": "SecurityTest123!",
+      "name": "Security Test User",
+      "preferences": {
+        "categories": ["Electronics"],
+        "priceRange": { "min": 0, "max": 1000 },
+        "brands": ["Apple", "Samsung"],
+        "stylePreferences": ["Modern"]
+      }
+    }
+  },
+  "vulnerabilities": {
+    "sqlInjection": {
+      "enabled": true,
+      "payloads": [
+        "' OR '1'='1",
+        "'; DROP TABLE users; --",
+        "' UNION SELECT * FROM users --",
+        "admin'--",
+        "1' OR 1=1 --"
+      ]
+    },
+    "xss": {
+      "enabled": true,
+      "payloads": [
+        "<script>alert('xss')</script>",
+        "javascript:alert('xss')",
+        "<img src=x onerror=alert('xss')>",
+        "<svg onload=alert('xss')>",
+        "<iframe src=javascript:alert('xss')>"
+      ]
+    },
+    "pathTraversal": {
+      "enabled": true,
+      "payloads": [
+        "../../../etc/passwd",
+        "..\\..\\..\\windows\\system32\\drivers\\etc\\hosts",
+        "....//....//....//etc/passwd",
+        "..%2F..%2F..%2Fetc%2Fpasswd"
+      ]
+    }
+  },
+  "headers": {
+    "required": [
+      "X-Content-Type-Options",
+      "X-Frame-Options",
+      "X-XSS-Protection"
+    ],
+    "recommended": [
+      "Strict-Transport-Security",
+      "Content-Security-Policy",
+      "Referrer-Policy",
+      "Permissions-Policy"
+    ]
+  },
+  "authentication": {
+    "testCases": [
+      "valid_login",
+      "invalid_credentials",
+      "empty_credentials",
+      "sql_injection",
+      "xss_attempts",
+      "brute_force_simulation"
+    ]
+  },
+  "authorization": {
+    "testCases": [
+      "access_without_token",
+      "access_with_invalid_token",
+      "access_with_expired_token",
+      "privilege_escalation",
+      "horizontal_privilege_escalation"
+    ]
+  },
+  "inputValidation": {
+    "testCases": [
+      "sql_injection",
+      "xss_attempts",
+      "path_traversal",
+      "command_injection",
+      "ldap_injection",
+      "xml_injection",
+      "no_sql_injection",
+      "buffer_overflow_attempts",
+      "null_byte_injection",
+      "unicode_attacks"
+    ]
+  },
+  "rateLimiting": {
+    "testCases": [
+      "normal_usage",
+      "burst_requests",
+      "sustained_high_load",
+      "distributed_attacks"
+    ],
+    "thresholds": {
+      "requests_per_minute": 100,
+      "burst_limit": 20,
+      "sustained_limit": 50
+    }
+  },
+  "reporting": {
+    "formats": ["json", "html", "pdf"],
+    "includeDetails": true,
+    "includeRecommendations": true,
+    "includeRemediation": true,
+    "severityLevels": ["critical", "high", "medium", "low", "info"]
+  }
+}

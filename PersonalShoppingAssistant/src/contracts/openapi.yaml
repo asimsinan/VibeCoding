@@ -1,0 +1,779 @@
+openapi: 3.0.0
+info:
+  title: Personal Shopping Assistant API
+  version: 1.0.0
+  description: API for personalized product recommendations
+  contact:
+    name: Personal Shopping Assistant Team
+    email: support@shoppingassistant.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.shoppingassistant.com/v1
+    description: Production server
+
+paths:
+  /products:
+    get:
+      summary: Get products
+      description: Retrieve paginated product list with optional filtering
+      tags:
+        - Products
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of products per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: category
+          in: query
+          description: Filter by product category
+          required: false
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          description: Minimum price filter
+          required: false
+          schema:
+            type: number
+            minimum: 0
+        - name: maxPrice
+          in: query
+          description: Maximum price filter
+          required: false
+          schema:
+            type: number
+            minimum: 0
+        - name: search
+          in: query
+          description: Search term for product name or description
+          required: false
+          schema:
+            type: string
+        - name: brand
+          in: query
+          description: Filter by brand
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of products retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+                      pagination:
+                        $ref: '#/components/schemas/Pagination'
+                  message:
+                    type: string
+                    example: "Products retrieved successfully"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /products/{id}:
+    get:
+      summary: Get product by ID
+      description: Retrieve detailed product information by ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Product'
+                  message:
+                    type: string
+                    example: "Product retrieved successfully"
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /recommendations:
+    get:
+      summary: Get personalized recommendations
+      description: Get personalized product recommendations for authenticated user
+      tags:
+        - Recommendations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          description: Number of recommendations to return
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+        - name: category
+          in: query
+          description: Filter recommendations by category
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Recommendations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      recommendations:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+                      algorithm:
+                        type: string
+                        description: Algorithm used for recommendations
+                        example: "hybrid"
+                  message:
+                    type: string
+                    example: "Recommendations retrieved successfully"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/register:
+    post:
+      summary: Register new user
+      description: Register a new user account
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+                      token:
+                        type: string
+                        description: JWT authentication token
+                  message:
+                    type: string
+                    example: "User registered successfully"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/login:
+    post:
+      summary: Login user
+      description: Authenticate user and return JWT token
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+                      token:
+                        type: string
+                        description: JWT authentication token
+                  message:
+                    type: string
+                    example: "User logged in successfully"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/profile:
+    get:
+      summary: Get user profile
+      description: Retrieve current user's profile and preferences
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/User'
+                  message:
+                    type: string
+                    example: "User profile retrieved successfully"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: Update user profile
+      description: Update user's profile and preferences
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/User'
+                  message:
+                    type: string
+                    example: "User profile updated successfully"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /interactions:
+    post:
+      summary: Record user interaction
+      description: Record user interaction (view, like, dislike, purchase) with product
+      tags:
+        - Interactions
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInteraction'
+      responses:
+        '201':
+          description: Interaction recorded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Interaction'
+                  message:
+                    type: string
+                    example: "Interaction recorded successfully"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /search:
+    get:
+      summary: Search products
+      description: Search products with query parameters and return results with recommendations
+      tags:
+        - Search
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          description: Search query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: category
+          in: query
+          description: Filter by category
+          required: false
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          description: Minimum price filter
+          required: false
+          schema:
+            type: number
+            minimum: 0
+        - name: maxPrice
+          in: query
+          description: Maximum price filter
+          required: false
+          schema:
+            type: number
+            minimum: 0
+        - name: limit
+          in: query
+          description: Number of results to return
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Search results retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+                      recommendations:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+                      pagination:
+                        $ref: '#/components/schemas/Pagination'
+                  message:
+                    type: string
+                    example: "Search results retrieved successfully"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authentication
+
+  schemas:
+    Product:
+      type: object
+      required:
+        - id
+        - name
+        - price
+        - category
+        - brand
+        - availability
+      properties:
+        id:
+          type: integer
+          description: Unique product identifier
+          example: 1
+        name:
+          type: string
+          description: Product name
+          example: "Wireless Bluetooth Headphones"
+        description:
+          type: string
+          description: Product description
+          example: "High-quality wireless headphones with noise cancellation"
+        price:
+          type: number
+          format: decimal
+          description: Product price
+          example: 99.99
+        category:
+          type: string
+          description: Product category
+          example: "Electronics"
+        brand:
+          type: string
+          description: Product brand
+          example: "TechBrand"
+        imageUrl:
+          type: string
+          format: uri
+          description: Product image URL
+          example: "https://example.com/images/headphones.jpg"
+        availability:
+          type: boolean
+          description: Product availability
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Product creation timestamp
+          example: "2023-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Product last update timestamp
+          example: "2023-01-01T00:00:00Z"
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - preferences
+      properties:
+        id:
+          type: integer
+          description: Unique user identifier
+          example: 1
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: "user@example.com"
+        preferences:
+          $ref: '#/components/schemas/Preferences'
+        createdAt:
+          type: string
+          format: date-time
+          description: User creation timestamp
+          example: "2023-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: User last update timestamp
+          example: "2023-01-01T00:00:00Z"
+
+    Preferences:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: string
+          description: Preferred product categories
+          example: ["Electronics", "Clothing", "Books"]
+        priceRange:
+          type: object
+          properties:
+            min:
+              type: number
+              format: decimal
+              description: Minimum preferred price
+              example: 10.00
+            max:
+              type: number
+              format: decimal
+              description: Maximum preferred price
+              example: 500.00
+        brands:
+          type: array
+          items:
+            type: string
+          description: Preferred brands
+          example: ["Apple", "Samsung", "Nike"]
+        stylePreferences:
+          type: array
+          items:
+            type: string
+          description: Style preferences
+          example: ["Modern", "Minimalist", "Vintage"]
+
+    Interaction:
+      type: object
+      required:
+        - id
+        - userId
+        - productId
+        - type
+        - timestamp
+      properties:
+        id:
+          type: integer
+          description: Unique interaction identifier
+          example: 1
+        userId:
+          type: integer
+          description: User ID
+          example: 1
+        productId:
+          type: integer
+          description: Product ID
+          example: 1
+        type:
+          type: string
+          enum: [view, like, dislike, purchase]
+          description: Interaction type
+          example: "like"
+        timestamp:
+          type: string
+          format: date-time
+          description: Interaction timestamp
+          example: "2023-01-01T00:00:00Z"
+
+    UserRegistration:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: "user@example.com"
+        password:
+          type: string
+          minLength: 8
+          description: User password
+          example: "securePassword123"
+
+    UserLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: "user@example.com"
+        password:
+          type: string
+          description: User password
+          example: "securePassword123"
+
+    UserUpdate:
+      type: object
+      properties:
+        preferences:
+          $ref: '#/components/schemas/Preferences'
+
+    UserInteraction:
+      type: object
+      required:
+        - productId
+        - type
+      properties:
+        productId:
+          type: integer
+          description: Product ID
+          example: 1
+        type:
+          type: string
+          enum: [view, like, dislike, purchase]
+          description: Interaction type
+          example: "like"
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        limit:
+          type: integer
+          description: Number of items per page
+          example: 20
+        total:
+          type: integer
+          description: Total number of items
+          example: 100
+        totalPages:
+          type: integer
+          description: Total number of pages
+          example: 5
+        hasNext:
+          type: boolean
+          description: Whether there is a next page
+          example: true
+        hasPrev:
+          type: boolean
+          description: Whether there is a previous page
+          example: false
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Error code
+              example: "VALIDATION_ERROR"
+            message:
+              type: string
+              description: Error message
+              example: "Invalid input data"
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    description: Field name
+                  message:
+                    type: string
+                    description: Field-specific error message
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: "2023-01-01T00:00:00Z"
+
+  responses:
+    BadRequest:
+      description: Bad request - Invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Unauthorized:
+      description: Unauthorized - Invalid or missing authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Not found - Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+tags:
+  - name: Products
+    description: Product management operations
+  - name: Users
+    description: User management and authentication
+  - name: Recommendations
+    description: Personalized product recommendations
+  - name: Interactions
+    description: User interaction tracking
+  - name: Search
+    description: Product search functionality

@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recommendation",
+  "type": "object",
+  "required": ["recommendations", "algorithm"],
+  "properties": {
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Product"
+      },
+      "description": "List of recommended products"
+    },
+    "algorithm": {
+      "type": "string",
+      "enum": ["collaborative", "content-based", "hybrid"],
+      "description": "Algorithm used for recommendations"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "totalProducts": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of products considered"
+        },
+        "processingTime": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Time taken to generate recommendations in milliseconds"
+        },
+        "userPreferences": {
+          "type": "object",
+          "description": "User preferences used for recommendations"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "Product": {
+      "type": "object",
+      "required": ["id", "name", "price", "category", "brand", "availability"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Unique product identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "description": "Product name"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Product description"
+        },
+        "price": {
+          "type": "number",
+          "minimum": 0,
+          "multipleOf": 0.01,
+          "description": "Product price"
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Product category"
+        },
+        "brand": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Product brand"
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Product image URL"
+        },
+        "availability": {
+          "type": "boolean",
+          "description": "Product availability"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Recommendation score"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Reasons for recommendation"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

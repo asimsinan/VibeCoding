@@ -1,0 +1,178 @@
+{
+  "performance": {
+    "baseUrl": "http://localhost:3001",
+    "timeout": 30000,
+    "retries": 3,
+    "concurrentUsers": [1, 5, 10, 25, 50, 100],
+    "testDuration": 60000,
+    "rampUpTime": 10000,
+    "checkInterval": 5000
+  },
+  "thresholds": {
+    "responseTime": {
+      "excellent": 100,
+      "good": 500,
+      "acceptable": 1000,
+      "poor": 2000
+    },
+    "successRate": {
+      "excellent": 0.99,
+      "good": 0.95,
+      "acceptable": 0.90,
+      "poor": 0.80
+    },
+    "throughput": {
+      "excellent": 1000,
+      "good": 500,
+      "acceptable": 100,
+      "poor": 50
+    },
+    "errorRate": {
+      "excellent": 0.01,
+      "good": 0.05,
+      "acceptable": 0.10,
+      "poor": 0.20
+    }
+  },
+  "monitoring": {
+    "enabled": true,
+    "metrics": [
+      "response_time",
+      "throughput",
+      "error_rate",
+      "memory_usage",
+      "cpu_usage"
+    ],
+    "alerts": {
+      "responseTime": 1000,
+      "errorRate": 0.05,
+      "availability": 0.95
+    }
+  },
+  "benchmarks": {
+    "iterations": 100,
+    "warmupIterations": 10,
+    "endpoints": [
+      {
+        "name": "Health Check",
+        "path": "/health",
+        "method": "GET",
+        "expectedStatus": 200,
+        "weight": 0.1
+      },
+      {
+        "name": "List Products",
+        "path": "/api/v1/products",
+        "method": "GET",
+        "expectedStatus": 200,
+        "weight": 0.3
+      },
+      {
+        "name": "Search Products",
+        "path": "/api/v1/products/search?q=laptop",
+        "method": "GET",
+        "expectedStatus": 200,
+        "weight": 0.2
+      },
+      {
+        "name": "Get Product by ID",
+        "path": "/api/v1/products/1",
+        "method": "GET",
+        "expectedStatus": 200,
+        "weight": 0.2
+      },
+      {
+        "name": "User Registration",
+        "path": "/api/v1/users/register",
+        "method": "POST",
+        "expectedStatus": 201,
+        "weight": 0.1,
+        "data": {
+          "email": "perftest@example.com",
+          "password": "testpassword123",
+          "name": "Performance Test User",
+          "preferences": {
+            "categories": ["Electronics"],
+            "priceRange": { "min": 0, "max": 1000 },
+            "brands": ["Apple", "Samsung"],
+            "stylePreferences": ["Modern"]
+          }
+        }
+      },
+      {
+        "name": "User Login",
+        "path": "/api/v1/users/login",
+        "method": "POST",
+        "expectedStatus": 200,
+        "weight": 0.1,
+        "data": {
+          "email": "perftest@example.com",
+          "password": "testpassword123"
+        }
+      }
+    ]
+  },
+  "loadTest": {
+    "scenarios": [
+      {
+        "name": "Light Load",
+        "concurrentUsers": 10,
+        "duration": 30000,
+        "description": "Simulate light traffic"
+      },
+      {
+        "name": "Medium Load",
+        "concurrentUsers": 50,
+        "duration": 60000,
+        "description": "Simulate medium traffic"
+      },
+      {
+        "name": "Heavy Load",
+        "concurrentUsers": 100,
+        "duration": 120000,
+        "description": "Simulate heavy traffic"
+      },
+      {
+        "name": "Stress Test",
+        "concurrentUsers": 200,
+        "duration": 180000,
+        "description": "Stress test to find breaking point"
+      }
+    ]
+  },
+  "optimization": {
+    "recommendations": {
+      "database": [
+        "Add indexes for frequently queried columns",
+        "Implement query result caching",
+        "Optimize database connection pool settings",
+        "Consider read replicas for read-heavy operations"
+      ],
+      "caching": [
+        "Implement Redis for session storage",
+        "Add response caching for product listings",
+        "Cache user preferences and recommendations",
+        "Implement CDN for static assets"
+      ],
+      "api": [
+        "Implement response compression",
+        "Add request/response logging",
+        "Optimize API endpoint logic",
+        "Implement rate limiting"
+      ],
+      "monitoring": [
+        "Implement APM (Application Performance Monitoring)",
+        "Add custom metrics and dashboards",
+        "Set up automated alerting",
+        "Implement health check endpoints"
+      ]
+    }
+  },
+  "reports": {
+    "outputDir": "./tests/performance/results",
+    "formats": ["json", "html", "csv"],
+    "includeCharts": true,
+    "includeRecommendations": true,
+    "includeSystemInfo": true
+  }
+}

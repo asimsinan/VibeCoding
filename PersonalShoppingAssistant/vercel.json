@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3001",
+    "DATABASE_URL": "postgresql://neondb_owner:npg_7YHn8jJlIpdW@ep-empty-flower-admmhvgf-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require",
+    "JWT_SECRET": "super-secure-jwt-secret-key-for-production-2024",
+    "JWT_EXPIRES_IN": "24h",
+    "CORS_ORIGIN": "https://personal-shopping-assistant-fronten.vercel.app",
+    "RATE_LIMIT_WINDOW_MS": "900000",
+    "RATE_LIMIT_MAX_REQUESTS": "100",
+    "BCRYPT_ROUNDS": "12",
+    "LOG_LEVEL": "info",
+    "API_VERSION": "v1",
+    "API_BASE_URL": "https://personal-shopping-assistant.vercel.app",
+    "FRONTEND_URL": "https://personal-shopping-assistant-fronten.vercel.app"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}

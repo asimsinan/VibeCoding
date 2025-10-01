@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "User",
+  "type": "object",
+  "required": ["id", "email", "preferences"],
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Unique user identifier"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 255,
+      "description": "User email address"
+    },
+    "preferences": {
+      "$ref": "#/definitions/Preferences"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "User creation timestamp"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "User last update timestamp"
+    }
+  },
+  "definitions": {
+    "Preferences": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": "Preferred product categories"
+        },
+        "priceRange": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "minimum": 0,
+              "multipleOf": 0.01,
+              "description": "Minimum preferred price"
+            },
+            "max": {
+              "type": "number",
+              "minimum": 0,
+              "multipleOf": 0.01,
+              "description": "Maximum preferred price"
+            }
+          },
+          "required": ["min", "max"],
+          "additionalProperties": false
+        },
+        "brands": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": "Preferred brands"
+        },
+        "stylePreferences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "description": "Style preferences"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

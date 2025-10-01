@@ -30,6 +30,8 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 **Prompt**: *"Create an appointment scheduler with a calendar view and booking slots, using React, Tailwind CSS, and date-handling library like date-fns"*
 ### [Challenge 5: Mental Health Journal](./MentalHealthJournal) (Built in 3.5 hours)
 **Prompt**: *"Create a mental health journal app where users log mood daily and view trend charts, using Next.js, TypeScript, Tailwind"*
+### [Challenge 6: Personal Shopping Assistant](./PersonalShoppingAssistant) (Built in 4.5 hours)
+**Prompt**: *"Prompt: Create a virtual personal shopping assistant that suggests products based on user preferences, using React, TypeScript, Node.js backend, PostgreSQL, and a simple recommendation algorithm"*
 
 ### Future Challenges
 The difficulty will gradually increase with more complex prompts and requirements.

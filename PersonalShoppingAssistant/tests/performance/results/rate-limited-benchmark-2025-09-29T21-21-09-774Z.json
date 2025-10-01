@@ -1,0 +1,202 @@
+{
+  "totalTime": 53498.826042,
+  "results": [
+    {
+      "testName": "Health Check",
+      "totalRequests": 55,
+      "successfulRequests": 0,
+      "rateLimitedRequests": 55,
+      "failedRequests": 0,
+      "successRate": 0,
+      "rateLimitRate": 1,
+      "responseTime": {
+        "min": 0,
+        "max": 0,
+        "avg": 0,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 388.50381607165053
+      },
+      "errors": [],
+      "dataSize": {
+        "avg": 0,
+        "total": 0
+      }
+    },
+    {
+      "testName": "List Products",
+      "totalRequests": 55,
+      "successfulRequests": 0,
+      "rateLimitedRequests": 55,
+      "failedRequests": 0,
+      "successRate": 0,
+      "rateLimitRate": 1,
+      "responseTime": {
+        "min": 0,
+        "max": 0,
+        "avg": 0,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 381.5156738153899
+      },
+      "errors": [],
+      "dataSize": {
+        "avg": 0,
+        "total": 0
+      }
+    },
+    {
+      "testName": "Search Products",
+      "totalRequests": 55,
+      "successfulRequests": 0,
+      "rateLimitedRequests": 55,
+      "failedRequests": 0,
+      "successRate": 0,
+      "rateLimitRate": 1,
+      "responseTime": {
+        "min": 0,
+        "max": 0,
+        "avg": 0,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 491.5227429985267
+      },
+      "errors": [],
+      "dataSize": {
+        "avg": 0,
+        "total": 0
+      }
+    },
+    {
+      "testName": "Get Product by ID",
+      "totalRequests": 55,
+      "successfulRequests": 0,
+      "rateLimitedRequests": 55,
+      "failedRequests": 0,
+      "successRate": 0,
+      "rateLimitRate": 1,
+      "responseTime": {
+        "min": 0,
+        "max": 0,
+        "avg": 0,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 585.5055482717396
+      },
+      "errors": [],
+      "dataSize": {
+        "avg": 0,
+        "total": 0
+      }
+    },
+    {
+      "testName": "Get Non-existent Product",
+      "totalRequests": 55,
+      "successfulRequests": 0,
+      "rateLimitedRequests": 55,
+      "failedRequests": 0,
+      "successRate": 0,
+      "rateLimitRate": 1,
+      "responseTime": {
+        "min": 0,
+        "max": 0,
+        "avg": 0,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 511.2787392683349
+      },
+      "errors": [],
+      "dataSize": {
+        "avg": 0,
+        "total": 0
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 5,
+    "totalRequests": 275,
+    "totalSuccessfulRequests": 0,
+    "totalRateLimitedRequests": 275,
+    "overallSuccessRate": 0,
+    "rateLimitRate": 1,
+    "avgResponseTime": 0,
+    "avgSuccessRate": 0,
+    "bestPerformingTest": {
+      "testName": "Health Check",
+      "totalRequests": 55,
+      "successfulRequests": 0,
+      "rateLimitedRequests": 55,
+      "failedRequests": 0,
+      "successRate": 0,
+      "rateLimitRate": 1,
+      "responseTime": {
+        "min": 0,
+        "max": 0,
+        "avg": 0,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 388.50381607165053
+      },
+      "errors": [],
+      "dataSize": {
+        "avg": 0,
+        "total": 0
+      }
+    },
+    "worstPerformingTest": {
+      "testName": "Health Check",
+      "totalRequests": 55,
+      "successfulRequests": 0,
+      "rateLimitedRequests": 55,
+      "failedRequests": 0,
+      "successRate": 0,
+      "rateLimitRate": 1,
+      "responseTime": {
+        "min": 0,
+        "max": 0,
+        "avg": 0,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 388.50381607165053
+      },
+      "errors": [],
+      "dataSize": {
+        "avg": 0,
+        "total": 0
+      }
+    }
+  },
+  "rateLimitStats": {
+    "totalRequests": 250,
+    "rateLimitHits": 250,
+    "rateLimitPercentage": 100
+  }
+}

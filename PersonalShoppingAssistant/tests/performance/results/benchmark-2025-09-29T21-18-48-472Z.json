@@ -1,0 +1,304 @@
+{
+  "systemInfo": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "nodeVersion": "v22.12.0",
+    "cpuInfo": "Apple M4 Pro",
+    "totalMemory": "48GB"
+  },
+  "totalTime": 1057.247125,
+  "finalStats": {
+    "uptime": 1093.1935,
+    "memory": {
+      "rss": 58015744,
+      "heapTotal": 11010048,
+      "heapUsed": 6747024,
+      "external": 1731896,
+      "arrayBuffers": 33789
+    },
+    "memoryDelta": {
+      "rss": 14925824,
+      "heapUsed": 2378784
+    }
+  },
+  "results": [
+    {
+      "testName": "Health Check",
+      "totalRequests": 100,
+      "successfulRequests": 65,
+      "failedRequests": 35,
+      "successRate": 0.65,
+      "responseTime": {
+        "min": 0.29520899999999983,
+        "max": 4.963583,
+        "avg": 0.9745725230769228,
+        "median": 0.8802090000000078,
+        "p90": 1.4661669999999845,
+        "p95": 1.6430000000000007,
+        "p99": 4.963583
+      },
+      "throughput": {
+        "requestsPerSecond": 1175.7235611486258
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": 147,
+        "total": 9555
+      }
+    },
+    {
+      "testName": "List Products",
+      "totalRequests": 100,
+      "successfulRequests": 0,
+      "failedRequests": 100,
+      "successRate": 0,
+      "responseTime": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 1003.0824020055918
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": null,
+        "total": 0
+      }
+    },
+    {
+      "testName": "Search Products",
+      "totalRequests": 100,
+      "successfulRequests": 0,
+      "failedRequests": 100,
+      "successRate": 0,
+      "responseTime": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 533.1279241200301
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": null,
+        "total": 0
+      }
+    },
+    {
+      "testName": "Get Product by ID",
+      "totalRequests": 100,
+      "successfulRequests": 0,
+      "failedRequests": 100,
+      "successRate": 0,
+      "responseTime": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 1300.8037184879183
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": null,
+        "total": 0
+      }
+    },
+    {
+      "testName": "Get Non-existent Product",
+      "totalRequests": 100,
+      "successfulRequests": 0,
+      "failedRequests": 100,
+      "successRate": 0,
+      "responseTime": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 1099.5818850877756
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": null,
+        "total": 0
+      }
+    },
+    {
+      "testName": "User Registration",
+      "totalRequests": 100,
+      "successfulRequests": 0,
+      "failedRequests": 100,
+      "successRate": 0,
+      "responseTime": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 770.1539053229905
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": null,
+        "total": 0
+      }
+    },
+    {
+      "testName": "User Login",
+      "totalRequests": 100,
+      "successfulRequests": 0,
+      "failedRequests": 100,
+      "successRate": 0,
+      "responseTime": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "median": 0,
+        "p90": 0,
+        "p95": 0,
+        "p99": 0
+      },
+      "throughput": {
+        "requestsPerSecond": 433.5571011133985
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": null,
+        "total": 0
+      }
+    }
+  ],
+  "summary": {
+    "totalTests": 7,
+    "totalRequests": 700,
+    "totalSuccessfulRequests": 65,
+    "overallSuccessRate": 0.09285714285714286,
+    "avgResponseTime": null,
+    "avgSuccessRate": 0.09285714285714286,
+    "bestPerformingTest": {
+      "testName": "Health Check",
+      "totalRequests": 100,
+      "successfulRequests": 65,
+      "failedRequests": 35,
+      "successRate": 0.65,
+      "responseTime": {
+        "min": 0.29520899999999983,
+        "max": 4.963583,
+        "avg": 0.9745725230769228,
+        "median": 0.8802090000000078,
+        "p90": 1.4661669999999845,
+        "p95": 1.6430000000000007,
+        "p99": 4.963583
+      },
+      "throughput": {
+        "requestsPerSecond": 1175.7235611486258
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": 147,
+        "total": 9555
+      }
+    },
+    "worstPerformingTest": {
+      "testName": "Health Check",
+      "totalRequests": 100,
+      "successfulRequests": 65,
+      "failedRequests": 35,
+      "successRate": 0.65,
+      "responseTime": {
+        "min": 0.29520899999999983,
+        "max": 4.963583,
+        "avg": 0.9745725230769228,
+        "median": 0.8802090000000078,
+        "p90": 1.4661669999999845,
+        "p95": 1.6430000000000007,
+        "p99": 4.963583
+      },
+      "throughput": {
+        "requestsPerSecond": 1175.7235611486258
+      },
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "dataSize": {
+        "avg": 147,
+        "total": 9555
+      }
+    }
+  }
+}

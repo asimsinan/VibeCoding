@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "name": "personal-shopping-assistant-frontend",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "REACT_APP_API_BASE_URL": "https://personal-shopping-assistant.vercel.app",
+    "REACT_APP_API_VERSION": "v1",
+    "REACT_APP_API_TIMEOUT": "10000"
+  }
+}
