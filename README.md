@@ -32,6 +32,8 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 **Prompt**: *"Create a mental health journal app where users log mood daily and view trend charts, using Next.js, TypeScript, Tailwind"*
 ### [Challenge 6: Personal Shopping Assistant](./PersonalShoppingAssistant) (Built in 4.5 hours)
 **Prompt**: *"Prompt: Create a virtual personal shopping assistant that suggests products based on user preferences, using React, TypeScript, Node.js backend, PostgreSQL, and a simple recommendation algorithm"*
+### [Challenge 7: Market Place](./MarketPlace) (Built in 4.5 hours)
+**Prompt**: *"Prompt: Create a marketplace app where users list items and allow browsing/purchase, using Next.js, TypeScript, Tailwind, Node.js backend, Stripe, and PostgreSQL or MongoDB."*
 
 ### Future Challenges
 The difficulty will gradually increase with more complex prompts and requirements.

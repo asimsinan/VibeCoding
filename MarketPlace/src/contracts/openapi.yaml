@@ -1,0 +1,829 @@
+openapi: 3.0.0
+info:
+  title: Marketplace API
+  version: 1.0.0
+  description: API for peer-to-peer marketplace application
+  contact:
+    name: Marketplace API Support
+    email: support@marketplace.com
+servers:
+  - url: https://api.marketplace.com/v1
+    description: Production server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+
+paths:
+  /products:
+    get:
+      summary: Get products
+      description: Retrieve paginated product listings with search and filter parameters
+      tags:
+        - Products
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: category
+          in: query
+          description: Filter by product category
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search term for product title and description
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          description: Minimum price filter
+          schema:
+            type: number
+            minimum: 0
+        - name: maxPrice
+          in: query
+          description: Maximum price filter
+          schema:
+            type: number
+            minimum: 0
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Create product
+      description: Create new product listing (authenticated users only)
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /products/{id}:
+    get:
+      summary: Get product by ID
+      description: Get detailed product information by ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Product ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Update product
+      description: Update existing product listing (owner only)
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Product ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Delete product
+      description: Delete product listing (owner only)
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Product ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Product deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /categories:
+    get:
+      summary: Get categories
+      description: Retrieve all product categories
+      tags:
+        - Categories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/register:
+    post:
+      summary: User registration
+      description: Register a new user account
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticate user and return access token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /orders:
+    get:
+      summary: Get user orders
+      description: Retrieve user's order history (authenticated)
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Create order
+      description: Create new order with Stripe payment intent
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /upload:
+    post:
+      summary: Upload image
+      description: Upload product images (authenticated users only)
+      tags:
+        - Upload
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                productId:
+                  type: string
+      responses:
+        '201':
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageUpload'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique product identifier
+        title:
+          type: string
+          description: Product title
+        description:
+          type: string
+          description: Product description
+        price:
+          type: number
+          description: Product price
+          minimum: 0
+        images:
+          type: array
+          items:
+            type: string
+          description: Product image URLs
+        category:
+          type: string
+          description: Product category
+        seller:
+          $ref: '#/components/schemas/User'
+        isAvailable:
+          type: boolean
+          description: Product availability status
+        createdAt:
+          type: string
+          format: date-time
+          description: Product creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Product last update timestamp
+      required:
+        - id
+        - title
+        - description
+        - price
+        - images
+        - category
+        - seller
+        - isAvailable
+        - createdAt
+        - updatedAt
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique user identifier
+        username:
+          type: string
+          description: Username
+        email:
+          type: string
+          format: email
+          description: User email address
+        profile:
+          $ref: '#/components/schemas/UserProfile'
+        isActive:
+          type: boolean
+          description: User account status
+        createdAt:
+          type: string
+          format: date-time
+          description: User creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: User last update timestamp
+      required:
+        - id
+        - username
+        - email
+        - profile
+        - isActive
+        - createdAt
+        - updatedAt
+
+    UserProfile:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: User first name
+        lastName:
+          type: string
+          description: User last name
+        avatar:
+          type: string
+          description: User avatar URL
+        bio:
+          type: string
+          description: User bio
+        location:
+          type: string
+          description: User location
+        phone:
+          type: string
+          description: User phone number
+      required:
+        - firstName
+        - lastName
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique category identifier
+        name:
+          type: string
+          description: Category name
+        description:
+          type: string
+          description: Category description
+        parentId:
+          type: string
+          description: Parent category ID
+        createdAt:
+          type: string
+          format: date-time
+          description: Category creation timestamp
+      required:
+        - id
+        - name
+        - createdAt
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique order identifier
+        buyer:
+          $ref: '#/components/schemas/User'
+        seller:
+          $ref: '#/components/schemas/User'
+        product:
+          $ref: '#/components/schemas/Product'
+        amount:
+          type: number
+          description: Order amount
+        currency:
+          type: string
+          description: Order currency
+        status:
+          type: string
+          enum: [pending, paid, shipped, delivered, cancelled, refunded]
+          description: Order status
+        paymentIntentId:
+          type: string
+          description: Stripe payment intent ID
+        createdAt:
+          type: string
+          format: date-time
+          description: Order creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Order last update timestamp
+      required:
+        - id
+        - buyer
+        - seller
+        - product
+        - amount
+        - currency
+        - status
+        - createdAt
+        - updatedAt
+
+    ImageUpload:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique image identifier
+        filename:
+          type: string
+          description: Image filename
+        originalName:
+          type: string
+          description: Original filename
+        mimeType:
+          type: string
+          description: Image MIME type
+        size:
+          type: integer
+          description: Image size in bytes
+        url:
+          type: string
+          description: Image URL
+        thumbnailUrl:
+          type: string
+          description: Thumbnail URL
+        uploadedBy:
+          type: string
+          description: User ID who uploaded the image
+        createdAt:
+          type: string
+          format: date-time
+          description: Upload timestamp
+      required:
+        - id
+        - filename
+        - originalName
+        - mimeType
+        - size
+        - url
+        - uploadedBy
+        - createdAt
+
+    CreateProductRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Product title
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          description: Product description
+          minLength: 1
+          maxLength: 2000
+        price:
+          type: number
+          description: Product price
+          minimum: 0
+        images:
+          type: array
+          items:
+            type: string
+          description: Product image URLs
+          minItems: 1
+          maxItems: 10
+        category:
+          type: string
+          description: Product category
+      required:
+        - title
+        - description
+        - price
+        - images
+        - category
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Product title
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          description: Product description
+          minLength: 1
+          maxLength: 2000
+        price:
+          type: number
+          description: Product price
+          minimum: 0
+        images:
+          type: array
+          items:
+            type: string
+          description: Product image URLs
+          minItems: 1
+          maxItems: 10
+        category:
+          type: string
+          description: Product category
+        isAvailable:
+          type: boolean
+          description: Product availability status
+
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username
+          minLength: 3
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          description: User email address
+        password:
+          type: string
+          description: User password
+          minLength: 8
+        firstName:
+          type: string
+          description: User first name
+          minLength: 1
+          maxLength: 50
+        lastName:
+          type: string
+          description: User last name
+          minLength: 1
+          maxLength: 50
+      required:
+        - username
+        - email
+        - password
+        - firstName
+        - lastName
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+        password:
+          type: string
+          description: User password
+      required:
+        - email
+        - password
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+          description: JWT access token
+        refreshToken:
+          type: string
+          description: JWT refresh token
+      required:
+        - user
+        - token
+        - refreshToken
+
+    CreateOrderRequest:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Product ID to order
+        amount:
+          type: number
+          description: Order amount
+          minimum: 0
+        currency:
+          type: string
+          description: Order currency
+          default: usd
+      required:
+        - productId
+        - amount
+        - currency
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        limit:
+          type: integer
+          description: Items per page
+        total:
+          type: integer
+          description: Total number of items
+        totalPages:
+          type: integer
+          description: Total number of pages
+      required:
+        - page
+        - limit
+        - total
+        - totalPages
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+      required:
+        - error
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token authentication
+
+tags:
+  - name: Products
+    description: Product management operations
+  - name: Categories
+    description: Category management operations
+  - name: Authentication
+    description: User authentication operations
+  - name: Orders
+    description: Order management operations
+  - name: Upload
+    description: File upload operations

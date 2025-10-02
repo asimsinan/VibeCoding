@@ -1,0 +1,288 @@
+// Database Schema
+// Prisma schema for the marketplace application
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/lib/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(cuid())
+  username     String       @unique
+  email        String       @unique
+  passwordHash String
+  profile      UserProfile?
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  // Relations
+  products       Product[]
+  ordersAsBuyer  Order[]          @relation("BuyerOrders")
+  ordersAsSeller Order[]          @relation("SellerOrders")
+  notifications  Notification[]
+  imageUploads   ImageUpload[]
+  preferences    UserPreferences?
+  messages       ContactMessage[] @relation("SellerMessages")
+
+  @@index([email])
+  @@index([username])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model UserProfile {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  firstName String
+  lastName  String
+  avatar    String?
+  bio       String?
+  location  String?
+  phone     String?
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       Decimal  @db.Decimal(10, 2)
+  images      String[]
+  category    String
+  sellerId    String
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  seller   User             @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  orders   Order[]
+  messages ContactMessage[] @relation("ProductMessages")
+
+  @@index([sellerId])
+  @@index([category])
+  @@index([isAvailable])
+  @@index([price])
+  @@index([createdAt])
+  @@index([title])
+  @@map("products")
+}
+
+model Order {
+  id              String          @id @default(cuid())
+  buyerId         String
+  sellerId        String
+  productId       String
+  amount          Decimal         @db.Decimal(10, 2)
+  currency        String          @default("usd")
+  status          OrderStatusEnum @default(PENDING)
+  paymentIntentId String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  buyer       User         @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller      User         @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: Cascade)
+  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderStatus OrderStatus?
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([productId])
+  @@index([status])
+  @@index([paymentIntentId])
+  @@index([createdAt])
+  @@index([amount])
+  @@map("orders")
+}
+
+model OrderStatus {
+  id          String   @id @default(cuid())
+  orderId     String   @unique
+  status      String
+  lastUpdated DateTime @default(now())
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_statuses")
+}
+
+model Notification {
+  id        String               @id @default(cuid())
+  userId    String
+  type      NotificationTypeEnum
+  title     String
+  message   String
+  data      Json?
+  isRead    Boolean              @default(false)
+  readAt    DateTime?
+  createdAt DateTime             @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model NotificationType {
+  id       String                   @id @default(cuid())
+  type     String
+  category NotificationCategoryEnum
+
+  @@map("notification_types")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  parentId    String?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+
+  @@map("categories")
+}
+
+model ImageUpload {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  thumbnailUrl String?
+  uploadedBy   String
+  createdAt    DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+
+  @@map("image_uploads")
+}
+
+model PaymentIntent {
+  id           String   @id @default(cuid())
+  stripeId     String   @unique
+  amount       Decimal  @db.Decimal(10, 2)
+  currency     String
+  status       String
+  clientSecret String
+  orderId      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("payment_intents")
+}
+
+model Refund {
+  id              String   @id @default(cuid())
+  stripeId        String   @unique
+  paymentIntentId String
+  amount          Decimal  @db.Decimal(10, 2)
+  currency        String
+  status          String
+  reason          String?
+  createdAt       DateTime @default(now())
+
+  @@map("refunds")
+}
+
+model UserPreferences {
+  id                       String  @id @default(cuid())
+  userId                   String  @unique
+  email                    Boolean @default(true)
+  push                     Boolean @default(true)
+  sms                      Boolean @default(false)
+  transactionNotifications Boolean @default(true)
+  productNotifications     Boolean @default(true)
+  orderNotifications       Boolean @default(true)
+  systemNotifications      Boolean @default(true)
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+model ContactMessage {
+  id          String                   @id @default(cuid())
+  name        String
+  email       String
+  subject     String
+  message     String
+  status      ContactMessageStatusEnum @default(UNREAD)
+  response    String?
+  respondedAt DateTime?
+
+  // Seller information for contact seller messages
+  sellerId  String?
+  productId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  seller  User?    @relation("SellerMessages", fields: [sellerId], references: [id], onDelete: SetNull)
+  product Product? @relation("ProductMessages", fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@index([sellerId])
+  @@index([productId])
+  @@map("contact_messages")
+}
+
+// Enums
+enum OrderStatusEnum {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum NotificationTypeEnum {
+  PURCHASE_CONFIRMATION
+  SALE_CONFIRMATION
+  PRODUCT_SOLD
+  ORDER_SHIPPED
+  ORDER_DELIVERED
+  PAYMENT_RECEIVED
+  LISTING_UPDATED
+  SYSTEM_ALERT
+}
+
+enum NotificationCategoryEnum {
+  TRANSACTION
+  PRODUCT
+  ORDER
+  SYSTEM
+}
+
+enum ContactMessageStatusEnum {
+  UNREAD
+  READ
+  RESPONDED
+  ARCHIVED
+}

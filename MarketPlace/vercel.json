@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "buildCommand": "rm -rf .next node_modules/.cache && npx prisma generate && npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "rm -rf node_modules package-lock.json && npm install",
+  "headers": [
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Pragma",
+          "value": "no-cache"
+        },
+        {
+          "key": "Expires",
+          "value": "0"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "DATABASE_URL": "postgresql://neondb_owner:npg_lDRx45CIGShN@ep-sweet-dream-adn6i3a6-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require",
+    "NODE_ENV": "production",
+    "JWT_SECRET": "your-super-secure-jwt-secret-key-here-change-this-in-production",
+    "NEXTAUTH_SECRET": "your-nextauth-secret-key-here-change-this-in-production",
+    "NEXTAUTH_URL": "https://marketplace-app-woad-one.vercel.app",
+    "NEXT_PUBLIC_APP_URL": "https://marketplace-app-woad-one.vercel.app"
+  }
+}
