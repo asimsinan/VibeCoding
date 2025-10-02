@@ -2,5 +2,6 @@
 node_modules
 dist
 .env
+.env.example
 .env.local
 config.env
