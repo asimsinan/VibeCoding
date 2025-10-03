@@ -34,6 +34,10 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 **Prompt**: *"Prompt: Create a virtual personal shopping assistant that suggests products based on user preferences, using React, TypeScript, Node.js backend, PostgreSQL, and a simple recommendation algorithm"*
 ### [Challenge 7: Market Place](./MarketPlace) (Built in 4.5 hours)
 **Prompt**: *"Prompt: Create a marketplace app where users list items and allow browsing/purchase, using Next.js, TypeScript, Tailwind, Node.js backend, Stripe, and PostgreSQL or MongoDB."*
+### [Challenge 8: Event Organizer](./EventOrganizer) (Built in 5.5 hours)
+**Prompt**: *"Prompt: Build a virtual event organizer app managing attendees, schedule, notifications, and networking, using Next.js, TypeScript, Tailwind, Supabase (Auth, real-time DB, storage), WebSockets for real-time features"*
+### [Challenge 9: Collaborative Whiteboard](./WhiteBoard) (Built in x hours)
+**Prompt**: *"Prompt: Build a collaborative whiteboard app where multiple users can draw and add sticky notes in real time, using Next.js, TypeScript, Tailwind, Supabase Realtime and deploy on Vercel."*
 
 ### Future Challenges
 The difficulty will gradually increase with more complex prompts and requirements.

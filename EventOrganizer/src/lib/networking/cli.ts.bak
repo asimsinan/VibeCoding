@@ -1,0 +1,503 @@
+#!/usr/bin/env node
+/**
+ * Networking CLI
+ * 
+ * Command-line interface for Networking Library with:
+ * - --json mode support for automation
+ * - stdin/stdout handling for pipe operations
+ * - stderr error reporting
+ * - Developer tool capabilities
+ * 
+ * @fileoverview CLI Interface for Networking Library
+ * @version 1.0.0
+ * @author Virtual Event Organizer Team
+ */
+
+import { Command } from 'commander'
+import { NetworkingLibrary } from './index'
+
+/**
+ * Networking CLI
+ * 
+ * Provides command-line interface for all networking operations
+ * with JSON output support and comprehensive error handling.
+ */
+export class NetworkingCLI {
+  private library: NetworkingLibrary
+  private program: Command
+
+  constructor() {
+    this.library = new NetworkingLibrary()
+    this.program = new Command()
+    this.setupCommands()
+  }
+
+  /**
+   * Setup CLI commands
+   */
+  private setupCommands(): void {
+    this.program
+      .name('networking')
+      .description('Networking CLI for Virtual Event Organizer')
+      .version('1.0.0')
+      .option('--json', 'Output results in JSON format')
+      .option('--verbose', 'Enable verbose logging')
+
+    // Connection commands
+    this.setupConnectionCommands()
+    
+    // Messaging commands
+    this.setupMessagingCommands()
+    
+    // Analytics commands
+    this.setupAnalyticsCommands()
+    
+    // Health check command
+    this.setupHealthCommand()
+  }
+
+  /**
+   * Setup connection-related commands
+   */
+  private setupConnectionCommands(): void {
+    const connCmd = this.program
+      .command('connection')
+      .description('Connection management operations')
+
+    // Send connection request
+    connCmd
+      .command('request')
+      .description('Send connection request')
+      .option('--requester-id <id>', 'Requester user ID')
+      .option('--addressee-id <id>', 'Addressee user ID')
+      .option('--message <message>', 'Connection request message')
+      .option('--type <type>', 'Connection type')
+      .action(async (options) => {
+        try {
+          if (!options.requesterId || !options.addresseeId) {
+            this.outputError('Requester ID and addressee ID are required')
+            process.exit(1)
+          }
+
+          const connection = await this.library.sendConnectionRequest(
+            options.requesterId,
+            options.addresseeId,
+            options.message || '',
+            {
+              type: options.type as any
+            }
+          )
+
+          this.outputResult(connection, 'Connection request sent successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Respond to connection request
+    connCmd
+      .command('respond <connectionId> <response>')
+      .description('Respond to connection request')
+      .option('--user-id <id>', 'User ID (for authorization)')
+      .option('--message <message>', 'Response message')
+      .action(async (connectionId, response, options) => {
+        try {
+          if (!options.userId) {
+            this.outputError('User ID is required for authorization')
+            process.exit(1)
+          }
+
+          if (!['accepted', 'declined'].includes(response)) {
+            this.outputError('Response must be "accepted" or "declined"')
+            process.exit(1)
+          }
+
+          const connection = await this.library.respondToConnectionRequest(
+            connectionId,
+            response as 'accepted' | 'declined',
+            options.userId,
+            options.message
+          )
+
+          this.outputResult(connection, 'Connection request responded to successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get user connections
+    connCmd
+      .command('list <userId>')
+      .description('Get user connections')
+      .option('--status <status>', 'Filter by status')
+      .option('--type <type>', 'Filter by type')
+      .option('--direction <direction>', 'Filter by direction (sent/received/all)')
+      .option('--page <number>', 'Page number')
+      .option('--limit <number>', 'Items per page')
+      .action(async (userId, options) => {
+        try {
+          const filters = {
+            status: options.status,
+            type: options.type,
+            direction: options.direction as any,
+            page: options.page ? parseInt(options.page) : undefined,
+            limit: options.limit ? parseInt(options.limit) : undefined
+          }
+
+          const result = await this.library.connections.getUserConnections(userId, filters)
+          this.outputResult(result, 'User connections retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get connection recommendations
+    connCmd
+      .command('recommendations <userId>')
+      .description('Get connection recommendations for user')
+      .option('--event-id <id>', 'Filter by event ID')
+      .option('--limit <number>', 'Number of recommendations')
+      .action(async (userId, options) => {
+        try {
+          const recommendations = await this.library.connections.getConnectionRecommendations(
+            userId,
+            options.eventId,
+            options.limit ? parseInt(options.limit) : 10
+          )
+
+          this.outputResult(recommendations, 'Connection recommendations retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Search connections
+    connCmd
+      .command('search <userId> <searchTerm>')
+      .description('Search connections')
+      .option('--status <status>', 'Filter by status')
+      .option('--type <type>', 'Filter by type')
+      .option('--limit <number>', 'Number of results')
+      .action(async (userId, searchTerm, options) => {
+        try {
+          const filters = {
+            status: options.status,
+            type: options.type,
+            limit: options.limit ? parseInt(options.limit) : 20
+          }
+
+          const connections = await this.library.connections.searchConnections(
+            userId,
+            searchTerm,
+            filters
+          )
+
+          this.outputResult(connections, 'Connection search completed successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Block user
+    connCmd
+      .command('block <connectionId> <userId>')
+      .description('Block user')
+      .action(async (connectionId, userId) => {
+        try {
+          const connection = await this.library.connections.blockUser(connectionId, userId)
+          this.outputResult(connection, 'User blocked successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Setup messaging-related commands
+   */
+  private setupMessagingCommands(): void {
+    const msgCmd = this.program
+      .command('message')
+      .description('Messaging operations')
+
+    // Send private message
+    msgCmd
+      .command('send')
+      .description('Send private message')
+      .option('--connection-id <id>', 'Connection ID')
+      .option('--sender-id <id>', 'Sender user ID')
+      .option('--recipient-id <id>', 'Recipient user ID')
+      .option('--content <content>', 'Message content')
+      .option('--type <type>', 'Message type')
+      .option('--priority <priority>', 'Message priority')
+      .action(async (options) => {
+        try {
+          if (!options.connectionId || !options.senderId || !options.recipientId || !options.content) {
+            this.outputError('Connection ID, sender ID, recipient ID, and content are required')
+            process.exit(1)
+          }
+
+          const message = await this.library.sendPrivateMessage(
+            options.connectionId,
+            options.senderId,
+            options.recipientId,
+            options.content,
+            {
+              type: options.type as any,
+              priority: options.priority as any
+            }
+          )
+
+          this.outputResult(message, 'Private message sent successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get conversation
+    msgCmd
+      .command('conversation <userId1> <userId2>')
+      .description('Get conversation between users')
+      .option('--page <number>', 'Page number')
+      .option('--limit <number>', 'Items per page')
+      .option('--before <date>', 'Get messages before this date')
+      .action(async (userId1, userId2, options) => {
+        try {
+          const filters = {
+            page: options.page ? parseInt(options.page) : undefined,
+            limit: options.limit ? parseInt(options.limit) : undefined,
+            before: options.before
+          }
+
+          const conversation = await this.library.messaging.getConversation(
+            userId1,
+            userId2,
+            filters
+          )
+
+          this.outputResult(conversation, 'Conversation retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get user conversations
+    msgCmd
+      .command('conversations <userId>')
+      .description('Get user conversations')
+      .option('--page <number>', 'Page number')
+      .option('--limit <number>', 'Items per page')
+      .option('--unread-only', 'Show only conversations with unread messages')
+      .action(async (userId, options) => {
+        try {
+          const filters = {
+            page: options.page ? parseInt(options.page) : undefined,
+            limit: options.limit ? parseInt(options.limit) : undefined,
+            unreadOnly: options.unreadOnly
+          }
+
+          const result = await this.library.messaging.getUserConversations(userId, filters)
+          this.outputResult(result, 'User conversations retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Search messages
+    msgCmd
+      .command('search <userId> <searchTerm>')
+      .description('Search messages')
+      .option('--connection-id <id>', 'Filter by connection ID')
+      .option('--type <type>', 'Filter by message type')
+      .option('--limit <number>', 'Number of results')
+      .action(async (userId, searchTerm, options) => {
+        try {
+          const filters = {
+            connectionId: options.connectionId,
+            type: options.type,
+            limit: options.limit ? parseInt(options.limit) : 20
+          }
+
+          const messages = await this.library.messaging.searchMessages(
+            userId,
+            searchTerm,
+            filters
+          )
+
+          this.outputResult(messages, 'Message search completed successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Mark message as read
+    msgCmd
+      .command('read <messageId> <userId>')
+      .description('Mark message as read')
+      .action(async (messageId, userId) => {
+        try {
+          const message = await this.library.messaging.markAsRead(messageId, userId)
+          this.outputResult(message, 'Message marked as read successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Setup analytics commands
+   */
+  private setupAnalyticsCommands(): void {
+    const analyticsCmd = this.program
+      .command('analytics')
+      .description('Networking analytics operations')
+
+    // Get user networking summary
+    analyticsCmd
+      .command('summary <userId>')
+      .description('Get user networking summary')
+      .action(async (userId) => {
+        try {
+          const summary = await this.library.getUserNetworkingSummary(userId)
+          this.outputResult(summary, 'User networking summary retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get networking analytics
+    analyticsCmd
+      .command('overview')
+      .description('Get networking analytics overview')
+      .option('--start-date <date>', 'Start date (ISO 8601)')
+      .option('--end-date <date>', 'End date (ISO 8601)')
+      .option('--event-id <id>', 'Filter by event ID')
+      .action(async (options) => {
+        try {
+          const filters = {
+            startDate: options.startDate,
+            endDate: options.endDate,
+            eventId: options.eventId
+          }
+
+          const analytics = await this.library.getNetworkingAnalytics(filters)
+          this.outputResult(analytics, 'Networking analytics retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get connection statistics
+    analyticsCmd
+      .command('connections <userId>')
+      .description('Get connection statistics for user')
+      .action(async (userId) => {
+        try {
+          const stats = await this.library.connections.getNetworkingStats(userId)
+          this.outputResult(stats, 'Connection statistics retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get messaging statistics
+    analyticsCmd
+      .command('messaging <userId>')
+      .description('Get messaging statistics for user')
+      .action(async (userId) => {
+        try {
+          const stats = await this.library.messaging.getMessagingStats(userId)
+          this.outputResult(stats, 'Messaging statistics retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Setup health check command
+   */
+  private setupHealthCommand(): void {
+    this.program
+      .command('health')
+      .description('Check library health status')
+      .action(async () => {
+        try {
+          const health = await this.library.getHealthStatus()
+          this.outputResult(health, 'Health check completed')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Output result in appropriate format
+   */
+  private outputResult(data: any, message: string): void {
+    const options = this.program.opts()
+    
+    if (options.json) {
+      const result = {
+        success: true,
+        message,
+        data,
+        timestamp: new Date().toISOString()
+      }
+      console.log(JSON.stringify(result, null, 2))
+    } else {
+      console.log(`✅ ${message}`)
+      if (options.verbose) {
+        console.log(JSON.stringify(data, null, 2))
+      }
+    }
+  }
+
+  /**
+   * Output error in appropriate format
+   */
+  private outputError(message: string): void {
+    const options = this.program.opts()
+    
+    if (options.json) {
+      const result = {
+        success: false,
+        error: {
+          message,
+          timestamp: new Date().toISOString()
+        }
+      }
+      console.error(JSON.stringify(result, null, 2))
+    } else {
+      console.error(`❌ ${message}`)
+    }
+  }
+
+  /**
+   * Handle errors consistently
+   */
+  private handleError(error: any): void {
+    const message = error instanceof Error ? error.message : 'Unknown error occurred'
+    this.outputError(message)
+    process.exit(1)
+  }
+
+  /**
+   * Parse command line arguments and execute
+   */
+  async run(args: string[] = process.argv.slice(2)): Promise<void> {
+    try {
+      await this.program.parseAsync(args)
+    } catch (error) {
+      this.handleError(error)
+    }
+  }
+}
+
+// CLI entry point
+if (require.main === module) {
+  const cli = new NetworkingCLI()
+  cli.run().catch(console.error)
+}
+
+export default NetworkingCLI

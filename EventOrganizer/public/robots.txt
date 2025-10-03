@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+
+# Allow important pages
+Allow: /
+Allow: /events/
+Allow: /sessions/
+Allow: /networking/
+
+# Sitemap location
+Sitemap: https://eventorganizer.example.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

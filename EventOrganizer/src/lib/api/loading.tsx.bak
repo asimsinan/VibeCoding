@@ -1,0 +1,498 @@
+#!/usr/bin/env node
+/**
+ * Professional API Loading State Management
+ * 
+ * Comprehensive loading state management for API operations
+ * with loading indicators, skeleton screens, and progress tracking.
+ * 
+ * @fileoverview API loading state utilities and components
+ */
+
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react'
+import { APIResponse } from './client'
+
+export interface LoadingState {
+  isLoading: boolean
+  progress?: number
+  message?: string
+  operation?: string
+  startTime?: number
+  estimatedTime?: number
+}
+
+export interface LoadingContextType {
+  loadingStates: Map<string, LoadingState>
+  setLoading: (key: string, state: LoadingState) => void
+  clearLoading: (key: string) => void
+  clearAllLoading: () => void
+  isAnyLoading: boolean
+  getLoadingState: (key: string) => LoadingState | undefined
+}
+
+// Loading context
+const LoadingContext = createContext<LoadingContextType | null>(null)
+
+// Loading provider component
+export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [loadingStates, setLoadingStates] = useState<Map<string, LoadingState>>(new Map())
+
+  const setLoading = useCallback((key: string, state: LoadingState) => {
+    setLoadingStates(prev => {
+      const newMap = new Map(prev)
+      newMap.set(key, {
+        ...state,
+        startTime: state.startTime || Date.now()
+      })
+      return newMap
+    })
+  }, [])
+
+  const clearLoading = useCallback((key: string) => {
+    setLoadingStates(prev => {
+      const newMap = new Map(prev)
+      newMap.delete(key)
+      return newMap
+    })
+  }, [])
+
+  const clearAllLoading = useCallback(() => {
+    setLoadingStates(new Map())
+  }, [])
+
+  const getLoadingState = useCallback((key: string) => {
+    return loadingStates.get(key)
+  }, [loadingStates])
+
+  const isAnyLoading = loadingStates.size > 0
+
+  const value: LoadingContextType = {
+    loadingStates,
+    setLoading,
+    clearLoading,
+    clearAllLoading,
+    isAnyLoading,
+    getLoadingState
+  }
+
+  return (
+    <LoadingContext.Provider value={value}>
+      {children}
+    </LoadingContext.Provider>
+  )
+}
+
+// Hook to use loading context
+export const useLoading = () => {
+  const context = useContext(LoadingContext)
+  if (!context) {
+    throw new Error('useLoading must be used within a LoadingProvider')
+  }
+  return context
+}
+
+// Hook for managing loading state for a specific operation
+export const useLoadingState = (key: string) => {
+  const { setLoading, clearLoading, getLoadingState } = useLoading()
+  const [state, setState] = useState<LoadingState | undefined>(getLoadingState(key))
+
+  const startLoading = useCallback((message?: string, operation?: string) => {
+    const loadingState: LoadingState = {
+      isLoading: true,
+      message,
+      operation,
+      startTime: Date.now()
+    }
+    setLoading(key, loadingState)
+    setState(loadingState)
+  }, [key, setLoading])
+
+  const updateProgress = useCallback((progress: number, message?: string) => {
+    const currentState = getLoadingState(key)
+    if (currentState) {
+      const updatedState: LoadingState = {
+        ...currentState,
+        progress,
+        message: message || currentState.message
+      }
+      setLoading(key, updatedState)
+      setState(updatedState)
+    }
+  }, [key, setLoading, getLoadingState])
+
+  const stopLoading = useCallback(() => {
+    clearLoading(key)
+    setState(undefined)
+  }, [key, clearLoading])
+
+  return {
+    loadingState: state,
+    startLoading,
+    updateProgress,
+    stopLoading,
+    isLoading: state?.isLoading || false
+  }
+}
+
+// Loading spinner component
+export const LoadingSpinner: React.FC<{
+  size?: 'sm' | 'md' | 'lg'
+  color?: string
+  className?: string
+}> = ({ size = 'md', color = 'currentColor', className = '' }) => {
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-8 h-8',
+    lg: 'w-12 h-12'
+  }
+
+  return (
+    <div className={`inline-block ${className}`}>
+      <svg
+        className={`animate-spin ${sizeClasses[size]} ${color}`}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+    </div>
+  )
+}
+
+// Progress bar component
+export const ProgressBar: React.FC<{
+  progress: number
+  className?: string
+  showPercentage?: boolean
+  color?: string
+}> = ({ progress, className = '', showPercentage = true, color = 'bg-blue-500' }) => {
+  return (
+    <div className={`w-full ${className}`}>
+      <div className="flex justify-between items-center mb-1">
+        {showPercentage && (
+          <span className="text-sm font-medium text-gray-700">
+            {Math.round(progress)}%
+          </span>
+        )}
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-2">
+        <div
+          className={`h-2 rounded-full transition-all duration-300 ease-in-out ${color}`}
+          style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+        />
+      </div>
+    </div>
+  )
+}
+
+// Loading overlay component
+export const LoadingOverlay: React.FC<{
+  isLoading: boolean
+  message?: string
+  progress?: number
+  children: React.ReactNode
+  className?: string
+}> = ({ isLoading, message, progress, children, className = '' }) => {
+  if (!isLoading) {
+    return <>{children}</>
+  }
+
+  return (
+    <div className={`relative ${className}`}>
+      {children}
+      <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+        <div className="text-center">
+          <LoadingSpinner size="lg" />
+          {message && (
+            <p className="mt-2 text-sm text-gray-600">{message}</p>
+          )}
+          {progress !== undefined && (
+            <div className="mt-4 w-64">
+              <ProgressBar progress={progress} />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Skeleton loading component
+export const SkeletonLoader: React.FC<{
+  lines?: number
+  className?: string
+}> = ({ lines = 3, className = '' }) => {
+  return (
+    <div className={`animate-pulse ${className}`}>
+      {Array.from({ length: lines }).map((_, index) => (
+        <div
+          key={index}
+          className={`h-4 bg-gray-200 rounded ${
+            index === lines - 1 ? 'w-3/4' : 'w-full'
+          } ${index > 0 ? 'mt-2' : ''}`}
+        />
+      ))}
+    </div>
+  )
+}
+
+// Card skeleton component
+export const CardSkeleton: React.FC<{
+  className?: string
+}> = ({ className = '' }) => {
+  return (
+    <div className={`bg-white rounded-lg shadow p-6 ${className}`}>
+      <div className="animate-pulse">
+        <div className="h-4 bg-gray-200 rounded w-1/4 mb-4" />
+        <div className="h-4 bg-gray-200 rounded w-full mb-2" />
+        <div className="h-4 bg-gray-200 rounded w-3/4 mb-4" />
+        <div className="h-8 bg-gray-200 rounded w-1/3" />
+      </div>
+    </div>
+  )
+}
+
+// Table skeleton component
+export const TableSkeleton: React.FC<{
+  rows?: number
+  columns?: number
+  className?: string
+}> = ({ rows = 5, columns = 4, className = '' }) => {
+  return (
+    <div className={`overflow-hidden ${className}`}>
+      <div className="animate-pulse">
+        {/* Header */}
+        <div className="grid grid-cols-4 gap-4 mb-4">
+          {Array.from({ length: columns }).map((_, index) => (
+            <div key={index} className="h-4 bg-gray-200 rounded" />
+          ))}
+        </div>
+        {/* Rows */}
+        {Array.from({ length: rows }).map((_, rowIndex) => (
+          <div key={rowIndex} className="grid grid-cols-4 gap-4 mb-2">
+            {Array.from({ length: columns }).map((_, colIndex) => (
+              <div key={colIndex} className="h-4 bg-gray-200 rounded" />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Loading button component
+export const LoadingButton: React.FC<{
+  isLoading: boolean
+  loadingText?: string
+  children: React.ReactNode
+  onClick?: () => void
+  disabled?: boolean
+  className?: string
+  type?: 'button' | 'submit' | 'reset'
+}> = ({
+  isLoading,
+  loadingText = 'Loading...',
+  children,
+  onClick,
+  disabled,
+  className = '',
+  type = 'button'
+}) => {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled || isLoading}
+      className={`relative ${className}`}
+    >
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <LoadingSpinner size="sm" color="white" />
+        </div>
+      )}
+      <span className={isLoading ? 'opacity-0' : ''}>
+        {isLoading ? loadingText : children}
+      </span>
+    </button>
+  )
+}
+
+// Hook for API operation loading states
+export const useAPILoading = (operationKey: string) => {
+  const { startLoading, updateProgress, stopLoading, isLoading } = useLoadingState(operationKey)
+
+  const executeWithLoading = useCallback(async <T>(
+    operation: () => Promise<APIResponse<T>>,
+    message?: string
+  ): Promise<APIResponse<T>> => {
+    try {
+      startLoading(message, operationKey)
+      const result = await operation()
+      stopLoading()
+      return result
+    } catch (error) {
+      stopLoading()
+      throw error
+    }
+  }, [operationKey, startLoading, stopLoading])
+
+  const executeWithProgress = useCallback(async <T>(
+    operation: (updateProgress: (progress: number) => void) => Promise<APIResponse<T>>,
+    message?: string
+  ): Promise<APIResponse<T>> => {
+    try {
+      startLoading(message, operationKey)
+      const result = await operation(updateProgress)
+      stopLoading()
+      return result
+    } catch (error) {
+      stopLoading()
+      throw error
+    }
+  }, [operationKey, startLoading, stopLoading, updateProgress])
+
+  return {
+    isLoading,
+    executeWithLoading,
+    executeWithProgress,
+    startLoading,
+    updateProgress,
+    stopLoading
+  }
+}
+
+// Global loading indicator component
+export const GlobalLoadingIndicator: React.FC<{
+  className?: string
+}> = ({ className = '' }) => {
+  const { isAnyLoading, loadingStates } = useLoading()
+
+  if (!isAnyLoading) {
+    return null
+  }
+
+  const loadingStatesArray = Array.from(loadingStates.values())
+  const primaryLoading = loadingStatesArray.find(state => state.isLoading)
+
+  return (
+    <div className={`fixed top-4 right-4 z-50 ${className}`}>
+      <div className="bg-white rounded-lg shadow-lg p-4 min-w-64">
+        <div className="flex items-center">
+          <LoadingSpinner size="sm" />
+          <div className="ml-3">
+            <p className="text-sm font-medium text-gray-900">
+              {primaryLoading?.message || 'Loading...'}
+            </p>
+            {primaryLoading?.operation && (
+              <p className="text-xs text-gray-500">
+                {primaryLoading.operation}
+              </p>
+            )}
+          </div>
+        </div>
+        {primaryLoading?.progress !== undefined && (
+          <div className="mt-2">
+            <ProgressBar progress={primaryLoading.progress} />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Loading state manager hook
+export const useLoadingManager = () => {
+  const { loadingStates, setLoading, clearLoading, clearAllLoading, isAnyLoading } = useLoading()
+
+  const createLoadingOperation = useCallback((key: string) => {
+    return {
+      start: (message?: string, operation?: string) => {
+        setLoading(key, {
+          isLoading: true,
+          message,
+          operation,
+          startTime: Date.now()
+        })
+      },
+      update: (progress: number, message?: string) => {
+        const currentState = loadingStates.get(key)
+        if (currentState) {
+          setLoading(key, {
+            ...currentState,
+            progress,
+            message: message || currentState.message
+          })
+        }
+      },
+      stop: () => {
+        clearLoading(key)
+      }
+    }
+  }, [loadingStates, setLoading, clearLoading])
+
+  const getLoadingSummary = useCallback(() => {
+    const activeLoadings = Array.from(loadingStates.values()).filter(state => state.isLoading)
+    return {
+      count: activeLoadings.length,
+      operations: activeLoadings.map(state => state.operation).filter(Boolean),
+      messages: activeLoadings.map(state => state.message).filter(Boolean)
+    }
+  }, [loadingStates])
+
+  return {
+    loadingStates,
+    isAnyLoading,
+    createLoadingOperation,
+    getLoadingSummary,
+    clearAllLoading
+  }
+}
+
+// Higher-order component for loading states
+export const withLoading = <P extends object>(
+  Component: React.ComponentType<P>,
+  loadingKey: string
+) => {
+  const WrappedComponent = (props: P) => {
+    const { isLoading } = useLoadingState(loadingKey)
+
+    return (
+      <LoadingOverlay isLoading={isLoading}>
+        <Component {...props} />
+      </LoadingOverlay>
+    )
+  }
+
+  WrappedComponent.displayName = `withLoading(${Component.displayName || Component.name})`
+
+  return WrappedComponent
+}
+
+export default {
+  LoadingProvider,
+  useLoading,
+  useLoadingState,
+  useAPILoading,
+  useLoadingManager,
+  LoadingSpinner,
+  ProgressBar,
+  LoadingOverlay,
+  SkeletonLoader,
+  CardSkeleton,
+  TableSkeleton,
+  LoadingButton,
+  GlobalLoadingIndicator,
+  withLoading
+}

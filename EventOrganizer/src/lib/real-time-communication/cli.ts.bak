@@ -1,0 +1,364 @@
+#!/usr/bin/env node
+/**
+ * Real-time Communication CLI
+ * 
+ * Command-line interface for Real-time Communication Library with:
+ * - --json mode support for automation
+ * - stdin/stdout handling for pipe operations
+ * - stderr error reporting
+ * - Developer tool capabilities
+ * 
+ * @fileoverview CLI Interface for Real-time Communication Library
+ * @version 1.0.0
+ * @author Virtual Event Organizer Team
+ */
+
+import { Command } from 'commander'
+import { RealTimeCommunicationLibrary } from './index'
+
+/**
+ * Real-time Communication CLI
+ * 
+ * Provides command-line interface for all real-time communication operations
+ * with JSON output support and comprehensive error handling.
+ */
+export class RealTimeCommunicationCLI {
+  private library: RealTimeCommunicationLibrary
+  private program: Command
+
+  constructor() {
+    this.library = new RealTimeCommunicationLibrary()
+    this.program = new Command()
+    this.setupCommands()
+  }
+
+  /**
+   * Setup CLI commands
+   */
+  private setupCommands(): void {
+    this.program
+      .name('real-time-communication')
+      .description('Real-time Communication CLI for Virtual Event Organizer')
+      .version('1.0.0')
+      .option('--json', 'Output results in JSON format')
+      .option('--verbose', 'Enable verbose logging')
+
+    // WebSocket commands
+    this.setupWebSocketCommands()
+    
+    // Notification commands
+    this.setupNotificationCommands()
+    
+    // Health check command
+    this.setupHealthCommand()
+  }
+
+  /**
+   * Setup WebSocket-related commands
+   */
+  private setupWebSocketCommands(): void {
+    const wsCmd = this.program
+      .command('websocket')
+      .description('WebSocket management operations')
+
+    // Start WebSocket service
+    wsCmd
+      .command('start')
+      .description('Start WebSocket service')
+      .action(async () => {
+        try {
+          await this.library.start()
+          this.outputResult({ status: 'started' }, 'WebSocket service started successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Stop WebSocket service
+    wsCmd
+      .command('stop')
+      .description('Stop WebSocket service')
+      .action(async () => {
+        try {
+          await this.library.stop()
+          this.outputResult({ status: 'stopped' }, 'WebSocket service stopped successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get connection stats
+    wsCmd
+      .command('stats')
+      .description('Get WebSocket connection statistics')
+      .action(async () => {
+        try {
+          const stats = this.library.getRealtimeStats()
+          this.outputResult(stats, 'WebSocket statistics retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Broadcast event
+    wsCmd
+      .command('broadcast')
+      .description('Broadcast real-time event')
+      .option('--type <type>', 'Event type (event_update, session_start, session_end, etc.)')
+      .option('--data <data>', 'Event data (JSON string)')
+      .option('--event-id <id>', 'Target event ID')
+      .option('--session-id <id>', 'Target session ID')
+      .option('--user-ids <ids>', 'Target user IDs (comma-separated)')
+      .action(async (options) => {
+        try {
+          if (!options.type || !options.data) {
+            this.outputError('Event type and data are required')
+            process.exit(1)
+          }
+
+          const data = JSON.parse(options.data)
+          const target = {
+            eventId: options.eventId,
+            sessionId: options.sessionId,
+            userIds: options.userIds ? options.userIds.split(',') : undefined
+          }
+
+          const sentCount = await this.library.broadcastEvent(
+            options.type as any,
+            data,
+            target
+          )
+
+          this.outputResult({ sentCount }, 'Event broadcast successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Setup notification-related commands
+   */
+  private setupNotificationCommands(): void {
+    const notifCmd = this.program
+      .command('notification')
+      .description('Notification management operations')
+
+    // Send notification
+    notifCmd
+      .command('send')
+      .description('Send real-time notification')
+      .option('--recipient-id <id>', 'Recipient user ID')
+      .option('--title <title>', 'Notification title')
+      .option('--message <message>', 'Notification message')
+      .option('--sender-id <id>', 'Sender user ID')
+      .option('--type <type>', 'Notification type')
+      .option('--priority <priority>', 'Notification priority')
+      .action(async (options) => {
+        try {
+          if (!options.recipientId || !options.title || !options.message) {
+            this.outputError('Recipient ID, title, and message are required')
+            process.exit(1)
+          }
+
+          const notification = await this.library.sendRealtimeNotification(
+            options.recipientId,
+            options.title,
+            options.message,
+            {
+              senderId: options.senderId,
+              type: options.type as any,
+              priority: options.priority as any
+            }
+          )
+
+          this.outputResult(notification, 'Notification sent successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Send template notification
+    notifCmd
+      .command('template')
+      .description('Send template notification')
+      .option('--template-id <id>', 'Template ID')
+      .option('--recipient-id <id>', 'Recipient user ID')
+      .option('--variables <vars>', 'Template variables (JSON string)')
+      .option('--sender-id <id>', 'Sender user ID')
+      .option('--priority <priority>', 'Notification priority')
+      .action(async (options) => {
+        try {
+          if (!options.templateId || !options.recipientId) {
+            this.outputError('Template ID and recipient ID are required')
+            process.exit(1)
+          }
+
+          const variables = options.variables ? JSON.parse(options.variables) : {}
+          const notification = await this.library.notifications.sendTemplateNotification(
+            options.templateId,
+            options.recipientId,
+            variables,
+            {
+              senderId: options.senderId,
+              priority: options.priority as any
+            }
+          )
+
+          this.outputResult(notification, 'Template notification sent successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get user notifications
+    notifCmd
+      .command('list <userId>')
+      .description('Get user notifications')
+      .option('--status <status>', 'Filter by status')
+      .option('--type <type>', 'Filter by type')
+      .option('--unread-only', 'Show only unread notifications')
+      .option('--page <number>', 'Page number')
+      .option('--limit <number>', 'Items per page')
+      .action(async (userId, options) => {
+        try {
+          const filters = {
+            status: options.status,
+            type: options.type,
+            unreadOnly: options.unreadOnly,
+            page: options.page ? parseInt(options.page) : undefined,
+            limit: options.limit ? parseInt(options.limit) : undefined
+          }
+
+          const result = await this.library.notifications.getUserNotifications(userId, filters)
+          this.outputResult(result, 'User notifications retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Mark notification as read
+    notifCmd
+      .command('read <notificationId> <userId>')
+      .description('Mark notification as read')
+      .action(async (notificationId, userId) => {
+        try {
+          const notification = await this.library.notifications.markAsRead(notificationId, userId)
+          this.outputResult(notification, 'Notification marked as read successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get notification analytics
+    notifCmd
+      .command('analytics')
+      .description('Get notification analytics')
+      .option('--start-date <date>', 'Start date (ISO 8601)')
+      .option('--end-date <date>', 'End date (ISO 8601)')
+      .option('--type <type>', 'Filter by type')
+      .option('--method <method>', 'Filter by delivery method')
+      .action(async (options) => {
+        try {
+          const filters = {
+            startDate: options.startDate,
+            endDate: options.endDate,
+            type: options.type,
+            deliveryMethod: options.method
+          }
+
+          const analytics = await this.library.notifications.getNotificationAnalytics(filters)
+          this.outputResult(analytics, 'Notification analytics retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Setup health check command
+   */
+  private setupHealthCommand(): void {
+    this.program
+      .command('health')
+      .description('Check library health status')
+      .action(async () => {
+        try {
+          const health = await this.library.getHealthStatus()
+          this.outputResult(health, 'Health check completed')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Output result in appropriate format
+   */
+  private outputResult(data: any, message: string): void {
+    const options = this.program.opts()
+    
+    if (options.json) {
+      const result = {
+        success: true,
+        message,
+        data,
+        timestamp: new Date().toISOString()
+      }
+      console.log(JSON.stringify(result, null, 2))
+    } else {
+      console.log(`✅ ${message}`)
+      if (options.verbose) {
+        console.log(JSON.stringify(data, null, 2))
+      }
+    }
+  }
+
+  /**
+   * Output error in appropriate format
+   */
+  private outputError(message: string): void {
+    const options = this.program.opts()
+    
+    if (options.json) {
+      const result = {
+        success: false,
+        error: {
+          message,
+          timestamp: new Date().toISOString()
+        }
+      }
+      console.error(JSON.stringify(result, null, 2))
+    } else {
+      console.error(`❌ ${message}`)
+    }
+  }
+
+  /**
+   * Handle errors consistently
+   */
+  private handleError(error: any): void {
+    const message = error instanceof Error ? error.message : 'Unknown error occurred'
+    this.outputError(message)
+    process.exit(1)
+  }
+
+  /**
+   * Parse command line arguments and execute
+   */
+  async run(args: string[] = process.argv.slice(2)): Promise<void> {
+    try {
+      await this.program.parseAsync(args)
+    } catch (error) {
+      this.handleError(error)
+    }
+  }
+}
+
+// CLI entry point
+if (require.main === module) {
+  const cli = new RealTimeCommunicationCLI()
+  cli.run().catch(console.error)
+}
+
+export default RealTimeCommunicationCLI

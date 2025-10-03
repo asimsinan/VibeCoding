@@ -1,0 +1,628 @@
+#!/usr/bin/env node
+/**
+ * Event Management CLI
+ * 
+ * Command-line interface for Event Management Library with:
+ * - --json mode support for automation
+ * - stdin/stdout handling for pipe operations
+ * - stderr error reporting
+ * - Developer tool capabilities
+ * 
+ * @fileoverview CLI Interface for Event Management Library
+ * @version 1.0.0
+ * @author Virtual Event Organizer Team
+ */
+
+import { Command } from 'commander'
+import { EventManagementLibrary } from './index'
+import { DatabaseConnectionService } from '../database/connection'
+
+/**
+ * Event Management CLI
+ * 
+ * Provides command-line interface for all event management operations
+ * with JSON output support and comprehensive error handling.
+ */
+export class EventManagementCLI {
+  private library: EventManagementLibrary
+  private program: Command
+
+  constructor() {
+    this.library = new EventManagementLibrary()
+    this.program = new Command()
+    this.setupCommands()
+  }
+
+  /**
+   * Setup CLI commands
+   */
+  private setupCommands(): void {
+    this.program
+      .name('event-management')
+      .description('Event Management CLI for Virtual Event Organizer')
+      .version('1.0.0')
+      .option('--json', 'Output results in JSON format')
+      .option('--verbose', 'Enable verbose logging')
+
+    // Event commands
+    this.setupEventCommands()
+    
+    // Attendee commands
+    this.setupAttendeeCommands()
+    
+    // Session commands
+    this.setupSessionCommands()
+    
+    // Health check command
+    this.setupHealthCommand()
+  }
+
+  /**
+   * Setup event-related commands
+   */
+  private setupEventCommands(): void {
+    const eventCmd = this.program
+      .command('event')
+      .description('Event management operations')
+
+    // Create event
+    eventCmd
+      .command('create')
+      .description('Create a new event')
+      .option('--title <title>', 'Event title')
+      .option('--description <description>', 'Event description')
+      .option('--start-date <date>', 'Event start date (ISO 8601)')
+      .option('--end-date <date>', 'Event end date (ISO 8601)')
+      .option('--capacity <number>', 'Event capacity')
+      .option('--organizer-id <id>', 'Organizer ID')
+      .option('--type <type>', 'Event type')
+      .option('--location <location>', 'Event location')
+      .option('--timezone <timezone>', 'Event timezone')
+      .option('--public', 'Make event public')
+      .option('--private', 'Make event private')
+      .action(async (options) => {
+        try {
+          const eventData = {
+            title: options.title,
+            description: options.description,
+            startDate: options.startDate,
+            endDate: options.endDate,
+            capacity: options.capacity ? parseInt(options.capacity) : 100,
+            organizerId: options.organizerId,
+            type: options.type || 'conference',
+            location: options.location,
+            timezone: options.timezone,
+            isPublic: options.public ? true : options.private ? false : true,
+            status: 'draft' as const,
+            registrationOpen: true,
+            metadata: {
+              timezone: options.timezone || 'UTC',
+              tags: [],
+              categories: [],
+              language: 'en',
+              recordingEnabled: false,
+              chatEnabled: true,
+              qaEnabled: true,
+              networkingEnabled: true,
+              maxSessions: 10,
+              customFields: {}
+            }
+          }
+
+          const event = await this.library.events.createEvent(eventData)
+          this.outputResult(event, 'Event created successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get event
+    eventCmd
+      .command('get <eventId>')
+      .description('Get event by ID')
+      .action(async (eventId) => {
+        try {
+          const event = await this.library.events.getEventById(eventId)
+          if (!event) {
+            this.outputError('Event not found')
+            process.exit(1)
+          }
+          this.outputResult(event, 'Event retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // List events
+    eventCmd
+      .command('list')
+      .description('List events')
+      .option('--organizer-id <id>', 'Filter by organizer ID')
+      .option('--status <status>', 'Filter by status')
+      .option('--type <type>', 'Filter by type')
+      .option('--public', 'Show only public events')
+      .option('--private', 'Show only private events')
+      .option('--search <term>', 'Search term')
+      .option('--page <number>', 'Page number')
+      .option('--limit <number>', 'Items per page')
+      .option('--sort-by <field>', 'Sort field')
+      .option('--sort-order <order>', 'Sort order (asc/desc)')
+      .action(async (options) => {
+        try {
+          const filters = {
+            organizerId: options.organizerId,
+            status: options.status,
+            type: options.type,
+            isPublic: options.public ? true : options.private ? false : undefined,
+            search: options.search,
+            page: options.page ? parseInt(options.page) : undefined,
+            limit: options.limit ? parseInt(options.limit) : undefined,
+            sortBy: options.sortBy,
+            sortOrder: options.sortOrder
+          }
+
+          const result = await this.library.events.listEvents(filters)
+          this.outputResult(result, 'Events retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Update event
+    eventCmd
+      .command('update <eventId>')
+      .description('Update event')
+      .option('--title <title>', 'Event title')
+      .option('--description <description>', 'Event description')
+      .option('--start-date <date>', 'Event start date')
+      .option('--end-date <date>', 'Event end date')
+      .option('--capacity <number>', 'Event capacity')
+      .option('--status <status>', 'Event status')
+      .option('--type <type>', 'Event type')
+      .option('--location <location>', 'Event location')
+      .option('--timezone <timezone>', 'Event timezone')
+      .action(async (eventId, options) => {
+        try {
+          const updateData = {
+            title: options.title,
+            description: options.description,
+            startDate: options.startDate,
+            endDate: options.endDate,
+            capacity: options.capacity ? parseInt(options.capacity) : undefined,
+            status: options.status,
+            type: options.type,
+            location: options.location,
+            timezone: options.timezone
+          }
+
+          const event = await this.library.events.updateEvent(eventId, updateData)
+          this.outputResult(event, 'Event updated successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Delete event
+    eventCmd
+      .command('delete <eventId>')
+      .description('Delete event')
+      .option('--organizer-id <id>', 'Organizer ID (for authorization)')
+      .action(async (eventId, options) => {
+        try {
+          if (!options.organizerId) {
+            this.outputError('Organizer ID is required for deletion')
+            process.exit(1)
+          }
+
+          const success = await this.library.events.deleteEvent(eventId, options.organizerId)
+          this.outputResult({ success }, 'Event deleted successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get event analytics
+    eventCmd
+      .command('analytics <eventId>')
+      .description('Get event analytics')
+      .action(async (eventId) => {
+        try {
+          const analytics = await this.library.events.getEventAnalytics(eventId)
+          this.outputResult(analytics, 'Event analytics retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Setup attendee-related commands
+   */
+  private setupAttendeeCommands(): void {
+    const attendeeCmd = this.program
+      .command('attendee')
+      .description('Attendee management operations')
+
+    // Register attendee
+    attendeeCmd
+      .command('register')
+      .description('Register attendee for event')
+      .option('--event-id <id>', 'Event ID')
+      .option('--user-id <id>', 'User ID')
+      .option('--type <type>', 'Attendee type')
+      .action(async (options) => {
+        try {
+          if (!options.eventId || !options.userId) {
+            this.outputError('Event ID and User ID are required')
+            process.exit(1)
+          }
+
+          const attendeeData = {
+            eventId: options.eventId,
+            userId: options.userId,
+            type: options.type || 'attendee',
+            status: 'registered' as const,
+            metadata: {
+              customFields: {},
+              dietaryRequirements: undefined,
+              accessibilityNeeds: undefined,
+              emergencyContact: undefined,
+              tshirtSize: undefined,
+              company: undefined,
+              jobTitle: undefined,
+              bio: undefined,
+              socialLinks: {},
+              interests: [],
+              skills: [],
+              experience: undefined,
+              availability: undefined,
+              timezone: undefined,
+              language: undefined,
+              notes: undefined
+            }
+          }
+
+          const attendee = await this.library.attendees.registerAttendee(attendeeData)
+          this.outputResult(attendee, 'Attendee registered successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get attendee
+    attendeeCmd
+      .command('get <attendeeId>')
+      .description('Get attendee by ID')
+      .action(async (attendeeId) => {
+        try {
+          const attendee = await this.library.attendees.getAttendeeById(attendeeId)
+          if (!attendee) {
+            this.outputError('Attendee not found')
+            process.exit(1)
+          }
+          this.outputResult(attendee, 'Attendee retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // List attendees
+    attendeeCmd
+      .command('list <eventId>')
+      .description('List attendees for event')
+      .option('--status <status>', 'Filter by status')
+      .option('--type <type>', 'Filter by type')
+      .option('--search <term>', 'Search term')
+      .option('--page <number>', 'Page number')
+      .option('--limit <number>', 'Items per page')
+      .action(async (eventId, options) => {
+        try {
+          const filters = {
+            status: options.status,
+            type: options.type,
+            search: options.search,
+            page: options.page ? parseInt(options.page) : undefined,
+            limit: options.limit ? parseInt(options.limit) : undefined
+          }
+
+          const result = await this.library.attendees.listEventAttendees(eventId, filters)
+          this.outputResult(result, 'Attendees retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Check in attendee
+    attendeeCmd
+      .command('checkin <attendeeId>')
+      .description('Check in attendee')
+      .action(async (attendeeId) => {
+        try {
+          const attendee = await this.library.attendees.checkInAttendee(attendeeId)
+          this.outputResult(attendee, 'Attendee checked in successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Check out attendee
+    attendeeCmd
+      .command('checkout <attendeeId>')
+      .description('Check out attendee')
+      .action(async (attendeeId) => {
+        try {
+          const attendee = await this.library.attendees.checkOutAttendee(attendeeId)
+          this.outputResult(attendee, 'Attendee checked out successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Cancel registration
+    attendeeCmd
+      .command('cancel <attendeeId>')
+      .description('Cancel attendee registration')
+      .action(async (attendeeId) => {
+        try {
+          const attendee = await this.library.attendees.cancelAttendeeRegistration(attendeeId)
+          this.outputResult(attendee, 'Attendee registration cancelled successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get attendee analytics
+    attendeeCmd
+      .command('analytics <eventId>')
+      .description('Get attendee analytics for event')
+      .action(async (eventId) => {
+        try {
+          const analytics = await this.library.attendees.getAttendeeAnalytics(eventId)
+          this.outputResult(analytics, 'Attendee analytics retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Setup session-related commands
+   */
+  private setupSessionCommands(): void {
+    const sessionCmd = this.program
+      .command('session')
+      .description('Session management operations')
+
+    // Create session
+    sessionCmd
+      .command('create')
+      .description('Create a new session')
+      .option('--event-id <id>', 'Event ID')
+      .option('--title <title>', 'Session title')
+      .option('--description <description>', 'Session description')
+      .option('--speaker-name <name>', 'Speaker name')
+      .option('--speaker-email <email>', 'Speaker email')
+      .option('--start-time <time>', 'Session start time (ISO 8601)')
+      .option('--end-time <time>', 'Session end time (ISO 8601)')
+      .option('--type <type>', 'Session type')
+      .option('--max-attendees <number>', 'Maximum attendees')
+      .option('--meeting-link <url>', 'Meeting link')
+      .action(async (options) => {
+        try {
+          if (!options.eventId || !options.title || !options.description || !options.speakerName) {
+            this.outputError('Event ID, title, description, and speaker name are required')
+            process.exit(1)
+          }
+
+          const sessionData = {
+            eventId: options.eventId,
+            title: options.title,
+            description: options.description,
+            speaker: {
+              name: options.speakerName,
+              email: options.speakerEmail,
+              isExternal: false
+            },
+            startTime: options.startTime,
+            endTime: options.endTime,
+            type: options.type,
+            maxAttendees: options.maxAttendees ? parseInt(options.maxAttendees) : undefined,
+            meetingLink: options.meetingLink
+          }
+
+          const session = await this.library.sessions.createSession(sessionData)
+          this.outputResult(session, 'Session created successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get session
+    sessionCmd
+      .command('get <sessionId>')
+      .description('Get session by ID')
+      .action(async (sessionId) => {
+        try {
+          const session = await this.library.sessions.getSessionById(sessionId)
+          if (!session) {
+            this.outputError('Session not found')
+            process.exit(1)
+          }
+          this.outputResult(session, 'Session retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // List sessions
+    sessionCmd
+      .command('list <eventId>')
+      .description('List sessions for event')
+      .option('--status <status>', 'Filter by status')
+      .option('--type <type>', 'Filter by type')
+      .option('--speaker-id <id>', 'Filter by speaker ID')
+      .option('--search <term>', 'Search term')
+      .option('--page <number>', 'Page number')
+      .option('--limit <number>', 'Items per page')
+      .action(async (eventId, options) => {
+        try {
+          const filters = {
+            status: options.status,
+            type: options.type,
+            speakerId: options.speakerId,
+            search: options.search,
+            page: options.page ? parseInt(options.page) : undefined,
+            limit: options.limit ? parseInt(options.limit) : undefined
+          }
+
+          const result = await this.library.sessions.listEventSessions(eventId, filters)
+          this.outputResult(result, 'Sessions retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Update session
+    sessionCmd
+      .command('update <sessionId>')
+      .description('Update session')
+      .option('--title <title>', 'Session title')
+      .option('--description <description>', 'Session description')
+      .option('--start-time <time>', 'Session start time')
+      .option('--end-time <time>', 'Session end time')
+      .option('--status <status>', 'Session status')
+      .option('--type <type>', 'Session type')
+      .option('--max-attendees <number>', 'Maximum attendees')
+      .action(async (sessionId, options) => {
+        try {
+          const updateData = {
+            title: options.title,
+            description: options.description,
+            startTime: options.startTime,
+            endTime: options.endTime,
+            status: options.status,
+            type: options.type,
+            maxAttendees: options.maxAttendees ? parseInt(options.maxAttendees) : undefined
+          }
+
+          const session = await this.library.sessions.updateSession(sessionId, updateData)
+          this.outputResult(session, 'Session updated successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Delete session
+    sessionCmd
+      .command('delete <sessionId>')
+      .description('Delete session')
+      .action(async (sessionId) => {
+        try {
+          const success = await this.library.sessions.deleteSession(sessionId)
+          this.outputResult({ success }, 'Session deleted successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+
+    // Get session analytics
+    sessionCmd
+      .command('analytics <sessionId>')
+      .description('Get session analytics')
+      .action(async (sessionId) => {
+        try {
+          const analytics = await this.library.sessions.getSessionAnalytics(sessionId)
+          this.outputResult(analytics, 'Session analytics retrieved successfully')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Setup health check command
+   */
+  private setupHealthCommand(): void {
+    this.program
+      .command('health')
+      .description('Check library health status')
+      .action(async () => {
+        try {
+          const health = await this.library.getHealthStatus()
+          this.outputResult(health, 'Health check completed')
+        } catch (error) {
+          this.handleError(error)
+        }
+      })
+  }
+
+  /**
+   * Output result in appropriate format
+   */
+  private outputResult(data: any, message: string): void {
+    const options = this.program.opts()
+    
+    if (options.json) {
+      const result = {
+        success: true,
+        message,
+        data,
+        timestamp: new Date().toISOString()
+      }
+      console.log(JSON.stringify(result, null, 2))
+    } else {
+      console.log(`✅ ${message}`)
+      if (options.verbose) {
+        console.log(JSON.stringify(data, null, 2))
+      }
+    }
+  }
+
+  /**
+   * Output error in appropriate format
+   */
+  private outputError(message: string): void {
+    const options = this.program.opts()
+    
+    if (options.json) {
+      const result = {
+        success: false,
+        error: {
+          message,
+          timestamp: new Date().toISOString()
+        }
+      }
+      console.error(JSON.stringify(result, null, 2))
+    } else {
+      console.error(`❌ ${message}`)
+    }
+  }
+
+  /**
+   * Handle errors consistently
+   */
+  private handleError(error: any): void {
+    const message = error instanceof Error ? error.message : 'Unknown error occurred'
+    this.outputError(message)
+    process.exit(1)
+  }
+
+  /**
+   * Parse command line arguments and execute
+   */
+  async run(args: string[] = process.argv.slice(2)): Promise<void> {
+    try {
+      await this.program.parseAsync(args)
+    } catch (error) {
+      this.handleError(error)
+    }
+  }
+}
+
+// CLI entry point
+if (require.main === module) {
+  const cli = new EventManagementCLI()
+  cli.run().catch(console.error)
+}
+
+export default EventManagementCLI

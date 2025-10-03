@@ -1,0 +1,1444 @@
+openapi: 3.0.3
+info:
+  title: Virtual Event Organizer API
+  version: 1.0.0
+  description: |
+    Comprehensive API for managing virtual events, attendees, sessions, notifications, and networking features.
+    
+    ## Features
+    - Event creation and management
+    - Attendee registration and management
+    - Session scheduling
+    - Real-time notifications
+    - Networking and connections
+    - Analytics and reporting
+    
+    ## Authentication
+    All endpoints require Bearer token authentication except for public event listing.
+    
+    ## Rate Limiting
+    - 1000 requests per hour per authenticated user
+    - 100 requests per hour for unauthenticated requests
+    
+  contact:
+    name: Virtual Event Organizer API Support
+    email: support@eventorganizer.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.eventorganizer.com/v1
+    description: Production server
+  - url: https://staging-api.eventorganizer.com/v1
+    description: Staging server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+
+security:
+  - bearerAuth: []
+
+paths:
+  /events:
+    get:
+      summary: List events
+      description: Retrieve a paginated list of events with filtering and search capabilities
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of events per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          description: Search term for event title or description
+          required: false
+          schema:
+            type: string
+            maxLength: 100
+        - name: status
+          in: query
+          description: Filter by event status
+          required: false
+          schema:
+            type: string
+            enum: [draft, published, live, ended]
+        - name: organizerId
+          in: query
+          description: Filter by organizer ID
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of events retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      events:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Event'
+                      pagination:
+                        $ref: '#/components/schemas/Pagination'
+                  message:
+                    type: string
+                    example: "Events retrieved successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Create event
+      description: Create a new virtual event with comprehensive details
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventRequest'
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Event'
+                  message:
+                    type: string
+                    example: "Event created successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /events/{id}:
+    get:
+      summary: Get event details
+      description: Retrieve detailed information about a specific event including sessions and attendee count
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Event details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/EventDetails'
+                  message:
+                    type: string
+                    example: "Event details retrieved successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: Update event
+      description: Update event details with real-time notification to attendees
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEventRequest'
+      responses:
+        '200':
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Event'
+                  message:
+                    type: string
+                    example: "Event updated successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Cancel event
+      description: Cancel event with notification to all registered attendees
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Event cancelled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      eventId:
+                        type: string
+                        format: uuid
+                      status:
+                        type: string
+                        example: "cancelled"
+                  message:
+                    type: string
+                    example: "Event cancelled successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /events/{id}/register:
+    post:
+      summary: Register for event
+      description: Register attendee for event with capacity validation
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRegistrationRequest'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/EventRegistration'
+                  message:
+                    type: string
+                    example: "Registration successful"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Already registered or event at capacity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /events/{id}/attendees:
+    get:
+      summary: Get event attendees
+      description: Get attendee list with privacy controls
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+            format: uuid
+        - name: includePrivate
+          in: query
+          description: Include private attendee information (organizer only)
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Attendees retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      attendees:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Attendee'
+                      totalCount:
+                        type: integer
+                        example: 150
+                  message:
+                    type: string
+                    example: "Attendees retrieved successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /sessions:
+    post:
+      summary: Create event session
+      description: Create event session with speaker and time slot validation
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '201':
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Session'
+                  message:
+                    type: string
+                    example: "Session created successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /sessions/{id}:
+    put:
+      summary: Update session
+      description: Update session details with real-time notifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Session ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSessionRequest'
+      responses:
+        '200':
+          description: Session updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Session'
+                  message:
+                    type: string
+                    example: "Session updated successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /notifications:
+    post:
+      summary: Send notification
+      description: Send notifications to event attendees
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendNotificationRequest'
+      responses:
+        '201':
+          description: Notification sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      notificationId:
+                        type: string
+                        format: uuid
+                      recipientsCount:
+                        type: integer
+                        example: 150
+                  message:
+                    type: string
+                    example: "Notification sent successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /networking/connect:
+    post:
+      summary: Request connection
+      description: Request connection between attendees
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionRequest'
+      responses:
+        '201':
+          description: Connection request sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Connection'
+                  message:
+                    type: string
+                    example: "Connection request sent successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Connection already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /networking/connections:
+    get:
+      summary: Get user connections
+      description: Get user's networking connections and requests
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          description: Filter by connection status
+          required: false
+          schema:
+            type: string
+            enum: [pending, accepted, declined]
+        - name: type
+          in: query
+          description: Filter by connection type
+          required: false
+          schema:
+            type: string
+            enum: [sent, received]
+      responses:
+        '200':
+          description: Connections retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      connections:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Connection'
+                      sentRequests:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Connection'
+                      receivedRequests:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Connection'
+                  message:
+                    type: string
+                    example: "Connections retrieved successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT token obtained from authentication endpoint.
+        Include the token in the Authorization header as: `Bearer <token>`
+
+  schemas:
+    Event:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - startDate
+        - endDate
+        - capacity
+        - status
+        - organizerId
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique event identifier
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          maxLength: 100
+          description: Event title
+          example: "Tech Conference 2024"
+        description:
+          type: string
+          maxLength: 1000
+          description: Event description
+          example: "Annual technology conference featuring the latest innovations"
+        startDate:
+          type: string
+          format: date-time
+          description: Event start date and time
+          example: "2024-06-15T09:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          description: Event end date and time
+          example: "2024-06-15T17:00:00Z"
+        capacity:
+          type: integer
+          minimum: 1
+          maximum: 10000
+          description: Maximum number of attendees
+          example: 500
+        attendeeCount:
+          type: integer
+          minimum: 0
+          description: Current number of registered attendees
+          example: 150
+        status:
+          type: string
+          enum: [draft, published, live, ended, cancelled]
+          description: Event status
+          example: "published"
+        organizerId:
+          type: string
+          format: uuid
+          description: ID of the event organizer
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        isPublic:
+          type: boolean
+          description: Whether the event is publicly visible
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Event creation timestamp
+          example: "2024-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Event last update timestamp
+          example: "2024-01-15T10:30:00Z"
+
+    EventDetails:
+      allOf:
+        - $ref: '#/components/schemas/Event'
+        - type: object
+          properties:
+            sessions:
+              type: array
+              items:
+                $ref: '#/components/schemas/Session'
+            organizer:
+              $ref: '#/components/schemas/User'
+            attendees:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attendee'
+
+    CreateEventRequest:
+      type: object
+      required:
+        - title
+        - description
+        - startDate
+        - endDate
+        - capacity
+      properties:
+        title:
+          type: string
+          maxLength: 100
+          description: Event title
+          example: "Tech Conference 2024"
+        description:
+          type: string
+          maxLength: 1000
+          description: Event description
+          example: "Annual technology conference featuring the latest innovations"
+        startDate:
+          type: string
+          format: date-time
+          description: Event start date and time
+          example: "2024-06-15T09:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          description: Event end date and time
+          example: "2024-06-15T17:00:00Z"
+        capacity:
+          type: integer
+          minimum: 1
+          maximum: 10000
+          description: Maximum number of attendees
+          example: 500
+        isPublic:
+          type: boolean
+          default: true
+          description: Whether the event is publicly visible
+          example: true
+
+    UpdateEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 100
+          description: Event title
+          example: "Tech Conference 2024 - Updated"
+        description:
+          type: string
+          maxLength: 1000
+          description: Event description
+          example: "Annual technology conference featuring the latest innovations"
+        startDate:
+          type: string
+          format: date-time
+          description: Event start date and time
+          example: "2024-06-15T09:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          description: Event end date and time
+          example: "2024-06-15T17:00:00Z"
+        capacity:
+          type: integer
+          minimum: 1
+          maximum: 10000
+          description: Maximum number of attendees
+          example: 500
+        isPublic:
+          type: boolean
+          description: Whether the event is publicly visible
+          example: true
+
+    EventRegistrationRequest:
+      type: object
+      required:
+        - attendeeId
+      properties:
+        attendeeId:
+          type: string
+          format: uuid
+          description: ID of the attendee registering
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        notes:
+          type: string
+          maxLength: 500
+          description: Optional registration notes
+          example: "Looking forward to networking opportunities"
+
+    EventRegistration:
+      type: object
+      required:
+        - id
+        - eventId
+        - attendeeId
+        - status
+        - registeredAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Registration ID
+          example: "123e4567-e89b-12d3-a456-426614174003"
+        eventId:
+          type: string
+          format: uuid
+          description: Event ID
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        attendeeId:
+          type: string
+          format: uuid
+          description: Attendee ID
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        status:
+          type: string
+          enum: [registered, confirmed, cancelled]
+          description: Registration status
+          example: "registered"
+        notes:
+          type: string
+          description: Registration notes
+          example: "Looking forward to networking opportunities"
+        registeredAt:
+          type: string
+          format: date-time
+          description: Registration timestamp
+          example: "2024-01-15T10:30:00Z"
+
+    Session:
+      type: object
+      required:
+        - id
+        - eventId
+        - title
+        - speaker
+        - startTime
+        - endTime
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Session ID
+          example: "123e4567-e89b-12d3-a456-426614174004"
+        eventId:
+          type: string
+          format: uuid
+          description: Event ID
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          maxLength: 100
+          description: Session title
+          example: "Introduction to AI"
+        speaker:
+          type: string
+          maxLength: 100
+          description: Speaker name
+          example: "Dr. Jane Smith"
+        description:
+          type: string
+          maxLength: 500
+          description: Session description
+          example: "An introduction to artificial intelligence concepts"
+        startTime:
+          type: string
+          format: date-time
+          description: Session start time
+          example: "2024-06-15T10:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          description: Session end time
+          example: "2024-06-15T11:00:00Z"
+        capacity:
+          type: integer
+          minimum: 1
+          description: Session capacity
+          example: 100
+        attendeeCount:
+          type: integer
+          minimum: 0
+          description: Current number of attendees
+          example: 75
+        createdAt:
+          type: string
+          format: date-time
+          description: Session creation timestamp
+          example: "2024-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Session last update timestamp
+          example: "2024-01-15T10:30:00Z"
+
+    CreateSessionRequest:
+      type: object
+      required:
+        - eventId
+        - title
+        - speaker
+        - startTime
+        - endTime
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: Event ID
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          maxLength: 100
+          description: Session title
+          example: "Introduction to AI"
+        speaker:
+          type: string
+          maxLength: 100
+          description: Speaker name
+          example: "Dr. Jane Smith"
+        description:
+          type: string
+          maxLength: 500
+          description: Session description
+          example: "An introduction to artificial intelligence concepts"
+        startTime:
+          type: string
+          format: date-time
+          description: Session start time
+          example: "2024-06-15T10:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          description: Session end time
+          example: "2024-06-15T11:00:00Z"
+        capacity:
+          type: integer
+          minimum: 1
+          description: Session capacity
+          example: 100
+
+    UpdateSessionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 100
+          description: Session title
+          example: "Introduction to AI - Updated"
+        speaker:
+          type: string
+          maxLength: 100
+          description: Speaker name
+          example: "Dr. Jane Smith"
+        description:
+          type: string
+          maxLength: 500
+          description: Session description
+          example: "An introduction to artificial intelligence concepts"
+        startTime:
+          type: string
+          format: date-time
+          description: Session start time
+          example: "2024-06-15T10:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          description: Session end time
+          example: "2024-06-15T11:00:00Z"
+        capacity:
+          type: integer
+          minimum: 1
+          description: Session capacity
+          example: 100
+
+    Attendee:
+      type: object
+      required:
+        - id
+        - userId
+        - eventId
+        - status
+        - registeredAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Attendee ID
+          example: "123e4567-e89b-12d3-a456-426614174005"
+        userId:
+          type: string
+          format: uuid
+          description: User ID
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        eventId:
+          type: string
+          format: uuid
+          description: Event ID
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        status:
+          type: string
+          enum: [registered, confirmed, cancelled]
+          description: Attendee status
+          example: "registered"
+        checkInStatus:
+          type: string
+          enum: [not_checked_in, checked_in, checked_out]
+          description: Check-in status
+          example: "not_checked_in"
+        notes:
+          type: string
+          description: Attendee notes
+          example: "Vegetarian meal preference"
+        registeredAt:
+          type: string
+          format: date-time
+          description: Registration timestamp
+          example: "2024-01-15T10:30:00Z"
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: User ID
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        email:
+          type: string
+          format: email
+          description: User email
+          example: "john.doe@example.com"
+        firstName:
+          type: string
+          maxLength: 50
+          description: User first name
+          example: "John"
+        lastName:
+          type: string
+          maxLength: 50
+          description: User last name
+          example: "Doe"
+        avatar:
+          type: string
+          format: uri
+          description: User avatar URL
+          example: "https://example.com/avatars/john-doe.jpg"
+        bio:
+          type: string
+          maxLength: 500
+          description: User bio
+          example: "Software engineer with 5 years of experience"
+        company:
+          type: string
+          maxLength: 100
+          description: User company
+          example: "Tech Corp"
+        title:
+          type: string
+          maxLength: 100
+          description: User job title
+          example: "Senior Software Engineer"
+        createdAt:
+          type: string
+          format: date-time
+          description: User creation timestamp
+          example: "2024-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: User last update timestamp
+          example: "2024-01-15T10:30:00Z"
+
+    Notification:
+      type: object
+      required:
+        - id
+        - eventId
+        - type
+        - title
+        - message
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Notification ID
+          example: "123e4567-e89b-12d3-a456-426614174006"
+        eventId:
+          type: string
+          format: uuid
+          description: Event ID
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        type:
+          type: string
+          enum: [announcement, schedule_change, networking, reminder]
+          description: Notification type
+          example: "announcement"
+        title:
+          type: string
+          maxLength: 100
+          description: Notification title
+          example: "Event Update"
+        message:
+          type: string
+          maxLength: 1000
+          description: Notification message
+          example: "The event schedule has been updated"
+        status:
+          type: string
+          enum: [pending, sent, delivered, failed]
+          description: Notification status
+          example: "sent"
+        recipientsCount:
+          type: integer
+          minimum: 0
+          description: Number of recipients
+          example: 150
+        createdAt:
+          type: string
+          format: date-time
+          description: Notification creation timestamp
+          example: "2024-01-15T10:30:00Z"
+
+    SendNotificationRequest:
+      type: object
+      required:
+        - eventId
+        - type
+        - title
+        - message
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: Event ID
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        type:
+          type: string
+          enum: [announcement, schedule_change, networking, reminder]
+          description: Notification type
+          example: "announcement"
+        title:
+          type: string
+          maxLength: 100
+          description: Notification title
+          example: "Event Update"
+        message:
+          type: string
+          maxLength: 1000
+          description: Notification message
+          example: "The event schedule has been updated"
+        targetAudience:
+          type: string
+          enum: [all, registered, checked_in]
+          default: "all"
+          description: Target audience for the notification
+          example: "all"
+
+    Connection:
+      type: object
+      required:
+        - id
+        - requesterId
+        - recipientId
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Connection ID
+          example: "123e4567-e89b-12d3-a456-426614174007"
+        requesterId:
+          type: string
+          format: uuid
+          description: ID of the user requesting connection
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        recipientId:
+          type: string
+          format: uuid
+          description: ID of the user receiving connection request
+          example: "123e4567-e89b-12d3-a456-426614174008"
+        status:
+          type: string
+          enum: [pending, accepted, declined]
+          description: Connection status
+          example: "pending"
+        message:
+          type: string
+          maxLength: 500
+          description: Connection request message
+          example: "Would love to connect and discuss AI trends"
+        createdAt:
+          type: string
+          format: date-time
+          description: Connection creation timestamp
+          example: "2024-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Connection last update timestamp
+          example: "2024-01-15T10:30:00Z"
+        requester:
+          $ref: '#/components/schemas/User'
+        recipient:
+          $ref: '#/components/schemas/User'
+
+    ConnectionRequest:
+      type: object
+      required:
+        - recipientId
+      properties:
+        recipientId:
+          type: string
+          format: uuid
+          description: ID of the user to connect with
+          example: "123e4567-e89b-12d3-a456-426614174008"
+        message:
+          type: string
+          maxLength: 500
+          description: Connection request message
+          example: "Would love to connect and discuss AI trends"
+
+    Pagination:
+      type: object
+      required:
+        - page
+        - limit
+        - total
+        - totalPages
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: Current page number
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Number of items per page
+          example: 20
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of items
+          example: 150
+        totalPages:
+          type: integer
+          minimum: 0
+          description: Total number of pages
+          example: 8
+        hasNext:
+          type: boolean
+          description: Whether there is a next page
+          example: true
+        hasPrev:
+          type: boolean
+          description: Whether there is a previous page
+          example: false
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+        - timestamp
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Error code
+              example: "VALIDATION_ERROR"
+            message:
+              type: string
+              description: Error message
+              example: "Invalid input data"
+            details:
+              type: object
+              description: Additional error details
+              example:
+                field: "title"
+                reason: "Title is required"
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: "2024-01-15T10:30:00Z"
+
+  responses:
+    BadRequest:
+      description: Bad request - Invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "VALIDATION_ERROR"
+              message: "Invalid input data"
+              details:
+                field: "title"
+                reason: "Title is required"
+            timestamp: "2024-01-15T10:30:00Z"
+
+    Unauthorized:
+      description: Unauthorized - Invalid or missing authentication token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "UNAUTHORIZED"
+              message: "Authentication required"
+            timestamp: "2024-01-15T10:30:00Z"
+
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "FORBIDDEN"
+              message: "Insufficient permissions"
+            timestamp: "2024-01-15T10:30:00Z"
+
+    NotFound:
+      description: Not found - Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "NOT_FOUND"
+              message: "Resource not found"
+            timestamp: "2024-01-15T10:30:00Z"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "INTERNAL_ERROR"
+              message: "An unexpected error occurred"
+            timestamp: "2024-01-15T10:30:00Z"
+
+tags:
+  - name: Events
+    description: Event management operations
+  - name: Sessions
+    description: Session management operations
+  - name: Attendees
+    description: Attendee management operations
+  - name: Notifications
+    description: Notification operations
+  - name: Networking
+    description: Networking and connection operations

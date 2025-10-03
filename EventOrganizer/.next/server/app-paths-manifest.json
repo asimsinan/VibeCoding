@@ -1,0 +1,14 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/v1/events/route": "app/api/v1/events/route.js",
+  "/auth/callback/page": "app/auth/callback/page.js",
+  "/create-event/page": "app/create-event/page.js",
+  "/event/[id]/page": "app/event/[id]/page.js",
+  "/events/[id]/edit/page": "app/events/[id]/edit/page.js",
+  "/events/[id]/page": "app/events/[id]/page.js",
+  "/events/page": "app/events/page.js",
+  "/my-events/page": "app/my-events/page.js",
+  "/realtime-demo/page": "app/realtime-demo/page.js",
+  "/page": "app/page.js",
+  "/signin/page": "app/signin/page.js"
+}
