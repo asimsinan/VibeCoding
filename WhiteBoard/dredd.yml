@@ -1,0 +1,19 @@
+# Dredd configuration for API contract testing
+# Tests the OpenAPI specification against the actual API endpoints
+
+language: nodejs
+server: npm run dev
+server-wait: 10
+init: false
+hooks:
+  - "./tests/contract/hooks.js"
+reporter:
+  - spec
+  - json
+  - html
+output:
+  - "./tests/contract/results/spec.txt"
+  - "./tests/contract/results/results.json"
+  - "./tests/contract/results/results.html"
+blueprint: "./contracts/openapi.yaml"
+endpoint: "http://localhost:3000/api/v1"

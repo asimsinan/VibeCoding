@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Sticky Note Schema",
+  "description": "Schema for sticky note data structure",
+  "type": "object",
+  "required": ["id", "content", "position", "color", "user_id", "created_at", "updated_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique sticky note identifier",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "content": {
+      "type": "string",
+      "maxLength": 500,
+      "minLength": 1,
+      "description": "Sticky note content"
+    },
+    "position": {
+      "$ref": "#/definitions/Position"
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "description": "Sticky note color in hex format"
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User who created the sticky note",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    }
+  },
+  "definitions": {
+    "Position": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "description": "X coordinate"
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Y coordinate"
+        }
+      }
+    }
+  }
+}

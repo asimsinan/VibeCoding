@@ -1,0 +1,211 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Whiteboard Schema",
+  "description": "Schema for whiteboard data structure",
+  "type": "object",
+  "required": ["id", "name", "created_at", "updated_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique whiteboard identifier",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 1,
+      "description": "Whiteboard name"
+    },
+    "settings": {
+      "$ref": "#/definitions/WhiteboardSettings"
+    },
+    "drawings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Drawing"
+      },
+      "description": "List of drawings on the whiteboard"
+    },
+    "sticky_notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StickyNote"
+      },
+      "description": "List of sticky notes on the whiteboard"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    }
+  },
+  "definitions": {
+    "WhiteboardSettings": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number",
+          "minimum": 800,
+          "maximum": 4000,
+          "default": 1920,
+          "description": "Whiteboard width in pixels"
+        },
+        "height": {
+          "type": "number",
+          "minimum": 600,
+          "maximum": 3000,
+          "default": 1080,
+          "description": "Whiteboard height in pixels"
+        },
+        "background_color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "default": "#FFFFFF",
+          "description": "Background color in hex format"
+        },
+        "grid_enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show grid lines"
+        },
+        "grid_size": {
+          "type": "number",
+          "minimum": 10,
+          "maximum": 100,
+          "default": 20,
+          "description": "Grid cell size in pixels"
+        }
+      }
+    },
+    "Drawing": {
+      "type": "object",
+      "required": ["id", "tool", "color", "size", "points", "user_id", "created_at", "updated_at"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique drawing identifier",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "tool": {
+          "type": "string",
+          "enum": ["pen", "brush", "eraser"],
+          "description": "Drawing tool used"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Drawing color in hex format"
+        },
+        "size": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 50,
+          "description": "Drawing stroke size in pixels"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Point"
+          },
+          "minItems": 1,
+          "description": "Drawing path points"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "User who created the drawing",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        }
+      }
+    },
+    "StickyNote": {
+      "type": "object",
+      "required": ["id", "content", "position", "color", "user_id", "created_at", "updated_at"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique sticky note identifier",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "content": {
+          "type": "string",
+          "maxLength": 500,
+          "minLength": 1,
+          "description": "Sticky note content"
+        },
+        "position": {
+          "$ref": "#/definitions/Position"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Sticky note color in hex format"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "User who created the sticky note",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        }
+      }
+    },
+    "Point": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": {
+          "type": "number",
+          "description": "X coordinate"
+        },
+        "y": {
+          "type": "number",
+          "description": "Y coordinate"
+        }
+      }
+    },
+    "Position": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "description": "X coordinate"
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Y coordinate"
+        }
+      }
+    }
+  }
+}

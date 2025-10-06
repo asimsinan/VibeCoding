@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Collaborative Whiteboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .offline-container {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .offline-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #6b7280;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .features {
+            text-align: left;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .features h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            color: #4b5563;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .retry-section {
+            margin-top: 2rem;
+        }
+
+        .retry-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0.5rem;
+        }
+
+        .retry-button:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .retry-button:active {
+            transform: translateY(0);
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+        }
+
+        .secondary-button:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .status.offline {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .status.online {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .connection-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .connection-indicator.offline {
+            background: #dc2626;
+        }
+
+        .connection-indicator.online {
+            background: #16a34a;
+        }
+
+        @media (max-width: 640px) {
+            .offline-container {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">
+            📱
+        </div>
+        
+        <h1>You're Offline</h1>
+        <p class="subtitle">
+            It looks like you've lost your internet connection. Don't worry, 
+            you can still view your whiteboards and some features will work offline.
+        </p>
+
+        <div class="features">
+            <h3>Available Offline</h3>
+            <ul>
+                <li>View previously loaded whiteboards</li>
+                <li>Access cached drawings and sticky notes</li>
+                <li>Use basic drawing tools</li>
+                <li>View user presence (last known state)</li>
+            </ul>
+        </div>
+
+        <div class="retry-section">
+            <button class="retry-button" onclick="checkConnection()">
+                Check Connection
+            </button>
+            <button class="retry-button secondary-button" onclick="goHome()">
+                Go to Home
+            </button>
+        </div>
+
+        <div id="status" class="status offline">
+            <span class="connection-indicator offline"></span>
+            <span id="status-text">You are currently offline</span>
+        </div>
+    </div>
+
+    <script>
+        let isOnline = navigator.onLine;
+        let retryCount = 0;
+        const maxRetries = 5;
+
+        // Update status display
+        function updateStatus() {
+            const statusEl = document.getElementById('status');
+            const statusTextEl = document.getElementById('status-text');
+            const indicatorEl = statusEl.querySelector('.connection-indicator');
+
+            if (isOnline) {
+                statusEl.className = 'status online';
+                statusTextEl.textContent = 'You are back online!';
+                indicatorEl.className = 'connection-indicator online';
+            } else {
+                statusEl.className = 'status offline';
+                statusTextEl.textContent = 'You are currently offline';
+                indicatorEl.className = 'connection-indicator offline';
+            }
+        }
+
+        // Check connection status
+        function checkConnection() {
+            retryCount++;
+            const statusTextEl = document.getElementById('status-text');
+            
+            if (retryCount <= maxRetries) {
+                statusTextEl.textContent = `Checking connection... (${retryCount}/${maxRetries})`;
+                
+                // Try to fetch a small resource to test connectivity
+                fetch('/api/v1/health', { 
+                    method: 'HEAD',
+                    cache: 'no-cache',
+                    timeout: 5000
+                })
+                .then(() => {
+                    isOnline = true;
+                    updateStatus();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                })
+                .catch(() => {
+                    isOnline = false;
+                    updateStatus();
+                });
+            } else {
+                statusTextEl.textContent = 'Unable to connect. Please check your internet connection.';
+            }
+        }
+
+        // Go to home page
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            isOnline = true;
+            updateStatus();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            updateStatus();
+        });
+
+        // Auto-check connection every 30 seconds
+        setInterval(() => {
+            if (!isOnline && retryCount < maxRetries) {
+                checkConnection();
+            }
+        }, 30000);
+
+        // Initialize status
+        updateStatus();
+    </script>
+</body>
+</html>

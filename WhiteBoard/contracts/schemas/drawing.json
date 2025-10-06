@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Drawing Schema",
+  "description": "Schema for drawing element data structure",
+  "type": "object",
+  "required": ["id", "tool", "color", "size", "points", "user_id", "created_at", "updated_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique drawing identifier",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "tool": {
+      "type": "string",
+      "enum": ["pen", "brush", "eraser"],
+      "description": "Drawing tool used"
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "description": "Drawing color in hex format"
+    },
+    "size": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 50,
+      "description": "Drawing stroke size in pixels"
+    },
+    "points": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Point"
+      },
+      "minItems": 1,
+      "description": "Drawing path points"
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User who created the drawing",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    }
+  },
+  "definitions": {
+    "Point": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": {
+          "type": "number",
+          "description": "X coordinate"
+        },
+        "y": {
+          "type": "number",
+          "description": "Y coordinate"
+        }
+      }
+    }
+  }
+}

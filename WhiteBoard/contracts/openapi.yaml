@@ -1,0 +1,1413 @@
+openapi: 3.0.3
+info:
+  title: Collaborative Whiteboard API
+  description: |
+    Real-time collaborative whiteboard API with drawing tools, sticky notes, and user presence.
+    Built with Next.js App Router, Supabase, and TypeScript.
+    
+    ## Features
+    - Real-time collaborative drawing with multiple tools (pen, brush, eraser)
+    - Interactive sticky notes with drag-and-drop positioning
+    - Live user presence indicators and cursor tracking
+    - WebSocket-based real-time synchronization
+    - RESTful API with comprehensive error handling
+    - JWT-based authentication and authorization
+    - Rate limiting and input validation
+    
+    ## Authentication
+    All endpoints require authentication via JWT token in the Authorization header:
+    ```
+    Authorization: Bearer <jwt_token>
+    ```
+    
+    ## Rate Limiting
+    - 100 requests per minute per user
+    - 1000 requests per hour per IP address
+    
+    ## Error Handling
+    All errors follow a consistent format with appropriate HTTP status codes.
+  version: 1.0.0
+  contact:
+    name: Whiteboard API Support
+    email: support@whiteboard.app
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.whiteboard.app/v1
+    description: Production server
+  - url: https://staging-api.whiteboard.app/v1
+    description: Staging server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /whiteboards:
+    get:
+      summary: List whiteboards
+      description: Retrieve a paginated list of whiteboards for the authenticated user
+      operationId: listWhiteboards
+      tags:
+        - Whiteboards
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-based)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          description: Search term for whiteboard names
+          required: false
+          schema:
+            type: string
+            maxLength: 100
+      responses:
+        '200':
+          description: Whiteboards retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      whiteboards:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/WhiteboardSummary'
+                      pagination:
+                        $ref: '#/components/schemas/Pagination'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    post:
+      summary: Create whiteboard
+      description: Create a new whiteboard with initial settings
+      operationId: createWhiteboard
+      tags:
+        - Whiteboards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWhiteboardRequest'
+      responses:
+        '201':
+          description: Whiteboard created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Whiteboard'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /whiteboards/{id}:
+    get:
+      summary: Get whiteboard
+      description: Retrieve a whiteboard with all its drawings and sticky notes
+      operationId: getWhiteboard
+      tags:
+        - Whiteboards
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: include_inactive
+          in: query
+          description: Include inactive drawings and sticky notes
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Whiteboard retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Whiteboard'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    put:
+      summary: Update whiteboard
+      description: Update whiteboard metadata (name, settings)
+      operationId: updateWhiteboard
+      tags:
+        - Whiteboards
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWhiteboardRequest'
+      responses:
+        '200':
+          description: Whiteboard updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Whiteboard'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    delete:
+      summary: Delete whiteboard
+      description: Delete whiteboard and all associated data
+      operationId: deleteWhiteboard
+      tags:
+        - Whiteboards
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Whiteboard deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /whiteboards/{id}/drawings:
+    get:
+      summary: List drawings
+      description: Get all drawings for a whiteboard
+      operationId: listDrawings
+      tags:
+        - Drawings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: tool
+          in: query
+          description: Filter by drawing tool
+          required: false
+          schema:
+            type: string
+            enum: [pen, brush, eraser]
+        - name: user_id
+          in: query
+          description: Filter by user ID
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Drawings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Drawing'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    post:
+      summary: Create drawing
+      description: Add a new drawing element to the whiteboard
+      operationId: createDrawing
+      tags:
+        - Drawings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDrawingRequest'
+      responses:
+        '201':
+          description: Drawing created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Drawing'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /whiteboards/{id}/drawings/{drawingId}:
+    get:
+      summary: Get drawing
+      description: Retrieve a specific drawing
+      operationId: getDrawing
+      tags:
+        - Drawings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: drawingId
+          in: path
+          required: true
+          description: Drawing UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Drawing retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Drawing'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    put:
+      summary: Update drawing
+      description: Update an existing drawing element
+      operationId: updateDrawing
+      tags:
+        - Drawings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: drawingId
+          in: path
+          required: true
+          description: Drawing UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDrawingRequest'
+      responses:
+        '200':
+          description: Drawing updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Drawing'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    delete:
+      summary: Delete drawing
+      description: Remove a drawing element from the whiteboard
+      operationId: deleteDrawing
+      tags:
+        - Drawings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: drawingId
+          in: path
+          required: true
+          description: Drawing UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Drawing deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /whiteboards/{id}/sticky-notes:
+    get:
+      summary: List sticky notes
+      description: Get all sticky notes for a whiteboard
+      operationId: listStickyNotes
+      tags:
+        - Sticky Notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: user_id
+          in: query
+          description: Filter by user ID
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Sticky notes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StickyNote'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    post:
+      summary: Create sticky note
+      description: Add a new sticky note to the whiteboard
+      operationId: createStickyNote
+      tags:
+        - Sticky Notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStickyNoteRequest'
+      responses:
+        '201':
+          description: Sticky note created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/StickyNote'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /whiteboards/{id}/sticky-notes/{noteId}:
+    get:
+      summary: Get sticky note
+      description: Retrieve a specific sticky note
+      operationId: getStickyNote
+      tags:
+        - Sticky Notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: noteId
+          in: path
+          required: true
+          description: Sticky note UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Sticky note retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/StickyNote'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    put:
+      summary: Update sticky note
+      description: Update an existing sticky note
+      operationId: updateStickyNote
+      tags:
+        - Sticky Notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: noteId
+          in: path
+          required: true
+          description: Sticky note UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStickyNoteRequest'
+      responses:
+        '200':
+          description: Sticky note updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/StickyNote'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    delete:
+      summary: Delete sticky note
+      description: Remove a sticky note from the whiteboard
+      operationId: deleteStickyNote
+      tags:
+        - Sticky Notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+        - name: noteId
+          in: path
+          required: true
+          description: Sticky note UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Sticky note deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /whiteboards/{id}/users:
+    get:
+      summary: Get active users
+      description: Get list of active users on the whiteboard
+      operationId: getActiveUsers
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Active users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  timestamp:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /whiteboards/{id}/clear:
+    post:
+      summary: Clear whiteboard
+      description: Clear all content from the whiteboard
+      operationId: clearWhiteboard
+      tags:
+        - Whiteboards
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Whiteboard UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                confirm:
+                  type: boolean
+                  description: Confirmation flag
+                  default: false
+      responses:
+        '200':
+          description: Whiteboard cleared successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      cleared_drawings:
+                        type: integer
+                        description: Number of drawings cleared
+                      cleared_sticky_notes:
+                        type: integer
+                        description: Number of sticky notes cleared
+                  timestamp:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from authentication endpoint
+
+  schemas:
+    Whiteboard:
+      type: object
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique whiteboard identifier
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          maxLength: 100
+          description: Whiteboard name
+          example: "Project Planning Board"
+        settings:
+          $ref: '#/components/schemas/WhiteboardSettings'
+        drawings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Drawing'
+          description: List of drawings on the whiteboard
+        sticky_notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/StickyNote'
+          description: List of sticky notes on the whiteboard
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+          example: "2023-12-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2023-12-01T15:30:00Z"
+
+    WhiteboardSummary:
+      type: object
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique whiteboard identifier
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          maxLength: 100
+          description: Whiteboard name
+          example: "Project Planning Board"
+        settings:
+          $ref: '#/components/schemas/WhiteboardSettings'
+        drawing_count:
+          type: integer
+          minimum: 0
+          description: Number of drawings on the whiteboard
+          example: 15
+        sticky_note_count:
+          type: integer
+          minimum: 0
+          description: Number of sticky notes on the whiteboard
+          example: 8
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+          example: "2023-12-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2023-12-01T15:30:00Z"
+
+    WhiteboardSettings:
+      type: object
+      properties:
+        width:
+          type: number
+          minimum: 800
+          maximum: 4000
+          default: 1920
+          description: Whiteboard width in pixels
+          example: 1920
+        height:
+          type: number
+          minimum: 600
+          maximum: 3000
+          default: 1080
+          description: Whiteboard height in pixels
+          example: 1080
+        background_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          default: "#FFFFFF"
+          description: Background color in hex format
+          example: "#FFFFFF"
+        grid_enabled:
+          type: boolean
+          default: true
+          description: Whether to show grid lines
+          example: true
+        grid_size:
+          type: number
+          minimum: 10
+          maximum: 100
+          default: 20
+          description: Grid cell size in pixels
+          example: 20
+
+    Drawing:
+      type: object
+      required:
+        - id
+        - tool
+        - color
+        - size
+        - points
+        - user_id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique drawing identifier
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        tool:
+          type: string
+          enum: [pen, brush, eraser]
+          description: Drawing tool used
+          example: "pen"
+        color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          description: Drawing color in hex format
+          example: "#FF0000"
+        size:
+          type: number
+          minimum: 1
+          maximum: 50
+          description: Drawing stroke size in pixels
+          example: 2
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+          minItems: 1
+          description: Drawing path points
+        user_id:
+          type: string
+          format: uuid
+          description: User who created the drawing
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+          example: "2023-12-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2023-12-01T10:00:00Z"
+
+    StickyNote:
+      type: object
+      required:
+        - id
+        - content
+        - position
+        - color
+        - user_id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique sticky note identifier
+          example: "123e4567-e89b-12d3-a456-426614174003"
+        content:
+          type: string
+          maxLength: 500
+          description: Sticky note content
+          example: "Remember to review the design mockups"
+        position:
+          $ref: '#/components/schemas/Position'
+        color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          description: Sticky note color in hex format
+          example: "#FFE066"
+        user_id:
+          type: string
+          format: uuid
+          description: User who created the sticky note
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+          example: "2023-12-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2023-12-01T10:00:00Z"
+
+    User:
+      type: object
+      required:
+        - id
+        - display_name
+        - last_seen
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        display_name:
+          type: string
+          maxLength: 50
+          description: User display name
+          example: "John Doe"
+        last_seen:
+          type: string
+          format: date-time
+          description: Last activity timestamp
+          example: "2023-12-01T15:30:00Z"
+        cursor_position:
+          $ref: '#/components/schemas/Position'
+        whiteboard_id:
+          type: string
+          format: uuid
+          description: Currently active whiteboard ID
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+          example: "2023-12-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2023-12-01T15:30:00Z"
+
+    Point:
+      type: object
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: number
+          description: X coordinate
+          example: 100.5
+        y:
+          type: number
+          description: Y coordinate
+          example: 200.3
+
+    Position:
+      type: object
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: number
+          minimum: 0
+          description: X coordinate
+          example: 100
+        y:
+          type: number
+          minimum: 0
+          description: Y coordinate
+          example: 200
+
+    CreateWhiteboardRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          description: Whiteboard name
+          example: "Project Planning Board"
+        settings:
+          $ref: '#/components/schemas/WhiteboardSettings'
+
+    UpdateWhiteboardRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          description: Whiteboard name
+          example: "Updated Project Planning Board"
+        settings:
+          $ref: '#/components/schemas/WhiteboardSettings'
+
+    CreateDrawingRequest:
+      type: object
+      required:
+        - tool
+        - color
+        - size
+        - points
+        - user_id
+      properties:
+        tool:
+          type: string
+          enum: [pen, brush, eraser]
+          description: Drawing tool used
+          example: "pen"
+        color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          description: Drawing color in hex format
+          example: "#FF0000"
+        size:
+          type: number
+          minimum: 1
+          maximum: 50
+          description: Drawing stroke size in pixels
+          example: 2
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+          minItems: 1
+          description: Drawing path points
+        user_id:
+          type: string
+          format: uuid
+          description: User who created the drawing
+          example: "123e4567-e89b-12d3-a456-426614174002"
+
+    UpdateDrawingRequest:
+      type: object
+      properties:
+        tool:
+          type: string
+          enum: [pen, brush, eraser]
+          description: Drawing tool used
+          example: "brush"
+        color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          description: Drawing color in hex format
+          example: "#00FF00"
+        size:
+          type: number
+          minimum: 1
+          maximum: 50
+          description: Drawing stroke size in pixels
+          example: 3
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+          minItems: 1
+          description: Drawing path points
+
+    CreateStickyNoteRequest:
+      type: object
+      required:
+        - content
+        - position
+        - color
+        - user_id
+      properties:
+        content:
+          type: string
+          maxLength: 500
+          description: Sticky note content
+          example: "Remember to review the design mockups"
+        position:
+          $ref: '#/components/schemas/Position'
+        color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          description: Sticky note color in hex format
+          example: "#FFE066"
+        user_id:
+          type: string
+          format: uuid
+          description: User who created the sticky note
+          example: "123e4567-e89b-12d3-a456-426614174002"
+
+    UpdateStickyNoteRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          maxLength: 500
+          description: Sticky note content
+          example: "Updated: Remember to review the design mockups"
+        position:
+          $ref: '#/components/schemas/Position'
+        color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          description: Sticky note color in hex format
+          example: "#FFB366"
+
+    Pagination:
+      type: object
+      required:
+        - page
+        - limit
+        - total
+        - total_pages
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: Current page number
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Items per page
+          example: 20
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of items
+          example: 150
+        total_pages:
+          type: integer
+          minimum: 0
+          description: Total number of pages
+          example: 8
+        has_next:
+          type: boolean
+          description: Whether there is a next page
+          example: true
+        has_prev:
+          type: boolean
+          description: Whether there is a previous page
+          example: false
+
+    Error:
+      type: object
+      required:
+        - success
+        - error
+        - code
+        - timestamp
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: Error message
+          example: "Validation failed"
+        code:
+          type: string
+          description: Error code
+          example: "VALIDATION_ERROR"
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: "2023-12-01T15:30:00Z"
+
+  responses:
+    BadRequest:
+      description: Bad request - Invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Validation failed"
+            code: "VALIDATION_ERROR"
+            details:
+              field: "name"
+              message: "Name is required"
+            timestamp: "2023-12-01T15:30:00Z"
+
+    Unauthorized:
+      description: Unauthorized - Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Authentication required"
+            code: "UNAUTHORIZED"
+            timestamp: "2023-12-01T15:30:00Z"
+
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Insufficient permissions"
+            code: "FORBIDDEN"
+            timestamp: "2023-12-01T15:30:00Z"
+
+    NotFound:
+      description: Not found - Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Whiteboard not found"
+            code: "NOT_FOUND"
+            timestamp: "2023-12-01T15:30:00Z"
+
+    RateLimited:
+      description: Too many requests - Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Rate limit exceeded"
+            code: "RATE_LIMITED"
+            details:
+              retry_after: 60
+            timestamp: "2023-12-01T15:30:00Z"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Internal server error"
+            code: "INTERNAL_ERROR"
+            timestamp: "2023-12-01T15:30:00Z"
+
+tags:
+  - name: Whiteboards
+    description: Whiteboard management operations
+  - name: Drawings
+    description: Drawing element operations
+  - name: Sticky Notes
+    description: Sticky note operations
+  - name: Users
+    description: User presence operations

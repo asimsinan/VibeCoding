@@ -1,0 +1,286 @@
+/**
+ * Global Styles
+ * Tailwind CSS imports and custom styles
+ * 
+ * @fileoverview Global styles with Tailwind CSS and custom utilities
+ * @version 1.0.0
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables */
+:root {
+  --whiteboard-bg: #ffffff;
+  --whiteboard-border: #e5e7eb;
+  --whiteboard-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --whiteboard-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --whiteboard-radius: 0.5rem;
+  --whiteboard-transition: all 0.2s ease-in-out;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--whiteboard-bg);
+}
+
+/* Custom Components */
+.whiteboard-canvas {
+  @apply relative w-full h-full bg-white border border-gray-200 rounded-lg shadow-sm;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.whiteboard-canvas:active {
+  cursor: grabbing;
+}
+
+.whiteboard-toolbar {
+  @apply bg-white border-b border-gray-200 px-4 py-3 flex items-center space-x-4;
+}
+
+.whiteboard-toolbar button {
+  @apply px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors;
+}
+
+.whiteboard-toolbar button.active {
+  @apply bg-blue-600 text-white border-blue-600;
+}
+
+.whiteboard-toolbar button:hover:not(.active) {
+  @apply bg-gray-50;
+}
+
+.sticky-note {
+  @apply absolute p-3 bg-yellow-200 border border-yellow-300 rounded shadow-sm cursor-move;
+  min-width: 200px;
+  min-height: 150px;
+  resize: both;
+  overflow: hidden;
+}
+
+.sticky-note:hover {
+  @apply shadow-md;
+}
+
+.sticky-note:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+.sticky-note textarea {
+  @apply w-full h-full bg-transparent border-none outline-none resize-none text-sm text-gray-900;
+  font-family: inherit;
+}
+
+.user-presence {
+  @apply absolute w-3 h-3 rounded-full border-2 border-white shadow-sm;
+  transition: all 0.2s ease-in-out;
+}
+
+.user-presence:hover {
+  @apply scale-110;
+}
+
+/* Drawing Tools */
+.drawing-tool-pen {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2" fill="black"/></svg>') 8 8, crosshair;
+}
+
+.drawing-tool-brush {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="black" opacity="0.7"/></svg>') 10 10, crosshair;
+}
+
+.drawing-tool-eraser {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="8" y="8" width="8" height="8" fill="white" stroke="black" stroke-width="2"/></svg>') 12 12, crosshair;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .whiteboard-toolbar {
+    @apply flex-wrap gap-2;
+  }
+  
+  .whiteboard-toolbar button {
+    @apply text-xs px-2 py-1;
+  }
+  
+  .sticky-note {
+    min-width: 150px;
+    min-height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .whiteboard-toolbar {
+    @apply px-2 py-2;
+  }
+  
+  .sticky-note {
+    min-width: 120px;
+    min-height: 100px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --whiteboard-bg: #1f2937;
+    --whiteboard-border: #374151;
+    --whiteboard-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    --whiteboard-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .whiteboard-canvas {
+    @apply bg-gray-800 border-gray-600;
+  }
+  
+  .whiteboard-toolbar {
+    @apply bg-gray-800 border-gray-600;
+  }
+  
+  .whiteboard-toolbar button {
+    @apply text-gray-300 bg-gray-800 border-gray-600 hover:bg-gray-700;
+  }
+  
+  .sticky-note {
+    @apply bg-yellow-300 border-yellow-400 text-gray-900;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus Styles */
+.focus-visible:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* Print Styles */
+@media print {
+  .whiteboard-toolbar,
+  .user-presence,
+  .sticky-note {
+    display: none !important;
+  }
+  
+  .whiteboard-canvas {
+    @apply border-none shadow-none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .whiteboard-canvas {
+    @apply border-2 border-black;
+  }
+  
+  .whiteboard-toolbar button {
+    @apply border-2 border-black;
+  }
+  
+  .sticky-note {
+    @apply border-2 border-black;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* Loading Animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Fade Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Slide Animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Utility Classes */
+.text-shadow {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

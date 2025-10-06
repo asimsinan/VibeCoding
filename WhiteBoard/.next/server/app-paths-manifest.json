@@ -1,0 +1,15 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(dashboard)/whiteboard/[id]/page": "app/(dashboard)/whiteboard/[id]/page.js",
+  "/(dashboard)/whiteboard/page": "app/(dashboard)/whiteboard/page.js",
+  "/api/v1/health/route": "app/api/v1/health/route.js",
+  "/api/v1/whiteboards/[id]/clear/route": "app/api/v1/whiteboards/[id]/clear/route.js",
+  "/api/v1/whiteboards/[id]/drawings/route": "app/api/v1/whiteboards/[id]/drawings/route.js",
+  "/api/v1/whiteboards/[id]/route": "app/api/v1/whiteboards/[id]/route.js",
+  "/api/v1/whiteboards/[id]/sticky-notes/route": "app/api/v1/whiteboards/[id]/sticky-notes/route.js",
+  "/api/v1/whiteboards/[id]/users/route": "app/api/v1/whiteboards/[id]/users/route.js",
+  "/api/v1/whiteboards/route": "app/api/v1/whiteboards/route.js",
+  "/page": "app/page.js",
+  "/(dashboard)/auth/login/page": "app/(dashboard)/auth/login/page.js",
+  "/(dashboard)/auth/register/page": "app/(dashboard)/auth/register/page.js"
+}
