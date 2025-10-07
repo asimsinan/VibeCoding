@@ -1,0 +1,1083 @@
+openapi: 3.0.3
+info:
+  title: Kanban Project Management API
+  version: 1.0.0
+  description: RESTful API for Kanban project management with real-time collaboration
+  contact:
+    name: API Support
+    email: support@kanban-app.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.kanban-app.com/v1
+    description: Production server
+  - url: https://staging-api.kanban-app.com/v1
+    description: Staging server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /workspaces:
+    get:
+      summary: Get user workspaces
+      description: Retrieve all workspaces the authenticated user has access to
+      operationId: getWorkspaces
+      tags:
+        - Workspaces
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of user workspaces
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Workspace'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Create new workspace
+      description: Create a new workspace with the authenticated user as admin
+      operationId: createWorkspace
+      tags:
+        - Workspaces
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
+      responses:
+        '201':
+          description: Workspace created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Workspace'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /workspaces/{id}/boards:
+    get:
+      summary: Get workspace boards
+      description: Retrieve all boards within a specific workspace
+      operationId: getWorkspaceBoards
+      tags:
+        - Workspaces
+        - Boards
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Workspace ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of workspace boards
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Board'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Create new board
+      description: Create a new board within a workspace with default columns
+      operationId: createBoard
+      tags:
+        - Workspaces
+        - Boards
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Workspace ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBoardRequest'
+      responses:
+        '201':
+          description: Board created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Board'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /boards/{id}:
+    get:
+      summary: Get board details
+      description: Retrieve board details with columns and tasks
+      operationId: getBoard
+      tags:
+        - Boards
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Board details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BoardDetail'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: Update board
+      description: Update board settings and column configuration
+      operationId: updateBoard
+      tags:
+        - Boards
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBoardRequest'
+      responses:
+        '200':
+          description: Board updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Board'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Delete board
+      description: Archive or permanently delete board
+      operationId: deleteBoard
+      tags:
+        - Boards
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+        - name: permanent
+          in: query
+          required: false
+          description: Whether to permanently delete (default: false)
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '204':
+          description: Board deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /boards/{id}/tasks:
+    get:
+      summary: Get board tasks
+      description: Get all tasks for a board with filtering options
+      operationId: getBoardTasks
+      tags:
+        - Boards
+        - Tasks
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+        - name: column_id
+          in: query
+          required: false
+          description: Filter by column ID
+          schema:
+            type: string
+            format: uuid
+        - name: assignee_id
+          in: query
+          required: false
+          description: Filter by assignee ID
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          required: false
+          description: Filter by task status
+          schema:
+            type: string
+            enum: [todo, in_progress, done, archived]
+        - name: priority
+          in: query
+          required: false
+          description: Filter by priority
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+        - name: search
+          in: query
+          required: false
+          description: Search in title and description
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Number of tasks to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          description: Number of tasks to skip
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of board tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Create new task
+      description: Create new task in specified column
+      operationId: createTask
+      tags:
+        - Boards
+        - Tasks
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{id}:
+    get:
+      summary: Get task details
+      description: Retrieve detailed information about a specific task
+      operationId: getTask
+      tags:
+        - Tasks
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: Update task
+      description: Update task properties and position
+      operationId: updateTask
+      tags:
+        - Tasks
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Delete task
+      description: Soft delete task with audit trail
+      operationId: deleteTask
+      tags:
+        - Tasks
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Task deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{id}/move:
+    post:
+      summary: Move task
+      description: Move task between columns with position updates
+      operationId: moveTask
+      tags:
+        - Tasks
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveTaskRequest'
+      responses:
+        '200':
+          description: Task moved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/search:
+    get:
+      summary: Search users
+      description: Search users for task assignment and workspace invitations
+      operationId: searchUsers
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+        - name: limit
+          in: query
+          required: false
+          description: Number of users to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+      responses:
+        '200':
+          description: List of matching users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from authentication endpoint
+
+  schemas:
+    Workspace:
+      type: object
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique workspace identifier
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Workspace name
+        description:
+          type: string
+          maxLength: 500
+          description: Workspace description
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        member_count:
+          type: integer
+          minimum: 1
+          description: Number of workspace members
+        recent_activity:
+          type: string
+          format: date-time
+          description: Last activity timestamp
+
+    Board:
+      type: object
+      required:
+        - id
+        - title
+        - workspace_id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique board identifier
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Board title
+        description:
+          type: string
+          maxLength: 500
+          description: Board description
+        workspace_id:
+          type: string
+          format: uuid
+          description: Parent workspace ID
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        task_count:
+          type: integer
+          minimum: 0
+          description: Number of tasks in board
+
+    BoardDetail:
+      allOf:
+        - $ref: '#/components/schemas/Board'
+        - type: object
+          properties:
+            columns:
+              type: array
+              items:
+                $ref: '#/components/schemas/Column'
+            tasks:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
+
+    Column:
+      type: object
+      required:
+        - id
+        - title
+        - board_id
+        - position
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique column identifier
+        title:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Column title
+        board_id:
+          type: string
+          format: uuid
+          description: Parent board ID
+        position:
+          type: integer
+          minimum: 0
+          description: Column position in board
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        task_count:
+          type: integer
+          minimum: 0
+          description: Number of tasks in column
+
+    Task:
+      type: object
+      required:
+        - id
+        - title
+        - board_id
+        - column_id
+        - position
+        - status
+        - priority
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique task identifier
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Task title
+        description:
+          type: string
+          maxLength: 2000
+          description: Task description
+        board_id:
+          type: string
+          format: uuid
+          description: Parent board ID
+        column_id:
+          type: string
+          format: uuid
+          description: Current column ID
+        position:
+          type: integer
+          minimum: 0
+          description: Task position in column
+        status:
+          type: string
+          enum: [todo, in_progress, done, archived]
+          description: Task status
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          description: Task priority
+        assignee_id:
+          type: string
+          format: uuid
+          description: Assigned user ID
+        due_date:
+          type: string
+          format: date-time
+          description: Task due date
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        created_by:
+          type: string
+          format: uuid
+          description: User who created the task
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+        email:
+          type: string
+          format: email
+          description: User email address
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: User display name
+        avatar_url:
+          type: string
+          format: uri
+          description: User avatar URL
+        created_at:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+
+    CreateWorkspaceRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Workspace name
+        description:
+          type: string
+          maxLength: 500
+          description: Workspace description
+
+    CreateBoardRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Board title
+        description:
+          type: string
+          maxLength: 500
+          description: Board description
+
+    UpdateBoardRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Board title
+        description:
+          type: string
+          maxLength: 500
+          description: Board description
+
+    CreateTaskRequest:
+      type: object
+      required:
+        - title
+        - column_id
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Task title
+        description:
+          type: string
+          maxLength: 2000
+          description: Task description
+        column_id:
+          type: string
+          format: uuid
+          description: Target column ID
+        assignee_id:
+          type: string
+          format: uuid
+          description: Assigned user ID
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          default: medium
+          description: Task priority
+        due_date:
+          type: string
+          format: date-time
+          description: Task due date
+
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Task title
+        description:
+          type: string
+          maxLength: 2000
+          description: Task description
+        assignee_id:
+          type: string
+          format: uuid
+          description: Assigned user ID
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          description: Task priority
+        due_date:
+          type: string
+          format: date-time
+          description: Task due date
+
+    MoveTaskRequest:
+      type: object
+      required:
+        - column_id
+        - position
+      properties:
+        column_id:
+          type: string
+          format: uuid
+          description: Target column ID
+        position:
+          type: integer
+          minimum: 0
+          description: New position in column
+
+    Meta:
+      type: object
+      properties:
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of items
+        limit:
+          type: integer
+          minimum: 1
+          description: Number of items per page
+        offset:
+          type: integer
+          minimum: 0
+          description: Number of items skipped
+        has_more:
+          type: boolean
+          description: Whether there are more items available
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          description: Additional error details
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: 'VALIDATION_ERROR'
+            message: 'Invalid input data'
+            details:
+              field: 'title'
+              reason: 'Title is required'
+            timestamp: '2024-01-01T00:00:00Z'
+
+    UnauthorizedError:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: 'UNAUTHORIZED'
+            message: 'Authentication required'
+            timestamp: '2024-01-01T00:00:00Z'
+
+    ForbiddenError:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: 'FORBIDDEN'
+            message: 'Insufficient permissions'
+            timestamp: '2024-01-01T00:00:00Z'
+
+    NotFoundError:
+      description: Not found - resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: 'NOT_FOUND'
+            message: 'Resource not found'
+            timestamp: '2024-01-01T00:00:00Z'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: 'INTERNAL_ERROR'
+            message: 'An unexpected error occurred'
+            timestamp: '2024-01-01T00:00:00Z'

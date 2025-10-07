@@ -1,0 +1,424 @@
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
+
+/* Custom Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.95);
+  }
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+@keyframes backdropFadeOut {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation Utility Classes */
+.animate-modal-slide-in {
+  animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-slide-out {
+  animation: modalSlideOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.animate-backdrop-fade-in {
+  animation: backdropFadeIn 0.3s ease-out forwards;
+}
+
+.animate-backdrop-fade-out {
+  animation: backdropFadeOut 0.3s ease-out forwards;
+}
+
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Progressive Enhancement Styles */
+@layer base {
+  /* Base styles for no-JS fallback */
+  .no-js {
+    /* Hide JavaScript-dependent elements by default */
+    .js-only {
+      display: none !important;
+    }
+    
+    /* Show no-JS fallbacks */
+    .no-js-only {
+      display: block !important;
+    }
+  }
+  
+  /* Enhanced styles when JavaScript is enabled */
+  .js-enabled {
+    .js-only {
+      display: block;
+    }
+    
+    .no-js-only {
+      display: none !important;
+    }
+  }
+  
+  /* Animation preferences */
+  .no-animations * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animations-enabled {
+    /* Smooth scrolling for modern browsers */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Enhanced transitions */
+    * {
+      transition: all 0.2s ease-in-out;
+    }
+  }
+  
+  /* Realtime features */
+  .realtime-enabled {
+    /* Styles for realtime features */
+    .realtime-indicator {
+      display: inline-block;
+    }
+  }
+  
+  .realtime-disabled {
+    .realtime-indicator {
+      display: none;
+    }
+  }
+  
+  /* Advanced features */
+  .advanced-features-enabled {
+    /* Styles for advanced features */
+    .advanced-feature {
+      display: block;
+    }
+  }
+  
+  .advanced-features-disabled {
+    .advanced-feature {
+      display: none;
+    }
+  }
+}
+
+/* Responsive Design Utilities */
+@layer utilities {
+  /* Mobile-first responsive utilities */
+  .mobile-only {
+    @apply block sm:hidden;
+  }
+  
+  .tablet-only {
+    @apply hidden sm:block lg:hidden;
+  }
+  
+  .desktop-only {
+    @apply hidden lg:block;
+  }
+  
+  .mobile-tablet {
+    @apply block lg:hidden;
+  }
+  
+  .tablet-desktop {
+    @apply hidden sm:block;
+  }
+  
+  /* Touch-friendly sizing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Safe area handling for mobile devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .high-contrast {
+      @apply border-2 border-black;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe {
+      @apply transition-none;
+    }
+  }
+  
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .dark-mode {
+      @apply bg-gray-900 text-white;
+    }
+  }
+}
+
+/* Component-specific styles */
+@layer components {
+  /* Loading states */
+  .loading-skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+  
+  .loading-spinner {
+    @apply animate-spin rounded-full border-2 border-gray-300 border-t-blue-600;
+  }
+  
+  /* Error states */
+  .error-state {
+    @apply border-red-500 bg-red-50 text-red-700;
+  }
+  
+  .error-state.dark {
+    @apply border-red-400 bg-red-900 text-red-200;
+  }
+  
+  /* Success states */
+  .success-state {
+    @apply border-green-500 bg-green-50 text-green-700;
+  }
+  
+  .success-state.dark {
+    @apply border-green-400 bg-green-900 text-green-200;
+  }
+  
+  /* Focus states for accessibility */
+  .focus-visible {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  /* Button variants */
+  .btn-primary {
+    @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus-visible transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300 focus-visible transition-colors;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus-visible transition-colors;
+  }
+  
+  /* Card components */
+  .card {
+    @apply bg-white rounded-lg shadow-md border border-gray-200 p-6;
+  }
+  
+  .card.dark {
+    @apply bg-gray-800 border-gray-700;
+  }
+  
+  /* Form components */
+  .form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+  
+  .form-input.error {
+    @apply border-red-500 focus:ring-red-500;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+  
+  .form-label.dark {
+    @apply text-gray-300;
+  }
+}
+
+/* Drag and Drop Performance Optimizations */
+.drag-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.drag-overlay {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.sortable-item {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.droppable-area {
+  will-change: background-color, border-color;
+}
+
+/* Disable transitions during drag for smoother performance */
+.sortable-item[data-dragging="true"] {
+  transition: none !important;
+}
+
+.sortable-item[data-dragging="true"] * {
+  transition: none !important;
+}
+
+/* Optimize hover states during drag */
+.sortable-item[data-dragging="true"]:hover {
+  transform: none !important;
+}
+
+/* Reduce repaints during drag */
+.sortable-item[data-dragging="true"] .group-hover\:opacity-100 {
+  opacity: 1 !important;
+}
+
+/* Hardware acceleration for smooth animations */
+@supports (transform: translateZ(0)) {
+  .sortable-item {
+    transform: translateZ(0);
+  }
+  
+  .drag-overlay {
+    transform: translateZ(0);
+  }
+}

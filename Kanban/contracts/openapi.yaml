@@ -1,0 +1,1378 @@
+openapi: 3.0.3
+info:
+  title: Kanban Project Management API
+  version: 1.0.0
+  description: RESTful API for Kanban project management with real-time collaboration
+  contact:
+    name: API Support
+    email: support@kanban-app.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://api.kanban-app.com/v1
+    description: Production server
+  - url: https://staging-api.kanban-app.com/v1
+    description: Staging server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+security:
+  - BearerAuth: []
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticate user with email and password
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /auth/register:
+    post:
+      summary: User registration
+      description: Register new user account
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /auth/logout:
+    post:
+      summary: User logout
+      description: Logout user and invalidate session
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /auth/refresh:
+    post:
+      summary: Refresh token
+      description: Refresh access token using refresh token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /workspaces:
+    get:
+      summary: Get user workspaces
+      description: Retrieve all workspaces for the authenticated user
+      tags:
+        - Workspaces
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of user workspaces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceListResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Create new workspace
+      description: Create a new workspace with the authenticated user as admin
+      tags:
+        - Workspaces
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
+      responses:
+        '201':
+          description: Workspace created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /workspaces/{workspaceId}:
+    get:
+      summary: Get workspace details
+      description: Retrieve detailed information about a specific workspace
+      tags:
+        - Workspaces
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          description: Workspace ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Workspace details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceResponse'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Update workspace
+      description: Update workspace details (admin only)
+      tags:
+        - Workspaces
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          description: Workspace ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWorkspaceRequest'
+      responses:
+        '200':
+          description: Workspace updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceResponse'
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete workspace
+      description: Delete workspace (admin only)
+      tags:
+        - Workspaces
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          description: Workspace ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Workspace deleted successfully
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /workspaces/{workspaceId}/boards:
+    get:
+      summary: Get workspace boards
+      description: Retrieve all boards within a specific workspace
+      tags:
+        - Boards
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          description: Workspace ID
+          schema:
+            type: string
+            format: uuid
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of workspace boards
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardListResponse'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Create new board
+      description: Create a new board within the specified workspace
+      tags:
+        - Boards
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          description: Workspace ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBoardRequest'
+      responses:
+        '201':
+          description: Board created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /boards/{boardId}:
+    get:
+      summary: Get board details
+      description: Retrieve detailed information about a specific board
+      tags:
+        - Boards
+      parameters:
+        - name: boardId
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Board details with columns and tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardResponse'
+        '404':
+          description: Board not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Update board
+      description: Update board details and column configuration
+      tags:
+        - Boards
+      parameters:
+        - name: boardId
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBoardRequest'
+      responses:
+        '200':
+          description: Board updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardResponse'
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Board not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete board
+      description: Archive or permanently delete board
+      tags:
+        - Boards
+      parameters:
+        - name: boardId
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+        - name: permanent
+          in: query
+          description: Whether to permanently delete (true) or archive (false)
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '204':
+          description: Board deleted successfully
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Board not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /boards/{boardId}/tasks:
+    get:
+      summary: Get board tasks
+      description: Retrieve all tasks for a board with filtering options
+      tags:
+        - Tasks
+      parameters:
+        - name: boardId
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+        - name: columnId
+          in: query
+          description: Filter by column ID
+          schema:
+            type: string
+            format: uuid
+        - name: assigneeId
+          in: query
+          description: Filter by assignee ID
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          description: Filter by task status
+          schema:
+            type: string
+            enum: [todo, in_progress, done]
+        - name: priority
+          in: query
+          description: Filter by priority
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+        - name: search
+          in: query
+          description: Search in title and description
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of board tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+        '404':
+          description: Board not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Create new task
+      description: Create a new task in the specified board
+      tags:
+        - Tasks
+      parameters:
+        - name: boardId
+          in: path
+          required: true
+          description: Board ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Board not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tasks/{taskId}:
+    get:
+      summary: Get task details
+      description: Retrieve detailed information about a specific task
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Update task
+      description: Update task properties and position
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete task
+      description: Soft delete task with audit trail
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Task deleted successfully
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tasks/{taskId}/move:
+    post:
+      summary: Move task
+      description: Move task between columns with position updates
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Task ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveTaskRequest'
+      responses:
+        '200':
+          description: Task moved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/search:
+    get:
+      summary: Search users
+      description: Search users for task assignment and workspace invitations
+      tags:
+        - Users
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query
+          schema:
+            type: string
+            minLength: 2
+        - name: limit
+          in: query
+          description: Number of results to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: List of matching users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  schemas:
+    # Authentication Schemas
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+        password:
+          type: string
+          minLength: 8
+          description: User password
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - fullName
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+        password:
+          type: string
+          minLength: 8
+          description: User password
+        fullName:
+          type: string
+          minLength: 2
+          maxLength: 100
+          description: User full name
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: Refresh token
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        accessToken:
+          type: string
+          description: JWT access token
+        refreshToken:
+          type: string
+          description: JWT refresh token
+        expiresIn:
+          type: integer
+          description: Token expiration time in seconds
+
+    # User Schemas
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: User ID
+        email:
+          type: string
+          format: email
+          description: User email
+        fullName:
+          type: string
+          description: User full name
+        avatar:
+          type: string
+          format: uri
+          description: User avatar URL
+        createdAt:
+          type: string
+          format: date-time
+          description: User creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: User last update timestamp
+
+    # Workspace Schemas
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Workspace ID
+        name:
+          type: string
+          description: Workspace name
+        description:
+          type: string
+          description: Workspace description
+        ownerId:
+          type: string
+          format: uuid
+          description: Workspace owner ID
+        memberCount:
+          type: integer
+          description: Number of workspace members
+        boardCount:
+          type: integer
+          description: Number of boards in workspace
+        createdAt:
+          type: string
+          format: date-time
+          description: Workspace creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Workspace last update timestamp
+
+    CreateWorkspaceRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Workspace name
+        description:
+          type: string
+          maxLength: 500
+          description: Workspace description
+
+    UpdateWorkspaceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Workspace name
+        description:
+          type: string
+          maxLength: 500
+          description: Workspace description
+
+    # Board Schemas
+    Board:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Board ID
+        name:
+          type: string
+          description: Board name
+        description:
+          type: string
+          description: Board description
+        workspaceId:
+          type: string
+          format: uuid
+          description: Parent workspace ID
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Column'
+          description: Board columns
+        taskCount:
+          type: integer
+          description: Number of tasks in board
+        createdAt:
+          type: string
+          format: date-time
+          description: Board creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Board last update timestamp
+
+    Column:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Column ID
+        name:
+          type: string
+          description: Column name
+        position:
+          type: integer
+          description: Column position in board
+        color:
+          type: string
+          description: Column color
+        taskLimit:
+          type: integer
+          nullable: true
+          description: Maximum number of tasks in column
+
+    CreateBoardRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Board name
+        description:
+          type: string
+          maxLength: 500
+          description: Board description
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateColumnRequest'
+          description: Initial board columns
+
+    CreateColumnRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Column name
+        color:
+          type: string
+          description: Column color
+        taskLimit:
+          type: integer
+          minimum: 1
+          description: Maximum number of tasks in column
+
+    UpdateBoardRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Board name
+        description:
+          type: string
+          maxLength: 500
+          description: Board description
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateColumnRequest'
+          description: Updated board columns
+
+    UpdateColumnRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Column ID
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Column name
+        color:
+          type: string
+          description: Column color
+        position:
+          type: integer
+          description: Column position
+        taskLimit:
+          type: integer
+          minimum: 1
+          description: Maximum number of tasks in column
+
+    # Task Schemas
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Task ID
+        title:
+          type: string
+          description: Task title
+        description:
+          type: string
+          description: Task description
+        status:
+          type: string
+          enum: [todo, in_progress, done]
+          description: Task status
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          description: Task priority
+        boardId:
+          type: string
+          format: uuid
+          description: Parent board ID
+        columnId:
+          type: string
+          format: uuid
+          description: Current column ID
+        assigneeId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Assigned user ID
+        position:
+          type: integer
+          description: Task position in column
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: Task due date
+        tags:
+          type: array
+          items:
+            type: string
+          description: Task tags
+        createdAt:
+          type: string
+          format: date-time
+          description: Task creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Task last update timestamp
+
+    CreateTaskRequest:
+      type: object
+      required:
+        - title
+        - columnId
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Task title
+        description:
+          type: string
+          maxLength: 2000
+          description: Task description
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          default: medium
+          description: Task priority
+        assigneeId:
+          type: string
+          format: uuid
+          description: Assigned user ID
+        dueDate:
+          type: string
+          format: date-time
+          description: Task due date
+        tags:
+          type: array
+          items:
+            type: string
+          description: Task tags
+
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Task title
+        description:
+          type: string
+          maxLength: 2000
+          description: Task description
+        status:
+          type: string
+          enum: [todo, in_progress, done]
+          description: Task status
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          description: Task priority
+        assigneeId:
+          type: string
+          format: uuid
+          description: Assigned user ID
+        dueDate:
+          type: string
+          format: date-time
+          description: Task due date
+        tags:
+          type: array
+          items:
+            type: string
+          description: Task tags
+
+    MoveTaskRequest:
+      type: object
+      required:
+        - columnId
+        - position
+      properties:
+        columnId:
+          type: string
+          format: uuid
+          description: Target column ID
+        position:
+          type: integer
+          minimum: 0
+          description: New position in column
+
+    # Response Schemas
+    WorkspaceResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Workspace'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    WorkspaceListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Workspace'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    BoardResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Board'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    BoardListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Board'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    TaskResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Task'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    TaskListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    UserSearchResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    # Common Response Schemas
+    ResponseMeta:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Response timestamp
+        version:
+          type: string
+          description: API version
+
+    PaginationMeta:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMeta'
+        - type: object
+          properties:
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        limit:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        pages:
+          type: integer
+          description: Total number of pages
+        hasNext:
+          type: boolean
+          description: Whether there is a next page
+        hasPrev:
+          type: boolean
+          description: Whether there is a previous page
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Success status
+        message:
+          type: string
+          description: Success message
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    # Error Schemas
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Error code
+            message:
+              type: string
+              description: Error message
+            details:
+              type: object
+              description: Additional error details
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              default: VALIDATION_ERROR
+              description: Error code
+            message:
+              type: string
+              default: Validation failed
+              description: Error message
+            details:
+              type: object
+              properties:
+                fields:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ValidationError'
+              description: Field validation errors
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    ValidationError:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Field name
+        message:
+          type: string
+          description: Validation error message
+        value:
+          type: string
+          description: Invalid value
+
+tags:
+  - name: Authentication
+    description: User authentication and session management
+  - name: Workspaces
+    description: Workspace management and organization
+  - name: Boards
+    description: Board management and configuration
+  - name: Tasks
+    description: Task management and operations
+  - name: Users
+    description: User search and management

@@ -1,0 +1,24 @@
+# Dredd configuration for API contract testing
+blueprint: src/contracts/openapi.yaml
+endpoint: 'http://localhost:3000/api/v1'
+reporter: [cli, html]
+output: [stdout, reports/contract-test-report.html]
+names: false
+only: []
+grep: []
+reject: []
+header: []
+sorted: false
+user: null
+http: null
+bargain: false
+loglevel: info
+path: []
+hooks: tests/contract/hooks.js
+language: nodejs
+timeout: 5000
+exit: true
+dry-run: false
+method: []
+color: true
+logger: []

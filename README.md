@@ -38,11 +38,15 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 **Prompt**: *"Prompt: Build a virtual event organizer app managing attendees, schedule, notifications, and networking, using Next.js, TypeScript, Tailwind, Supabase (Auth, real-time DB, storage), WebSockets for real-time features"*
 ### [Challenge 9: Collaborative Whiteboard](./WhiteBoard) (Built in 6 hours)
 **Prompt**: *"Prompt: Build a collaborative whiteboard app where multiple users can draw and add sticky notes in real time, using Next.js, TypeScript, Tailwind, Supabase Realtime and deploy on Vercel."*
+### [Challenge 10: Kanban](./Kanban) (Built in 5.5 hours)
+**Prompt**: *"Build a kanban project management app with drag-and-drop tasks, user authentication, and team workspaces, using Next.js, TypeScript, Tailwind, Supabase."*
 
+### [Challenge 11: Video Conference](./VideoConference) (Built in X hours)
+**Prompt**: *"Build a video conferencing web app with room creation, screen sharing, and chat, using Next.js, TypeScript, Tailwind, WebRTC + WebSockets (via Ably)."*
 ### Future Challenges
 The difficulty will gradually increase with more complex prompts and requirements.
 
-
+Prompt: 
 ## 🎯 Learning Objectives
 
 This challenge demonstrates:
