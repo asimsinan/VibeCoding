@@ -42,7 +42,7 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 **Prompt**: *"Build a kanban project management app with drag-and-drop tasks, user authentication, and team workspaces, using Next.js, TypeScript, Tailwind, Supabase."*
 
 ### [Challenge 11: Video Conference](./VideoConference) (Built in 6.5 hours)
-**Prompt**: *"Build a video conferencing web app with room creation, screen sharing, and chat, using Next.js, TypeScript, Tailwind, WebRTC + WebSockets (via Ably)."*
+**Prompt**: *"Build a video conferencing web app with room creation, screen sharing, and chat, using Next.js, TypeScript, Tailwind, socket.io."*
 ### Future Challenges
 The difficulty will gradually increase with more complex prompts and requirements.
 
