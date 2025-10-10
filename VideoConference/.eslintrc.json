@@ -1,0 +1,37 @@
+{
+  "extends": [
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-console": "warn",
+    "no-debugger": "error",
+    "no-duplicate-imports": "error",
+    "no-unused-expressions": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-key": "error",
+    "react/jsx-no-duplicate-props": "error",
+    "react/jsx-no-undef": "error",
+    "react/no-array-index-key": "warn",
+    "react/no-unescaped-entities": "error",
+    "react/prop-types": "off"
+  },
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

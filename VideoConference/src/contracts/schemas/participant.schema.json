@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Participant Schema",
+  "type": "object",
+  "properties": {
+    "participantId": {
+      "type": "string",
+      "pattern": "^participant-[a-zA-Z0-9-]+$",
+      "description": "Unique identifier for the participant"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 50,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9\\s-]+$",
+      "description": "Participant display name"
+    },
+    "isConnected": {
+      "type": "boolean",
+      "description": "Whether the participant is currently connected"
+    },
+    "mediaPermissions": {
+      "$ref": "#/definitions/MediaPermissions"
+    },
+    "joinedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the participant joined"
+    },
+    "lastSeen": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last activity timestamp"
+    },
+    "connectionState": {
+      "type": "string",
+      "enum": ["connecting", "connected", "disconnected", "reconnecting"],
+      "description": "Current connection state"
+    }
+  },
+  "required": ["participantId", "name", "isConnected", "mediaPermissions", "joinedAt"],
+  "definitions": {
+    "MediaPermissions": {
+      "type": "object",
+      "properties": {
+        "camera": {
+          "type": "boolean",
+          "default": true,
+          "description": "Camera access permission"
+        },
+        "microphone": {
+          "type": "boolean",
+          "default": true,
+          "description": "Microphone access permission"
+        },
+        "screenShare": {
+          "type": "boolean",
+          "default": false,
+          "description": "Screen sharing permission"
+        }
+      },
+      "required": ["camera", "microphone", "screenShare"]
+    }
+  }
+}

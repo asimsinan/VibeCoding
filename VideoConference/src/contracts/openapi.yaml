@@ -1,0 +1,824 @@
+openapi: 3.0.0
+info:
+  title: Video Conferencing API
+  version: 1.0.0
+  description: API for video conferencing web application with WebRTC, WebSocket, and real-time chat
+  contact:
+    name: Video Conference API Support
+    email: support@videoconf.com
+  license:
+    name: ISC
+    url: https://opensource.org/licenses/ISC
+
+servers:
+  - url: https://api.videoconf.com/v1
+    description: Production server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+
+paths:
+  /rooms:
+    post:
+      summary: Create a new video conference room
+      description: Creates a new room and returns room ID with access token
+      operationId: createRoom
+      tags:
+        - Rooms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoomRequest'
+            examples:
+              basic:
+                summary: Basic room creation
+                value:
+                  participantName: "John Doe"
+                  mediaPermissions:
+                    camera: true
+                    microphone: true
+                    screenShare: false
+      responses:
+        '201':
+          description: Room created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRoomResponse'
+              examples:
+                success:
+                  summary: Successful room creation
+                  value:
+                    success: true
+                    data:
+                      roomId: "550e8400-e29b-41d4-a716-446655440000"
+                      accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      participantId: "participant-123"
+                      createdAt: "2023-12-01T10:00:00Z"
+                    timestamp: "2023-12-01T10:00:00Z"
+        '400':
+          description: Bad request - Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: List all rooms
+      description: Get a list of all available rooms (for admin purposes)
+      operationId: listRooms
+      tags:
+        - Rooms
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of rooms to return
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Number of rooms to skip
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of rooms retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListRoomsResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /rooms/{roomId}:
+    get:
+      summary: Get room information
+      description: Get detailed information about a specific room including participants
+      operationId: getRoom
+      tags:
+        - Rooms
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: Unique identifier for the room
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Room information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRoomResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete a room
+      description: Delete a room and disconnect all participants
+      operationId: deleteRoom
+      tags:
+        - Rooms
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: Unique identifier for the room
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Room deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /rooms/{roomId}/join:
+    post:
+      summary: Join an existing room
+      description: Join an existing room and receive participant token
+      operationId: joinRoom
+      tags:
+        - Rooms
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: Unique identifier for the room
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinRoomRequest'
+      responses:
+        '200':
+          description: Successfully joined room
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoinRoomResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Room is full or participant already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /rooms/{roomId}/leave:
+    post:
+      summary: Leave a room
+      description: Leave a room and clean up resources
+      operationId: leaveRoom
+      tags:
+        - Rooms
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: Unique identifier for the room
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveRoomRequest'
+      responses:
+        '200':
+          description: Successfully left room
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: Room or participant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /rooms/{roomId}/messages:
+    get:
+      summary: Get chat message history
+      description: Get chat message history for a room
+      operationId: getMessages
+      tags:
+        - Messages
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: Unique identifier for the room
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          description: Maximum number of messages to return
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          description: Number of messages to skip
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: Messages retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMessagesResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Send a chat message
+      description: Send a new chat message to the room
+      operationId: sendMessage
+      tags:
+        - Messages
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: Unique identifier for the room
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendMessageResponse'
+        '400':
+          description: Bad request - Invalid message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ws/rooms/{roomId}:
+    get:
+      summary: WebSocket connection for real-time features
+      description: WebSocket endpoint for real-time signaling, chat, and participant updates
+      operationId: connectWebSocket
+      tags:
+        - WebSocket
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: Unique identifier for the room
+          schema:
+            type: string
+            format: uuid
+        - name: token
+          in: query
+          required: true
+          description: Participant access token
+          schema:
+            type: string
+      responses:
+        '101':
+          description: WebSocket connection established
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "WebSocket connection established"
+        '400':
+          description: Bad request - Invalid token or room
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CreateRoomRequest:
+      type: object
+      required:
+        - participantName
+      properties:
+        participantName:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: Name of the room creator
+          example: "John Doe"
+        mediaPermissions:
+          $ref: '#/components/schemas/MediaPermissions'
+
+    JoinRoomRequest:
+      type: object
+      required:
+        - participantName
+      properties:
+        participantName:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: Name of the participant joining
+          example: "Jane Smith"
+        mediaPermissions:
+          $ref: '#/components/schemas/MediaPermissions'
+
+    LeaveRoomRequest:
+      type: object
+      required:
+        - participantId
+      properties:
+        participantId:
+          type: string
+          description: Unique identifier for the participant
+          example: "participant-123"
+
+    SendMessageRequest:
+      type: object
+      required:
+        - participantId
+        - message
+      properties:
+        participantId:
+          type: string
+          description: Unique identifier for the participant
+          example: "participant-123"
+        message:
+          type: string
+          maxLength: 1000
+          minLength: 1
+          description: Message content
+          example: "Hello everyone!"
+
+    MediaPermissions:
+      type: object
+      properties:
+        camera:
+          type: boolean
+          default: true
+          description: Camera access permission
+        microphone:
+          type: boolean
+          default: true
+          description: Microphone access permission
+        screenShare:
+          type: boolean
+          default: false
+          description: Screen sharing permission
+
+    CreateRoomResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                roomId:
+                  type: string
+                  format: uuid
+                  description: Unique identifier for the room
+                accessToken:
+                  type: string
+                  description: JWT access token for the room creator
+                participantId:
+                  type: string
+                  description: Unique identifier for the participant
+                createdAt:
+                  type: string
+                  format: date-time
+                  description: Room creation timestamp
+
+    JoinRoomResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                participantId:
+                  type: string
+                  description: Unique identifier for the participant
+                accessToken:
+                  type: string
+                  description: JWT access token for the participant
+                roomInfo:
+                  $ref: '#/components/schemas/RoomInfo'
+
+    GetRoomResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/RoomInfo'
+
+    ListRoomsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                rooms:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RoomSummary'
+                total:
+                  type: integer
+                  description: Total number of rooms
+                limit:
+                  type: integer
+                  description: Number of rooms returned
+                offset:
+                  type: integer
+                  description: Number of rooms skipped
+
+    GetMessagesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                messages:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Message'
+                total:
+                  type: integer
+                  description: Total number of messages
+                limit:
+                  type: integer
+                  description: Number of messages returned
+                offset:
+                  type: integer
+                  description: Number of messages skipped
+
+    SendMessageResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Message'
+
+    RoomInfo:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+          description: Unique identifier for the room
+        name:
+          type: string
+          description: Room name (optional)
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Participant'
+        createdAt:
+          type: string
+          format: date-time
+          description: Room creation timestamp
+        isActive:
+          type: boolean
+          description: Whether the room is currently active
+
+    RoomSummary:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        participantCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+
+    Participant:
+      type: object
+      properties:
+        participantId:
+          type: string
+          description: Unique identifier for the participant
+        name:
+          type: string
+          description: Participant display name
+        isConnected:
+          type: boolean
+          description: Whether the participant is currently connected
+        mediaPermissions:
+          $ref: '#/components/schemas/MediaPermissions'
+        joinedAt:
+          type: string
+          format: date-time
+          description: When the participant joined
+
+    Message:
+      type: object
+      properties:
+        messageId:
+          type: string
+          description: Unique identifier for the message
+        participantId:
+          type: string
+          description: ID of the participant who sent the message
+        participantName:
+          type: string
+          description: Name of the participant who sent the message
+        message:
+          type: string
+          description: Message content
+        timestamp:
+          type: string
+          format: date-time
+          description: When the message was sent
+
+    BaseResponse:
+      type: object
+      required:
+        - success
+        - timestamp
+      properties:
+        success:
+          type: boolean
+          description: Whether the request was successful
+        timestamp:
+          type: string
+          format: date-time
+          description: Response timestamp
+
+    SuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            message:
+              type: string
+              description: Success message
+
+    ErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            error:
+              type: string
+              description: Error message
+            code:
+              type: string
+              description: Error code
+            details:
+              type: object
+              description: Additional error details
+
+    WebSocketMessage:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: ['participant_joined', 'participant_left', 'message', 'media_state_changed', 'room_updated', 'error']
+          description: Type of WebSocket message
+        data:
+          type: object
+          description: Message data
+        timestamp:
+          type: string
+          format: date-time
+          description: Message timestamp
+      required: ['type', 'data', 'timestamp']
+
+    ParticipantJoinedMessage:
+      allOf:
+        - $ref: '#/components/schemas/WebSocketMessage'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: ['participant_joined']
+            data:
+              $ref: '#/components/schemas/Participant'
+
+    ParticipantLeftMessage:
+      allOf:
+        - $ref: '#/components/schemas/WebSocketMessage'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: ['participant_left']
+            data:
+              type: object
+              properties:
+                participantId:
+                  type: string
+                participantName:
+                  type: string
+
+    MediaStateChangedMessage:
+      allOf:
+        - $ref: '#/components/schemas/WebSocketMessage'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: ['media_state_changed']
+            data:
+              type: object
+              properties:
+                participantId:
+                  type: string
+                mediaPermissions:
+                  $ref: '#/components/schemas/MediaPermissions'
+
+    RoomUpdatedMessage:
+      allOf:
+        - $ref: '#/components/schemas/WebSocketMessage'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: ['room_updated']
+            data:
+              $ref: '#/components/schemas/RoomInfo'
+
+    WebSocketErrorMessage:
+      allOf:
+        - $ref: '#/components/schemas/WebSocketMessage'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: ['error']
+            data:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: Error message
+                code:
+                  type: string
+                  description: Error code
+
+    ValidationError:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Field name that failed validation
+        message:
+          type: string
+          description: Validation error message
+        value:
+          type: string
+          description: Value that failed validation
+      required: ['field', 'message']
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for API authentication
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Rooms
+    description: Room management operations
+  - name: Messages
+    description: Chat message operations
+  - name: WebSocket
+    description: Real-time WebSocket connections

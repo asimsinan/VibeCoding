@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Message Schema",
+  "type": "object",
+  "properties": {
+    "messageId": {
+      "type": "string",
+      "pattern": "^msg-[a-zA-Z0-9-]+$",
+      "description": "Unique identifier for the message"
+    },
+    "roomId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of the room the message belongs to"
+    },
+    "participantId": {
+      "type": "string",
+      "pattern": "^participant-[a-zA-Z0-9-]+$",
+      "description": "ID of the participant who sent the message"
+    },
+    "participantName": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Name of the participant who sent the message"
+    },
+    "message": {
+      "type": "string",
+      "maxLength": 1000,
+      "minLength": 1,
+      "description": "Message content"
+    },
+    "messageType": {
+      "type": "string",
+      "enum": ["text", "system", "notification"],
+      "default": "text",
+      "description": "Type of message"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the message was sent"
+    },
+    "isEdited": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the message has been edited"
+    },
+    "editedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the message was last edited"
+    }
+  },
+  "required": ["messageId", "roomId", "participantId", "participantName", "message", "timestamp"]
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Room Schema",
+  "type": "object",
+  "properties": {
+    "roomId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the room"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Optional room name"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Participant"
+      },
+      "description": "List of participants in the room"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Room creation timestamp"
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Whether the room is currently active"
+    }
+  },
+  "required": ["roomId", "participants", "createdAt", "isActive"],
+  "definitions": {
+    "Participant": {
+      "type": "object",
+      "properties": {
+        "participantId": {
+          "type": "string",
+          "description": "Unique identifier for the participant"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "minLength": 1,
+          "description": "Participant display name"
+        },
+        "isConnected": {
+          "type": "boolean",
+          "description": "Whether the participant is currently connected"
+        },
+        "mediaPermissions": {
+          "$ref": "#/definitions/MediaPermissions"
+        },
+        "joinedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the participant joined"
+        }
+      },
+      "required": ["participantId", "name", "isConnected", "mediaPermissions", "joinedAt"]
+    },
+    "MediaPermissions": {
+      "type": "object",
+      "properties": {
+        "camera": {
+          "type": "boolean",
+          "default": true,
+          "description": "Camera access permission"
+        },
+        "microphone": {
+          "type": "boolean",
+          "default": true,
+          "description": "Microphone access permission"
+        },
+        "screenShare": {
+          "type": "boolean",
+          "default": false,
+          "description": "Screen sharing permission"
+        }
+      },
+      "required": ["camera", "microphone", "screenShare"]
+    }
+  }
+}
