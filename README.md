@@ -21,10 +21,10 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 **Prompt**: *"Build a recipe finder app where users input ingredients and get matching recipes, using HTML, CSS, and vanilla JavaScript"*
 
 ### [Challenge 2: Invoce Generator](./InvoiceGenerator/) (Built in 5.5 hours)
-**Prompt**: *"Build an invoice generator that lets users enter client details and items and download as PDF, using React, CSS, and jsPDF."*
+**Prompt**: *"Build an invoice generator that lets users enter client details and items and download as PDF, using React, CSS, and jsPDF"*
 
 ### [Challenge 3: Appointment Scheduler](./AppointmentScheduler/) (Built in 3.5 hours)
-**Prompt**: *"Build a personal finance dasboard to track spending categories and visualize with charts using React, Typescript, Tailwind, Chartjs."*
+**Prompt**: *"Build a personal finance dasboard to track spending categories and visualize with charts using React, Typescript, Tailwind, Chartjs"*
 
 ### [Challenge 4: Personal Finance Dashboard](./PersonalFinanceDashBoard) (Built in 3 hours)
 **Prompt**: *"Create an appointment scheduler with a calendar view and booking slots, using React, Tailwind CSS, and date-handling library like date-fns"*
@@ -33,18 +33,21 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 ### [Challenge 6: Personal Shopping Assistant](./PersonalShoppingAssistant) (Built in 4.5 hours)
 **Prompt**: *"Prompt: Create a virtual personal shopping assistant that suggests products based on user preferences, using React, TypeScript, Node.js backend, PostgreSQL, and a simple recommendation algorithm"*
 ### [Challenge 7: Market Place](./MarketPlace) (Built in 4.5 hours)
-**Prompt**: *"Prompt: Create a marketplace app where users list items and allow browsing/purchase, using Next.js, TypeScript, Tailwind, Node.js backend, Stripe, and PostgreSQL or MongoDB."*
+**Prompt**: *"Prompt: Create a marketplace app where users list items and allow browsing/purchase, using Next.js, TypeScript, Tailwind, Node.js backend, Stripe, and PostgreSQL or MongoDB"*
 ### [Challenge 8: Event Organizer](./EventOrganizer) (Built in 5.5 hours)
 **Prompt**: *"Prompt: Build a virtual event organizer app managing attendees, schedule, notifications, and networking, using Next.js, TypeScript, Tailwind, Supabase (Auth, real-time DB, storage), WebSockets for real-time features"*
 ### [Challenge 9: Collaborative Whiteboard](./WhiteBoard) (Built in 6 hours)
-**Prompt**: *"Prompt: Build a collaborative whiteboard app where multiple users can draw and add sticky notes in real time, using Next.js, TypeScript, Tailwind, Supabase Realtime and deploy on Vercel."*
+**Prompt**: *"Prompt: Build a collaborative whiteboard app where multiple users can draw and add sticky notes in real time, using Next.js, TypeScript, Tailwind, Supabase Realtime and deploy on Vercel"*
 ### [Challenge 10: Kanban](./Kanban) (Built in 5.5 hours)
-**Prompt**: *"Build a kanban project management app with drag-and-drop tasks, user authentication, and team workspaces, using Next.js, TypeScript, Tailwind, Supabase."*
+**Prompt**: *"Build a kanban project management app with drag-and-drop tasks, user authentication, and team workspaces, using Next.js, TypeScript, Tailwind, Supabase"*
 
 ### [Challenge 11: Video Conference](./VideoConference) (Built in 6.5 hours)
-**Prompt**: *"Build a video conferencing web app with room creation, screen sharing, and chat, using Next.js, TypeScript, Tailwind, socket.io."*
-### Future Challenges
-The difficulty will gradually increase with more complex prompts and requirements.
+**Prompt**: *"Build a video conferencing web app with room creation, screen sharing, and chat, using Next.js, TypeScript, Tailwind, socket.io"*
+
+### [Challenge 12: Learning Management System](./LMS) (Built in X hours)
+**Prompt**: *"Create a multi-tenant LMS (learning management system) where different organizations host courses, quizzes, student progress, and admin dashboards, using Next.js, TypeScript, Tailwind, Prisma, PostgreSQL, NextAuth"*
+
+
 
 Prompt: 
 ## 🎯 Learning Objectives
