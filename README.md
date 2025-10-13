@@ -44,7 +44,7 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 ### [Challenge 11: Video Conference](./VideoConference) (Built in 6.5 hours)
 **Prompt**: *"Build a video conferencing web app with room creation, screen sharing, and chat, using Next.js, TypeScript, Tailwind, socket.io"*
 
-### [Challenge 12: Learning Management System](./LMS) (Built in X hours)
+### [Challenge 12: Learning Management System](./LMS) (Built in 5 hours)
 **Prompt**: *"Create a multi-tenant LMS (learning management system) where different organizations host courses, quizzes, student progress, and admin dashboards, using Next.js, TypeScript, Tailwind, Prisma, PostgreSQL, NextAuth"*
 
 
