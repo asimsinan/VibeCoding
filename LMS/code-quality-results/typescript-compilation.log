@@ -1,0 +1,336 @@
+tests/analytics-service.test.ts(1,34): error TS2307: Cannot find module '../services/analytics.service' or its corresponding type declarations.
+tests/api-performance-tests.test.ts(291,42): error TS2339: Property 'prisma' does not exist on type 'typeof TestDataFactory'.
+tests/api-performance-tests.test.ts(300,43): error TS2339: Property 'prisma' does not exist on type 'typeof TestDataFactory'.
+tests/api-performance-tests.test.ts(336,47): error TS2339: Property 'prisma' does not exist on type 'typeof TestDataFactory'.
+tests/api-performance-tests.test.ts(370,49): error TS2339: Property 'prisma' does not exist on type 'typeof TestDataFactory'.
+tests/audit-logging-service.test.ts(1,37): error TS2307: Cannot find module '../services/audit-logging.service' or its corresponding type declarations.
+tests/audit-logging-service.test.ts(2,24): error TS2305: Module '"@prisma/client"' has no exported member 'AuditLogAction'.
+tests/audit-logging-service.test.ts(2,40): error TS2305: Module '"@prisma/client"' has no exported member 'AuditLogResource'.
+tests/caching-service.test.ts(1,65): error TS2307: Cannot find module '../services/caching.service' or its corresponding type declarations.
+tests/caching-service.test.ts(318,10): error TS2552: Cannot find name 'cached'. Did you mean 'cache'?
+tests/caching-service.test.ts(342,10): error TS2552: Cannot find name 'cached'. Did you mean 'cache'?
+tests/caching-service.test.ts(347,10): error TS2304: Cannot find name 'invalidateCache'.
+tests/contract-tests.test.ts(3,21): error TS2307: Cannot find module '../src/app' or its corresponding type declarations.
+tests/core-component-tests.test.ts(560,11): error TS2322: Type '{ role: "STUDENT"; organizationId: any; }' is not assignable to type '(Without<UserCreateInput, UserUncheckedCreateInput> & UserUncheckedCreateInput) | (Without<...> & UserCreateInput)'.
+  Type '{ role: "STUDENT"; organizationId: any; }' is not assignable to type 'Without<UserUncheckedCreateInput, UserCreateInput> & UserCreateInput'.
+    Type '{ role: "STUDENT"; organizationId: any; }' is missing the following properties from type 'UserCreateInput': email, organization
+tests/core-integration-tests.test.ts(75,54): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(76,58): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(102,53): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(128,57): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(143,53): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(144,57): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(158,53): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(159,57): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(186,11): error TS2353: Object literal may only specify known properties, and 'enrollmentId' does not exist in type 'ProgressWhereInput'.
+tests/core-integration-tests.test.ts(207,11): error TS2353: Object literal may only specify known properties, and 'enrollmentId' does not exist in type 'ProgressWhereInput'.
+tests/core-integration-tests.test.ts(234,26): error TS2339: Property 'completedAt' does not exist on type '{ id: string; quizId: string; userId: string; answers: JsonValue; score: number | null; submittedAt: Date; }'.
+tests/core-integration-tests.test.ts(257,53): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(275,57): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(285,15): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'Without<ModuleCreateInput, ModuleUncheckedCreateInput> & ModuleUncheckedCreateInput'.
+tests/core-integration-tests.test.ts(302,53): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(303,57): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(325,9): error TS2322: Type '{ userId: string; courseId: string; status: "ACTIVE"; }' is not assignable to type '(Without<EnrollmentCreateInput, EnrollmentUncheckedCreateInput> & EnrollmentUncheckedCreateInput) | (Without<...> & EnrollmentCreateInput)'.
+  Type '{ userId: string; courseId: string; status: "ACTIVE"; }' is not assignable to type 'Without<EnrollmentCreateInput, EnrollmentUncheckedCreateInput> & EnrollmentUncheckedCreateInput'.
+    Property 'organizationId' is missing in type '{ userId: string; courseId: string; status: "ACTIVE"; }' but required in type 'EnrollmentUncheckedCreateInput'.
+tests/core-integration-tests.test.ts(337,11): error TS2353: Object literal may only specify known properties, and 'enrollment' does not exist in type 'ProgressWhereInput'.
+tests/core-integration-tests.test.ts(358,11): error TS2353: Object literal may only specify known properties, and 'enrollment' does not exist in type 'ProgressInclude<DefaultArgs>'.
+tests/core-integration-tests.test.ts(394,40): error TS2345: Argument of type '{ organizationId: string; email: string; }' is not assignable to parameter of type 'string'.
+tests/core-integration-tests.test.ts(401,36): error TS2345: Argument of type '{ organizationId: string; email: string; }' is not assignable to parameter of type 'string'.
+tests/course-service.test.ts(96,55): error TS2345: Argument of type '{ title: string; description: string; status: "DRAFT"; }' is not assignable to parameter of type 'CourseCreateInput'.
+  Property 'organization' is missing in type '{ title: string; description: string; status: "DRAFT"; }' but required in type 'CourseCreateInput'.
+tests/course-service.test.ts(112,36): error TS2345: Argument of type '{ title: string; description: string; }' is not assignable to parameter of type 'CourseCreateInput'.
+  Property 'organization' is missing in type '{ title: string; description: string; }' but required in type 'CourseCreateInput'.
+tests/course-service.test.ts(122,55): error TS2345: Argument of type '{ title: string; description: string; }' is not assignable to parameter of type 'CourseCreateInput'.
+  Property 'organization' is missing in type '{ title: string; description: string; }' but required in type 'CourseCreateInput'.
+tests/course-service.test.ts(136,21): error TS2551: Property 'organization' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; organizationId: string; title: string; description: string | null; status: CourseStatus; }'. Did you mean 'organizationId'?
+tests/course-service.test.ts(137,21): error TS2339: Property 'modules' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; organizationId: string; title: string; description: string | null; status: CourseStatus; }'.
+tests/course-service.test.ts(138,21): error TS2339: Property '_count' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; organizationId: string; title: string; description: string | null; status: CourseStatus; }'.
+tests/data-validation-service.test.ts(1,39): error TS2307: Cannot find module '../lib/validation' or its corresponding type declarations.
+tests/data-validation-service.test.ts(2,10): error TS2305: Module '"@prisma/client"' has no exported member 'UserRole'.
+tests/data-validation-service.test.ts(2,20): error TS2305: Module '"@prisma/client"' has no exported member 'CourseStatus'.
+tests/data-validation-service.test.ts(2,34): error TS2305: Module '"@prisma/client"' has no exported member 'EnrollmentStatus'.
+tests/data-validation-service.test.ts(2,52): error TS2305: Module '"@prisma/client"' has no exported member 'ProgressStatus'.
+tests/data-validation-service.test.ts(2,68): error TS2305: Module '"@prisma/client"' has no exported member 'QuestionType'.
+tests/data-validation-service.test.ts(2,82): error TS2305: Module '"@prisma/client"' has no exported member 'LessonType'.
+tests/e2e/accessibility.spec.ts(52,15): error TS7034: Variable 'results' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(70,16): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tests/e2e/accessibility.spec.ts(155,26): error TS2339: Property 'type' does not exist on type 'Element'.
+tests/e2e/accessibility.spec.ts(178,15): error TS7034: Variable 'results' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(195,16): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tests/e2e/accessibility.spec.ts(255,78): error TS18046: 'error' is of type 'unknown'.
+tests/e2e/accessibility.spec.ts(266,15): error TS7034: Variable 'timeouts' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(279,21): error TS7005: Variable 'timeouts' implicitly has an 'any[]' type.
+tests/e2e/accessibility.spec.ts(344,15): error TS7034: Variable 'results' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(347,36): error TS2339: Property 'labels' does not exist on type 'Element'.
+tests/e2e/accessibility.spec.ts(350,42): error TS2339: Property 'placeholder' does not exist on type 'Element'.
+tests/e2e/accessibility.spec.ts(351,36): error TS2339: Property 'title' does not exist on type 'Element'.
+tests/e2e/accessibility.spec.ts(354,25): error TS2339: Property 'type' does not exist on type 'Element'.
+tests/e2e/accessibility.spec.ts(364,16): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tests/e2e/accessibility.spec.ts(431,11): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{}'.
+  No index signature with a parameter of type 'string' was found on type '{}'.
+tests/e2e/accessibility.spec.ts(438,31): error TS2339: Property 'main' does not exist on type '{}'.
+tests/e2e/accessibility.spec.ts(438,56): error TS2339: Property 'section' does not exist on type '{}'.
+tests/e2e/accessibility.spec.ts(488,11): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{}'.
+  No index signature with a parameter of type 'string' was found on type '{}'.
+tests/e2e/accessibility.spec.ts(507,55): error TS2339: Property 'main' does not exist on type '{}'.
+tests/e2e/accessibility.spec.ts(519,15): error TS7034: Variable 'results' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(536,16): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tests/e2e/accessibility.spec.ts(554,15): error TS7034: Variable 'results' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(564,24): error TS2339: Property 'href' does not exist on type 'Element'.
+tests/e2e/accessibility.spec.ts(574,16): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tests/e2e/accessibility.spec.ts(590,15): error TS7034: Variable 'results' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(600,26): error TS2339: Property 'type' does not exist on type 'Element'.
+tests/e2e/accessibility.spec.ts(610,16): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tests/e2e/accessibility.spec.ts(626,15): error TS7034: Variable 'results' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(637,16): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tests/e2e/accessibility.spec.ts(649,15): error TS7034: Variable 'colorElements' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/e2e/accessibility.spec.ts(666,16): error TS7005: Variable 'colorElements' implicitly has an 'any[]' type.
+tests/e2e/browser-specific.spec.ts(115,17): error TS2367: This comparison appears to be unintentional because the types 'BrowserName' and '"Mobile Chrome"' have no overlap.
+tests/e2e/browser-specific.spec.ts(136,17): error TS2367: This comparison appears to be unintentional because the types 'BrowserName' and '"Mobile Safari"' have no overlap.
+tests/e2e/browser-specific.spec.ts(241,13): error TS7022: 'performance' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+tests/e2e/browser-specific.spec.ts(241,47): error TS7024: Function implicitly has return type 'any' because it does not have a return type annotation and is referenced directly or indirectly in one of its return expressions.
+tests/e2e/browser-specific.spec.ts(248,66): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tests/e2e/browser-specific.spec.ts(249,76): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tests/e2e/fixtures.ts(6,3): error TS2353: Object literal may only specify known properties, and 'authenticatedPage' does not exist in type 'Fixtures<{}, {}, PlaywrightTestArgs & PlaywrightTestOptions, PlaywrightWorkerArgs & PlaywrightWorkerOptions>'.
+tests/e2e/mobile-responsiveness.spec.ts(159,23): error TS2339: Property 'type' does not exist on type 'Element'.
+tests/e2e/mobile-responsiveness.spec.ts(160,26): error TS2339: Property 'offsetWidth' does not exist on type 'Element'.
+tests/e2e/mobile-responsiveness.spec.ts(160,51): error TS2339: Property 'offsetHeight' does not exist on type 'Element'.
+tests/e2e/mobile-responsiveness.spec.ts(161,30): error TS2339: Property 'disabled' does not exist on type 'Element'.
+tests/e2e/mobile-responsiveness.spec.ts(161,49): error TS2339: Property 'hidden' does not exist on type 'Element'.
+tests/e2e/mobile-responsiveness.spec.ts(224,29): error TS2339: Property 'offsetWidth' does not exist on type 'Element'.
+tests/e2e/mobile-responsiveness.spec.ts(224,51): error TS2339: Property 'offsetHeight' does not exist on type 'Element'.
+tests/e2e/mobile-responsiveness.spec.ts(401,20): error TS18048: 'input.labels.length' is possibly 'undefined'.
+tests/email-notification-service.test.ts(1,24): error TS2305: Module '"@prisma/client"' has no exported member 'UserRole'.
+tests/email-notification-service.test.ts(1,34): error TS2305: Module '"@prisma/client"' has no exported member 'CourseStatus'.
+tests/email-notification-service.test.ts(1,48): error TS2305: Module '"@prisma/client"' has no exported member 'EnrollmentStatus'.
+tests/email-notification-service.test.ts(29,49): error TS2345: Argument of type '{ organizationId: any; status: any; }' is not assignable to parameter of type 'string'.
+tests/email-notification-service.test.ts(37,50): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/email-notification-service.test.ts(42,55): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/email-notification-service.test.ts(47,52): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/email-notification-service.test.ts(52,57): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/email-notification-service.test.ts(455,58): error TS2345: Argument of type '{ organizationId: string; role: any; }' is not assignable to parameter of type 'string'.
+tests/email-notification-service.test.ts(593,64): error TS2345: Argument of type '{ organizationId: any; title: string; description: string; status: any; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(27,49): error TS2345: Argument of type '{ organizationId: any; status: "PUBLISHED"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(34,50): error TS2345: Argument of type '{ organizationId: any; role: "ADMIN"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(39,55): error TS2345: Argument of type '{ organizationId: any; role: "INSTRUCTOR"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(44,52): error TS2345: Argument of type '{ organizationId: any; role: "STUDENT"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(49,57): error TS2345: Argument of type '{ organizationId: any; role: "STUDENT"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(107,62): error TS2345: Argument of type '{ organizationId: any; status: "DRAFT"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(135,62): error TS2345: Argument of type '{ organizationId: string; status: "PUBLISHED"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(222,58): error TS2345: Argument of type '{ organizationId: any; status: "PUBLISHED"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(282,26): error TS2339: Property 'CANCELLED' does not exist on type '{ ACTIVE: "ACTIVE"; COMPLETED: "COMPLETED"; DROPPED: "DROPPED"; SUSPENDED: "SUSPENDED"; }'.
+tests/enrollment-service.test.ts(286,62): error TS2339: Property 'CANCELLED' does not exist on type '{ ACTIVE: "ACTIVE"; COMPLETED: "COMPLETED"; DROPPED: "DROPPED"; SUSPENDED: "SUSPENDED"; }'.
+tests/enrollment-service.test.ts(311,26): error TS2339: Property 'CANCELLED' does not exist on type '{ ACTIVE: "ACTIVE"; COMPLETED: "COMPLETED"; DROPPED: "DROPPED"; SUSPENDED: "SUSPENDED"; }'.
+tests/enrollment-service.test.ts(360,63): error TS2339: Property 'CANCELLED' does not exist on type '{ ACTIVE: "ACTIVE"; COMPLETED: "COMPLETED"; DROPPED: "DROPPED"; SUSPENDED: "SUSPENDED"; }'.
+tests/enrollment-service.test.ts(409,58): error TS2345: Argument of type '{ organizationId: any; status: "PUBLISHED"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(421,58): error TS2345: Argument of type '{ organizationId: any; status: "PUBLISHED"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(430,34): error TS2339: Property 'CANCELLED' does not exist on type '{ ACTIVE: "ACTIVE"; COMPLETED: "COMPLETED"; DROPPED: "DROPPED"; SUSPENDED: "SUSPENDED"; }'.
+tests/enrollment-service.test.ts(452,62): error TS2345: Argument of type '{ organizationId: string; status: "PUBLISHED"; }' is not assignable to parameter of type 'string'.
+tests/enrollment-service.test.ts(496,52): error TS2345: Argument of type '{ organizationId: any; role: "ADMIN"; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(1,24): error TS2305: Module '"@prisma/client"' has no exported member 'UserRole'.
+tests/file-upload-service.test.ts(1,34): error TS2305: Module '"@prisma/client"' has no exported member 'CourseStatus'.
+tests/file-upload-service.test.ts(1,48): error TS2305: Module '"@prisma/client"' has no exported member 'EnrollmentStatus'.
+tests/file-upload-service.test.ts(30,49): error TS2345: Argument of type '{ organizationId: any; status: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(37,50): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(42,55): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(47,52): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(52,57): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(239,62): error TS2345: Argument of type '{ organizationId: string; status: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(268,62): error TS2345: Argument of type '{ organizationId: string; status: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(348,58): error TS2345: Argument of type '{ organizationId: string; role: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(500,58): error TS2345: Argument of type '{ organizationId: string; role: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(555,58): error TS2345: Argument of type '{ organizationId: string; role: any; }' is not assignable to parameter of type 'string'.
+tests/file-upload-service.test.ts(613,62): error TS2345: Argument of type '{ organizationId: any; status: any; }' is not assignable to parameter of type 'string'.
+tests/integration-scenarios.test.ts(705,45): error TS2339: Property 'title' does not exist on type '{ id: string; name: string | null; createdAt: Date; updatedAt: Date; email: string; password: string | null; role: UserRole; organizationId: string; } | { id: string; ... 5 more ...; status: CourseStatus; }'.
+  Property 'title' does not exist on type '{ id: string; name: string | null; createdAt: Date; updatedAt: Date; email: string; password: string | null; role: UserRole; organizationId: string; }'.
+tests/integration-scenarios.test.ts(706,43): error TS2339: Property 'name' does not exist on type '{ id: string; name: string | null; createdAt: Date; updatedAt: Date; email: string; password: string | null; role: UserRole; organizationId: string; } | { id: string; ... 5 more ...; status: CourseStatus; }'.
+  Property 'name' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; organizationId: string; title: string; description: string | null; status: CourseStatus; }'.
+tests/integration-test-utils.ts(286,51): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(287,55): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(364,52): error TS2345: Argument of type '{ organizationId: string; email: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(368,52): error TS2345: Argument of type '{ organizationId: string; email: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(373,56): error TS2345: Argument of type '{ organizationId: string; title: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(377,56): error TS2345: Argument of type '{ organizationId: string; title: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(411,52): error TS2345: Argument of type '{ organizationId: string; role: "ADMIN"; email: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(417,57): error TS2345: Argument of type '{ organizationId: string; role: "INSTRUCTOR"; email: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(423,54): error TS2345: Argument of type '{ organizationId: string; role: "STUDENT"; email: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(429,55): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(443,51): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/integration-test-utils.ts(444,55): error TS2345: Argument of type '{ organizationId: string; }' is not assignable to parameter of type 'string'.
+tests/module-lesson-service.test.ts(105,63): error TS2345: Argument of type '{ title: string; courseId: any; }' is not assignable to parameter of type 'ModuleCreateInput'.
+  Type '{ title: string; courseId: any; }' is missing the following properties from type 'ModuleCreateInput': order, course
+tests/module-lesson-service.test.ts(120,44): error TS2345: Argument of type '{ title: string; courseId: any; }' is not assignable to parameter of type 'ModuleCreateInput'.
+  Type '{ title: string; courseId: any; }' is missing the following properties from type 'ModuleCreateInput': order, course
+tests/module-lesson-service.test.ts(131,44): error TS2345: Argument of type '{ title: string; courseId: string; }' is not assignable to parameter of type 'ModuleCreateInput'.
+  Type '{ title: string; courseId: string; }' is missing the following properties from type 'ModuleCreateInput': order, course
+tests/module-lesson-service.test.ts(143,23): error TS2551: Property 'course' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; order: number; courseId: string; }'. Did you mean 'courseId'?
+tests/module-lesson-service.test.ts(144,23): error TS2339: Property 'lessons' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; order: number; courseId: string; }'.
+tests/module-lesson-service.test.ts(145,23): error TS2339: Property '_count' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; order: number; courseId: string; }'.
+tests/module-lesson-service.test.ts(267,63): error TS2345: Argument of type '{ title: string; content: string; type: "TEXT"; moduleId: any; }' is not assignable to parameter of type 'LessonCreateInput'.
+  Type '{ title: string; content: string; type: "TEXT"; moduleId: any; }' is missing the following properties from type 'LessonCreateInput': order, module
+tests/module-lesson-service.test.ts(284,44): error TS2345: Argument of type '{ title: string; moduleId: any; }' is not assignable to parameter of type 'LessonCreateInput'.
+  Type '{ title: string; moduleId: any; }' is missing the following properties from type 'LessonCreateInput': order, module
+tests/module-lesson-service.test.ts(295,44): error TS2345: Argument of type '{ title: string; moduleId: string; }' is not assignable to parameter of type 'LessonCreateInput'.
+  Type '{ title: string; moduleId: string; }' is missing the following properties from type 'LessonCreateInput': order, module
+tests/module-lesson-service.test.ts(320,23): error TS2551: Property 'module' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; order: number; content: string | null; type: LessonType; moduleId: string; }'. Did you mean 'moduleId'?
+tests/module-lesson-service.test.ts(321,23): error TS2339: Property 'quiz' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; order: number; content: string | null; type: LessonType; moduleId: string; }'.
+tests/multi-tenant-isolation-service.test.ts(1,72): error TS2307: Cannot find module '../services/multi-tenant-isolation.service' or its corresponding type declarations.
+tests/multi-tenant-isolation-service.test.ts(348,19): error TS2551: Property 'addOrganizationFilter' does not exist on type 'TestService'. Did you mean 'testAddOrganizationFilter'?
+tests/multi-tenant-isolation-service.test.ts(352,19): error TS2551: Property 'addNestedOrganizationFilter' does not exist on type 'TestService'. Did you mean 'testAddNestedOrganizationFilter'?
+tests/multi-tenant-isolation-service.test.ts(356,19): error TS2551: Property 'validateOwnership' does not exist on type 'TestService'. Did you mean 'testValidateOwnership'?
+tests/multi-tenant-isolation-service.test.ts(360,19): error TS2551: Property 'sanitizeData' does not exist on type 'TestService'. Did you mean 'testSanitizeData'?
+tests/multi-tenant-isolation-service.test.ts(372,14): error TS7053: Element implicitly has an 'any' type because expression of type '"organizationId"' can't be used to index type 'TestService'.
+  Property 'organizationId' does not exist on type 'TestService'.
+tests/multi-tenant-isolation-service.test.ts(373,14): error TS7053: Element implicitly has an 'any' type because expression of type '"prisma"' can't be used to index type 'TestService'.
+  Property 'prisma' does not exist on type 'TestService'.
+tests/multi-tenant-isolation-service.test.ts(374,14): error TS7053: Element implicitly has an 'any' type because expression of type '"isolationService"' can't be used to index type 'TestService'.
+  Property 'isolationService' does not exist on type 'TestService'.
+tests/multi-tenant-security-tests.test.ts(273,11): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'Without<ModuleCreateInput, ModuleUncheckedCreateInput> & ModuleUncheckedCreateInput'.
+tests/multi-tenant-security-tests.test.ts(281,11): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'Without<ModuleCreateInput, ModuleUncheckedCreateInput> & ModuleUncheckedCreateInput'.
+tests/multi-tenant-security-tests.test.ts(287,9): error TS2322: Type '{ title: string; content: string; moduleId: string; }' is not assignable to type '(Without<LessonCreateInput, LessonUncheckedCreateInput> & LessonUncheckedCreateInput) | (Without<...> & LessonCreateInput)'.
+  Type '{ title: string; content: string; moduleId: string; }' is not assignable to type 'Without<LessonCreateInput, LessonUncheckedCreateInput> & LessonUncheckedCreateInput'.
+    Property 'order' is missing in type '{ title: string; content: string; moduleId: string; }' but required in type 'LessonUncheckedCreateInput'.
+tests/multi-tenant-security-tests.test.ts(295,9): error TS2322: Type '{ title: string; content: string; moduleId: string; }' is not assignable to type '(Without<LessonCreateInput, LessonUncheckedCreateInput> & LessonUncheckedCreateInput) | (Without<...> & LessonCreateInput)'.
+  Type '{ title: string; content: string; moduleId: string; }' is not assignable to type 'Without<LessonCreateInput, LessonUncheckedCreateInput> & LessonUncheckedCreateInput'.
+    Property 'order' is missing in type '{ title: string; content: string; moduleId: string; }' but required in type 'LessonUncheckedCreateInput'.
+tests/multi-tenant-security-tests.test.ts(305,11): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'Without<QuizCreateInput, QuizUncheckedCreateInput> & QuizUncheckedCreateInput'.
+tests/multi-tenant-security-tests.test.ts(313,11): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'Without<QuizCreateInput, QuizUncheckedCreateInput> & QuizUncheckedCreateInput'.
+tests/multi-tenant-security-tests.test.ts(325,11): error TS2353: Object literal may only specify known properties, and 'status' does not exist in type 'Without<QuizAttemptCreateInput, QuizAttemptUncheckedCreateInput> & QuizAttemptUncheckedCreateInput'.
+tests/multi-tenant-security-tests.test.ts(335,11): error TS2353: Object literal may only specify known properties, and 'status' does not exist in type 'Without<QuizAttemptCreateInput, QuizAttemptUncheckedCreateInput> & QuizAttemptUncheckedCreateInput'.
+tests/organization-service.test.ts(125,27): error TS2339: Property 'users' does not exist on type '{ id: string; name: string; domain: string | null; settings: JsonValue; createdAt: Date; updatedAt: Date; }'.
+tests/organization-service.test.ts(126,27): error TS2339: Property 'courses' does not exist on type '{ id: string; name: string; domain: string | null; settings: JsonValue; createdAt: Date; updatedAt: Date; }'.
+tests/organization-service.test.ts(127,27): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; domain: string | null; settings: JsonValue; createdAt: Date; updatedAt: Date; }'.
+tests/performance-optimization-service.test.ts(1,68): error TS2307: Cannot find module '../services/performance-optimization.service' or its corresponding type declarations.
+tests/performance-optimization-service.test.ts(169,19): error TS7006: Parameter 'item' implicitly has an 'any' type.
+tests/performance-optimization-service.test.ts(310,7): error TS2741: Property 'rss' is missing in type 'Mock<any, any, any>' but required in type 'MemoryUsageFn'.
+tests/performance-test-utils.ts(203,9): error TS2322: Type 'true' is not assignable to type 'never'.
+tests/performance-test-utils.ts(267,13): error TS2322: Type 'null' is not assignable to type 'string | NestedStringFilter<"Course"> | undefined'.
+tests/progress-service.test.ts(29,49): error TS2345: Argument of type '{ organizationId: any; status: "PUBLISHED"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(37,50): error TS2345: Argument of type '{ organizationId: any; role: "ADMIN"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(42,55): error TS2345: Argument of type '{ organizationId: any; role: "INSTRUCTOR"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(47,52): error TS2345: Argument of type '{ organizationId: any; role: "STUDENT"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(52,57): error TS2345: Argument of type '{ organizationId: any; role: "STUDENT"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(130,66): error TS2345: Argument of type '{ organizationId: any; role: "STUDENT"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(148,42): error TS2339: Property 'CANCELLED' does not exist on type '{ ACTIVE: "ACTIVE"; COMPLETED: "COMPLETED"; DROPPED: "DROPPED"; SUSPENDED: "SUSPENDED"; }'.
+tests/progress-service.test.ts(251,57): error TS2345: Argument of type '{ organizationId: any; role: "STUDENT"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(256,57): error TS2345: Argument of type '{ organizationId: any; role: "STUDENT"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(383,52): error TS2345: Argument of type '{ organizationId: any; role: "ADMIN"; }' is not assignable to parameter of type 'string'.
+tests/progress-service.test.ts(423,62): error TS2345: Argument of type '{ organizationId: any; status: "PUBLISHED"; }' is not assignable to parameter of type 'string'.
+tests/quiz-grading-service.test.ts(1,24): error TS2305: Module '"@prisma/client"' has no exported member 'UserRole'.
+tests/quiz-grading-service.test.ts(1,34): error TS2305: Module '"@prisma/client"' has no exported member 'QuestionType'.
+tests/quiz-grading-service.test.ts(1,48): error TS2305: Module '"@prisma/client"' has no exported member 'CourseStatus'.
+tests/quiz-grading-service.test.ts(1,62): error TS2305: Module '"@prisma/client"' has no exported member 'EnrollmentStatus'.
+tests/quiz-grading-service.test.ts(32,49): error TS2345: Argument of type '{ organizationId: any; status: any; }' is not assignable to parameter of type 'string'.
+tests/quiz-grading-service.test.ts(70,50): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/quiz-grading-service.test.ts(75,55): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/quiz-grading-service.test.ts(80,52): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/quiz-grading-service.test.ts(85,57): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/quiz-grading-service.test.ts(227,66): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/quiz-grading-service.test.ts(484,52): error TS2345: Argument of type '{ organizationId: any; role: any; }' is not assignable to parameter of type 'string'.
+tests/quiz-grading-service.test.ts(575,9): error TS2345: Argument of type '({ questionId: any; answer: null; } | { questionId: any; answer: undefined; } | { questionId: any; answer: string; })[]' is not assignable to parameter of type 'QuizSubmission[]'.
+  Type '{ questionId: any; answer: null; } | { questionId: any; answer: undefined; } | { questionId: any; answer: string; }' is not assignable to type 'QuizSubmission'.
+    Type '{ questionId: any; answer: null; }' is not assignable to type 'QuizSubmission'.
+      Types of property 'answer' are incompatible.
+        Type 'null' is not assignable to type 'string | boolean | string[]'.
+tests/quiz-service.test.ts(26,49): error TS2345: Argument of type '{ organizationId: any; }' is not assignable to parameter of type 'string'.
+tests/quiz-service.test.ts(30,50): error TS2345: Argument of type '{ organizationId: any; role: "ADMIN"; }' is not assignable to parameter of type 'string'.
+tests/quiz-service.test.ts(35,55): error TS2345: Argument of type '{ organizationId: any; role: "INSTRUCTOR"; }' is not assignable to parameter of type 'string'.
+tests/quiz-service.test.ts(40,52): error TS2345: Argument of type '{ organizationId: any; role: "STUDENT"; }' is not assignable to parameter of type 'string'.
+tests/quiz-service.test.ts(66,19): error TS2339: Property 'maxAttempts' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; timeLimit: number | null; lessonId: string; }'.
+tests/quiz-service.test.ts(67,19): error TS2339: Property 'passingScore' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; title: string; timeLimit: number | null; lessonId: string; }'.
+tests/quiz-service.test.ts(162,57): error TS2345: Argument of type '{ text: string; type: "MULTIPLE_CHOICE"; options: string[]; correctAnswer: string; explanation: string; quiz: { connect: { id: any; }; }; }' is not assignable to parameter of type 'QuestionCreateInput'.
+  Property 'order' is missing in type '{ text: string; type: "MULTIPLE_CHOICE"; options: string[]; correctAnswer: string; explanation: string; quiz: { connect: { id: any; }; }; }' but required in type 'QuestionCreateInput'.
+tests/quiz-service.test.ts(180,57): error TS2345: Argument of type '{ text: string; type: "TRUE_FALSE"; correctAnswer: boolean; explanation: string; quiz: { connect: { id: any; }; }; }' is not assignable to parameter of type 'QuestionCreateInput'.
+  Property 'order' is missing in type '{ text: string; type: "TRUE_FALSE"; correctAnswer: boolean; explanation: string; quiz: { connect: { id: any; }; }; }' but required in type 'QuestionCreateInput'.
+tests/quiz-service.test.ts(197,57): error TS2345: Argument of type '{ text: string; type: "SHORT_ANSWER"; correctAnswer: string; explanation: string; quiz: { connect: { id: any; }; }; }' is not assignable to parameter of type 'QuestionCreateInput'.
+  Property 'order' is missing in type '{ text: string; type: "SHORT_ANSWER"; correctAnswer: string; explanation: string; quiz: { connect: { id: any; }; }; }' but required in type 'QuestionCreateInput'.
+tests/quiz-service.test.ts(213,57): error TS2345: Argument of type '{ text: string; type: "ESSAY"; explanation: string; quiz: { connect: { id: any; }; }; }' is not assignable to parameter of type 'QuestionCreateInput'.
+  Property 'order' is missing in type '{ text: string; type: "ESSAY"; explanation: string; quiz: { connect: { id: any; }; }; }' but required in type 'QuestionCreateInput'.
+tests/quiz-service.test.ts(231,36): error TS2345: Argument of type '{ text: string; type: "MULTIPLE_CHOICE"; options: string[]; correctAnswer: string; quiz: { connect: { id: any; }; }; }' is not assignable to parameter of type 'QuestionCreateInput'.
+  Property 'order' is missing in type '{ text: string; type: "MULTIPLE_CHOICE"; options: string[]; correctAnswer: string; quiz: { connect: { id: any; }; }; }' but required in type 'QuestionCreateInput'.
+tests/quiz-service.test.ts(244,36): error TS2345: Argument of type '{ text: string; type: "TRUE_FALSE"; correctAnswer: string; quiz: { connect: { id: any; }; }; }' is not assignable to parameter of type 'QuestionCreateInput'.
+  Property 'order' is missing in type '{ text: string; type: "TRUE_FALSE"; correctAnswer: string; quiz: { connect: { id: any; }; }; }' but required in type 'QuestionCreateInput'.
+tests/quiz-service.test.ts(257,36): error TS2345: Argument of type '{ text: string; type: "SHORT_ANSWER"; correctAnswer: number; quiz: { connect: { id: any; }; }; }' is not assignable to parameter of type 'QuestionCreateInput'.
+  Property 'order' is missing in type '{ text: string; type: "SHORT_ANSWER"; correctAnswer: number; quiz: { connect: { id: any; }; }; }' but required in type 'QuestionCreateInput'.
+tests/quiz-service.test.ts(399,52): error TS2345: Argument of type '{ organizationId: any; role: "ADMIN"; }' is not assignable to parameter of type 'string'.
+tests/search-service.test.ts(1,31): error TS2307: Cannot find module '../services/search.service' or its corresponding type declarations.
+tests/security-tests.test.ts(592,11): error TS2322: Type '{ description: string; status: "DRAFT"; organizationId: any; }' is not assignable to type '(Without<CourseCreateInput, CourseUncheckedCreateInput> & CourseUncheckedCreateInput) | (Without<...> & CourseCreateInput)'.
+  Type '{ description: string; status: "DRAFT"; organizationId: any; }' is not assignable to type 'Without<CourseUncheckedCreateInput, CourseCreateInput> & CourseCreateInput'.
+    Type '{ description: string; status: "DRAFT"; organizationId: any; }' is missing the following properties from type 'CourseCreateInput': title, organization
+tests/service-integration-tests.test.ts(2,37): error TS2307: Cannot find module '../services/organization.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(3,29): error TS2307: Cannot find module '../services/user.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(4,31): error TS2307: Cannot find module '../services/course.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(5,37): error TS2307: Cannot find module '../services/module-lesson.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(6,29): error TS2307: Cannot find module '../services/quiz.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(7,35): error TS2307: Cannot find module '../services/enrollment.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(8,33): error TS2307: Cannot find module '../services/progress.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(9,36): error TS2307: Cannot find module '../services/quiz-grading.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(10,35): error TS2307: Cannot find module '../services/file-upload.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(11,42): error TS2307: Cannot find module '../services/email-notification.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(12,37): error TS2307: Cannot find module '../services/audit-logging.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(13,32): error TS2307: Cannot find module '../services/caching.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(14,31): error TS2307: Cannot find module '../services/search.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(15,34): error TS2307: Cannot find module '../services/analytics.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(16,45): error TS2307: Cannot find module '../services/multi-tenant-isolation.service' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(17,39): error TS2307: Cannot find module '../lib/validation' or its corresponding type declarations.
+tests/service-integration-tests.test.ts(198,26): error TS7006: Parameter 'user' implicitly has an 'any' type.
+tests/service-integration-tests.test.ts(217,37): error TS7006: Parameter 'course' implicitly has an 'any' type.
+tests/service-integration-tests.test.ts(300,32): error TS7006: Parameter 'p' implicitly has an 'any' type.
+tests/service-performance-tests.test.ts(33,21): error TS2554: Expected 1 arguments, but got 0.
+tests/service-performance-tests.test.ts(34,19): error TS2554: Expected 1 arguments, but got 0.
+tests/service-performance-tests.test.ts(35,25): error TS2554: Expected 1 arguments, but got 0.
+tests/service-performance-tests.test.ts(36,19): error TS2554: Expected 1 arguments, but got 0.
+tests/service-performance-tests.test.ts(37,23): error TS2554: Expected 1 arguments, but got 0.
+tests/service-performance-tests.test.ts(56,42): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(73,29): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(83,43): error TS2339: Property 'getCourses' does not exist on type 'CourseService'.
+tests/service-performance-tests.test.ts(98,38): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(106,38): error TS2339: Property 'getCourses' does not exist on type 'CourseService'.
+tests/service-performance-tests.test.ts(109,47): error TS2339: Property 'getCourses' does not exist on type 'CourseService'.
+tests/service-performance-tests.test.ts(126,38): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(144,27): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(155,39): error TS2339: Property 'getUsers' does not exist on type 'UserService'.
+tests/service-performance-tests.test.ts(173,23): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(195,40): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(202,39): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(214,50): error TS2551: Property 'createEnrollment' does not exist on type 'EnrollmentService'. Did you mean 'cancelEnrollment'?
+tests/service-performance-tests.test.ts(230,43): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(238,33): error TS2551: Property 'createEnrollment' does not exist on type 'EnrollmentService'. Did you mean 'cancelEnrollment'?
+tests/service-performance-tests.test.ts(247,51): error TS2551: Property 'getEnrollments' does not exist on type 'EnrollmentService'. Did you mean 'getEnrollmentStats'?
+tests/service-performance-tests.test.ts(262,45): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(270,42): error TS2551: Property 'createEnrollment' does not exist on type 'EnrollmentService'. Did you mean 'cancelEnrollment'?
+tests/service-performance-tests.test.ts(277,42): error TS2551: Property 'getEnrollments' does not exist on type 'EnrollmentService'. Did you mean 'getEnrollmentStats'?
+tests/service-performance-tests.test.ts(295,11): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type '(Without<ModuleCreateInput, ModuleUncheckedCreateInput> & ModuleUncheckedCreateInput) | (Without<...> & ModuleCreateInput)'.
+tests/service-performance-tests.test.ts(296,21): error TS2552: Cannot find name 'testCourse'. Did you mean 'testUser'?
+tests/service-performance-tests.test.ts(301,9): error TS2322: Type '{ title: string; content: string; moduleId: string; }' is not assignable to type '(Without<LessonCreateInput, LessonUncheckedCreateInput> & LessonUncheckedCreateInput) | (Without<...> & LessonCreateInput)'.
+  Type '{ title: string; content: string; moduleId: string; }' is not assignable to type 'Without<LessonCreateInput, LessonUncheckedCreateInput> & LessonUncheckedCreateInput'.
+    Property 'order' is missing in type '{ title: string; content: string; moduleId: string; }' but required in type 'LessonUncheckedCreateInput'.
+tests/service-performance-tests.test.ts(312,38): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(326,38): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(334,42): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(346,23): error TS2339: Property 'question' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; order: number; type: QuestionType; text: string; options: JsonValue; correctAnswer: JsonValue; quizId: string; }'.
+tests/service-performance-tests.test.ts(355,23): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(374,46): error TS2339: Property 'trackProgress' does not exist on type 'ProgressService'.
+tests/service-performance-tests.test.ts(375,17): error TS2304: Cannot find name 'testStudent'.
+tests/service-performance-tests.test.ts(376,19): error TS2304: Cannot find name 'testLesson'.
+tests/service-performance-tests.test.ts(391,43): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(399,31): error TS2339: Property 'trackProgress' does not exist on type 'ProgressService'.
+tests/service-performance-tests.test.ts(401,21): error TS2304: Cannot find name 'testLesson'.
+tests/service-performance-tests.test.ts(409,53): error TS2339: Property 'getProgress' does not exist on type 'ProgressService'.
+tests/service-performance-tests.test.ts(424,45): error TS2554: Expected 2 arguments, but got 1.
+tests/service-performance-tests.test.ts(432,40): error TS2339: Property 'trackProgress' does not exist on type 'ProgressService'.
+tests/service-performance-tests.test.ts(434,23): error TS2304: Cannot find name 'testLesson'.
+tests/service-performance-tests.test.ts(440,40): error TS2339: Property 'getProgress' does not exist on type 'ProgressService'.
+tests/simple-security-tests.test.ts(96,46): error TS2339: Property 'passed' does not exist on type '{ field: string; payload: string; sanitized: boolean; }'.
+tests/user-service.test.ts(90,49): error TS2345: Argument of type '{ email: string; name: string; password: string; role: "STUDENT"; organizationId: any; }' is not assignable to parameter of type 'UserCreateInput'.
+  Property 'organization' is missing in type '{ email: string; name: string; password: string; role: "STUDENT"; organizationId: any; }' but required in type 'UserCreateInput'.
+tests/user-service.test.ts(97,19): error TS2339: Property 'password' does not exist on type 'Omit<{ id: string; name: string | null; createdAt: Date; updatedAt: Date; email: string; password: string | null; role: UserRole; organizationId: string; }, "password">'.
+tests/user-service.test.ts(108,32): error TS2345: Argument of type '{ email: string; name: string; password: string; }' is not assignable to parameter of type 'UserCreateInput'.
+  Property 'organization' is missing in type '{ email: string; name: string; password: string; }' but required in type 'UserCreateInput'.
+tests/user-service.test.ts(119,49): error TS2345: Argument of type '{ email: string; name: string; role: "STUDENT"; }' is not assignable to parameter of type 'UserCreateInput'.
+  Property 'organization' is missing in type '{ email: string; name: string; role: "STUDENT"; }' but required in type 'UserCreateInput'.
+tests/user-service.test.ts(134,19): error TS2339: Property 'password' does not exist on type 'Omit<{ id: string; name: string | null; createdAt: Date; updatedAt: Date; email: string; password: string | null; role: UserRole; organizationId: string; }, "password">'.
+tests/user-service.test.ts(135,19): error TS2551: Property 'organization' does not exist on type 'Omit<{ id: string; name: string | null; createdAt: Date; updatedAt: Date; email: string; password: string | null; role: UserRole; organizationId: string; }, "password">'. Did you mean 'organizationId'?
+tests/user-service.test.ts(136,19): error TS2339: Property 'enrollments' does not exist on type 'Omit<{ id: string; name: string | null; createdAt: Date; updatedAt: Date; email: string; password: string | null; role: UserRole; organizationId: string; }, "password">'.
+tests/user-service.test.ts(137,19): error TS2339: Property '_count' does not exist on type 'Omit<{ id: string; name: string | null; createdAt: Date; updatedAt: Date; email: string; password: string | null; role: UserRole; organizationId: string; }, "password">'.

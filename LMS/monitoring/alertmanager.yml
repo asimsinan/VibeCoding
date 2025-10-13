@@ -1,0 +1,98 @@
+global:
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alerts@lms.example.com'
+  smtp_auth_username: 'alerts@lms.example.com'
+  smtp_auth_password: 'your-email-password'
+
+# Alert routing configuration
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'web.hook'
+  routes:
+  - match:
+      severity: critical
+    receiver: 'critical-alerts'
+  - match:
+      severity: warning
+    receiver: 'warning-alerts'
+  - match:
+      severity: info
+    receiver: 'info-alerts'
+
+# Receivers configuration
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://localhost:5001/webhook'
+    send_resolved: true
+
+- name: 'critical-alerts'
+  email_configs:
+  - to: 'admin@lms.example.com'
+    subject: '[CRITICAL] LMS Alert: {{ .GroupLabels.alertname }}'
+    body: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Instance: {{ .Labels.instance }}
+      Time: {{ .StartsAt }}
+      {{ end }}
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+    channel: '#lms-critical'
+    title: 'LMS Critical Alert'
+    text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    send_resolved: true
+  pagerduty_configs:
+  - service_key: 'your-pagerduty-service-key'
+    description: '{{ .GroupLabels.alertname }}: {{ .Annotations.summary }}'
+
+- name: 'warning-alerts'
+  email_configs:
+  - to: 'ops@lms.example.com'
+    subject: '[WARNING] LMS Alert: {{ .GroupLabels.alertname }}'
+    body: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Instance: {{ .Labels.instance }}
+      Time: {{ .StartsAt }}
+      {{ end }}
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+    channel: '#lms-warnings'
+    title: 'LMS Warning Alert'
+    text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    send_resolved: true
+
+- name: 'info-alerts'
+  email_configs:
+  - to: 'info@lms.example.com'
+    subject: '[INFO] LMS Alert: {{ .GroupLabels.alertname }}'
+    body: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Instance: {{ .Labels.instance }}
+      Time: {{ .StartsAt }}
+      {{ end }}
+  slack_configs:
+  - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+    channel: '#lms-info'
+    title: 'LMS Info Alert'
+    text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    send_resolved: true
+
+# Inhibition rules to prevent alert spam
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'warning'
+  equal: ['alertname', 'cluster', 'service']

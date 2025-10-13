@@ -1,0 +1,17 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "env": {
+    "DATABASE_URL": "postgresql://neondb_owner:npg_7YHn8jJlIpdW@ep-empty-flower-admmhvgf-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require",
+    "NEXTAUTH_SECRET": "your-production-nextauth-secret-key-here",
+    "NEXTAUTH_URL": "https://asylms.vercel.app",
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "DATABASE_URL": "postgresql://neondb_owner:npg_7YHn8jJlIpdW@ep-empty-flower-admmhvgf-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
+    }
+  }
+}

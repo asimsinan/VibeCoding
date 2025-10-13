@@ -1,0 +1,446 @@
+// Multi-Tenant Learning Management System Database Schema
+// Generated for Phase 1: Foundations & Data
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Organization model - Represents a tenant with its own courses, users, and settings
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  domain      String?  @unique
+  settings    Json?    // Custom branding and settings
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  users       User[]
+  courses     Course[]
+  enrollments Enrollment[]
+  files       File[]
+
+  // Indexes for performance
+  @@index([domain])
+  @@index([createdAt])
+  @@map("organizations")
+}
+
+// User model - Represents individuals within organizations with roles and permissions
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String?
+  password       String?  // For credentials authentication
+  role           UserRole @default(STUDENT)
+  organizationId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  enrollments    Enrollment[]
+  progress       Progress[]
+  quizAttempts   QuizAttempt[]
+  sessions       Session[]
+  accounts       Account[]
+  files          File[]
+  certificates   Certificate[]
+
+  // Indexes for performance
+  @@index([email])
+  @@index([organizationId])
+  @@index([role])
+  @@index([createdAt])
+  @@map("users")
+}
+
+// Course model - Represents educational content with modules and lessons
+model Course {
+  id             String        @id @default(cuid())
+  title          String
+  description    String?
+  status         CourseStatus  @default(DRAFT)
+  organizationId String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  modules        Module[]
+  enrollments    Enrollment[]
+  files          File[]
+  certificates   Certificate[]
+
+  // Indexes for performance
+  @@index([organizationId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([title])
+  @@map("courses")
+}
+
+// Module model - Represents course sections containing related lessons
+model Module {
+  id        String   @id @default(cuid())
+  title     String
+  order     Int
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+
+  // Indexes for performance
+  @@index([courseId])
+  @@index([order])
+  @@map("modules")
+}
+
+// Lesson model - Represents individual learning units with content and activities
+model Lesson {
+  id        String     @id @default(cuid())
+  title     String
+  content   String?
+  type      LessonType @default(TEXT)
+  order     Int
+  moduleId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relations
+  module    Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  quiz      Quiz?
+  progress  Progress[]
+  files     File[]
+
+  // Indexes for performance
+  @@index([moduleId])
+  @@index([order])
+  @@index([type])
+  @@map("lessons")
+}
+
+// Quiz model - Represents assessments within lessons
+model Quiz {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?  // Optional description
+  timeLimit    Int?     // in minutes
+  maxAttempts  Int?     // maximum number of attempts allowed
+  passingScore Int      @default(70) // passing score percentage
+  isPublished  Boolean  @default(false) // whether quiz is published
+  lessonId     String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  lesson    Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questions Question[]
+  attempts  QuizAttempt[]
+
+  // Indexes for performance
+  @@index([lessonId])
+  @@map("quizzes")
+}
+
+// Question model - Represents individual quiz items
+model Question {
+  id           String       @id @default(cuid())
+  text         String
+  type         QuestionType
+  options      Json?        // For multiple choice questions
+  correctAnswer Json?       // Correct answer(s)
+  order        Int
+  quizId       String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  // Relations
+  quiz         Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance
+  @@index([quizId])
+  @@index([type])
+  @@map("questions")
+}
+
+// Enrollment model - Represents student participation in courses
+model Enrollment {
+  id             String           @id @default(cuid())
+  userId         String
+  courseId       String
+  organizationId String
+  status         EnrollmentStatus @default(ACTIVE)
+  enrolledAt     DateTime         @default(now())
+  completedAt    DateTime?
+
+  // Relations
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance
+  @@index([userId])
+  @@index([courseId])
+  @@index([organizationId])
+  @@index([status])
+  @@index([enrolledAt])
+  @@unique([userId, courseId])
+  @@map("enrollments")
+}
+
+// Progress model - Represents student advancement through course content
+model Progress {
+  id         String         @id @default(cuid())
+  userId     String
+  lessonId   String
+  status     ProgressStatus @default(NOT_STARTED)
+  completedAt DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  // Relations
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson     Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance
+  @@index([userId])
+  @@index([lessonId])
+  @@index([status])
+  @@index([completedAt])
+  @@unique([userId, lessonId])
+  @@map("progress")
+}
+
+// QuizAttempt model - Represents student quiz submissions
+model QuizAttempt {
+  id         String   @id @default(cuid())
+  userId     String
+  quizId     String
+  answers    Json     // Student's answers
+  score      Float?
+  createdAt  DateTime @default(now())
+  submittedAt DateTime?
+
+  // Relations
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance
+  @@index([userId])
+  @@index([quizId])
+  @@index([score])
+  @@index([createdAt])
+  @@index([submittedAt])
+  @@map("quiz_attempts")
+}
+
+// NextAuth.js required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// File model - Represents uploaded files and course materials
+model File {
+  id             String   @id @default(cuid())
+  filename        String
+  originalName    String
+  mimeType        String
+  size            Int
+  path            String
+  url             String
+  hash            String?  // File integrity hash
+  uploadedBy      String
+  organizationId  String
+  courseId        String?
+  lessonId        String?
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  uploader        User           @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+  organization    Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  course          Course?        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lesson          Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance
+  @@index([uploadedBy])
+  @@index([organizationId])
+  @@index([courseId])
+  @@index([lessonId])
+  @@index([mimeType])
+  @@index([createdAt])
+  @@map("files")
+}
+
+// AuditLog model - Represents audit trail for all critical operations
+model AuditLog {
+  id             String           @id @default(cuid())
+  userId         String           // User who performed the action
+  action         AuditLogAction   // Action performed
+  resource       AuditLogResource // Resource affected
+  resourceId     String           // ID of the resource
+  organizationId String           // Organization context
+  details        Json?            // Additional details about the action
+  ipAddress      String?          // IP address of the user
+  userAgent      String?          // User agent string
+  timestamp      DateTime         @default(now())
+
+  // Indexes for performance
+  @@index([userId])
+  @@index([organizationId])
+  @@index([action])
+  @@index([resource])
+  @@index([resourceId])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  INSTRUCTOR
+  STUDENT
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LessonType {
+  TEXT
+  VIDEO
+  IMAGE
+  DOCUMENT
+  INTERACTIVE
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  SHORT_ANSWER
+  ESSAY
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  DROPPED
+  SUSPENDED
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum AuditLogAction {
+  CREATE
+  UPDATE
+  DELETE
+  VIEW
+  LOGIN
+  LOGOUT
+  LOGIN_FAILED
+  PASSWORD_CHANGE
+  PASSWORD_RESET
+  PUBLISH
+  ARCHIVE
+  ROLE_CHANGE
+  UPLOAD
+  DOWNLOAD
+  SUBMIT
+  GRADE
+  COMPLETE
+}
+
+enum AuditLogResource {
+  USER
+  ORGANIZATION
+  COURSE
+  MODULE
+  LESSON
+  QUIZ
+  QUESTION
+  ENROLLMENT
+  PROGRESS
+  QUIZ_ATTEMPT
+  FILE
+  CERTIFICATE
+  SYSTEM
+}
+
+enum CertificateStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+// Certificate model - Represents completion certificates for courses
+model Certificate {
+  id               String           @id @default(cuid())
+  userId           String
+  courseId         String
+  issuedAt         DateTime         @default(now())
+  certificateNumber String          @unique
+  verificationCode String           @unique
+  status           CertificateStatus @default(ACTIVE)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("certificates")
+}

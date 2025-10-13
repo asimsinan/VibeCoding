@@ -1,0 +1,29 @@
+tests/contract-tests.test.ts(40,34): error TS1005: ',' expected.
+tests/contract-tests.test.ts(40,36): error TS1005: ',' expected.
+tests/contract-tests.test.ts(40,41): error TS1005: ',' expected.
+tests/contract-tests.test.ts(40,47): error TS1005: ',' expected.
+tests/contract-tests.test.ts(40,49): error TS1002: Unterminated string literal.
+tests/contract-tests.test.ts(41,9): error TS1005: ':' expected.
+tests/contract-tests.test.ts(41,15): error TS1005: ',' expected.
+tests/contract-tests.test.ts(41,24): error TS1005: ':' expected.
+tests/contract-tests.test.ts(44,7): error TS1005: ';' expected.
+tests/contract-tests.test.ts(56,10): error TS1351: An identifier or keyword cannot immediately follow a numeric literal.
+tests/contract-tests.test.ts(56,20): error TS1005: ',' expected.
+tests/contract-tests.test.ts(56,46): error TS1002: Unterminated string literal.
+tests/contract-tests.test.ts(57,9): error TS1005: ':' expected.
+tests/contract-tests.test.ts(57,20): error TS1005: ',' expected.
+tests/contract-tests.test.ts(57,37): error TS1005: ':' expected.
+tests/integration-scenarios.test.ts(43,27): error TS1005: ',' expected.
+tests/integration-scenarios.test.ts(43,32): error TS1005: ',' expected.
+tests/integration-scenarios.test.ts(43,42): error TS1005: ',' expected.
+tests/integration-scenarios.test.ts(43,44): error TS1002: Unterminated string literal.
+tests/integration-scenarios.test.ts(44,9): error TS1005: ':' expected.
+tests/integration-scenarios.test.ts(44,13): error TS1005: ',' expected.
+tests/integration-scenarios.test.ts(44,27): error TS1005: ':' expected.
+tests/integration-scenarios.test.ts(47,7): error TS1005: ';' expected.
+tests/integration-scenarios.test.ts(59,10): error TS1351: An identifier or keyword cannot immediately follow a numeric literal.
+tests/integration-scenarios.test.ts(59,20): error TS1005: ',' expected.
+tests/integration-scenarios.test.ts(59,46): error TS1002: Unterminated string literal.
+tests/integration-scenarios.test.ts(60,9): error TS1005: ':' expected.
+tests/integration-scenarios.test.ts(60,13): error TS1005: ',' expected.
+tests/integration-scenarios.test.ts(60,32): error TS1005: ':' expected.

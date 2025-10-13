@@ -1,0 +1,935 @@
+openapi: 3.0.0
+info:
+  title: Multi-Tenant LMS API
+  version: 1.0.0
+  description: API for managing courses, quizzes, and student progress in a multi-tenant learning management system
+  contact:
+    name: LMS API Support
+    email: support@lms.example.com
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.lms.example.com/v1
+    description: Production server
+security:
+  - bearerAuth: []
+paths:
+  /organizations:
+    get:
+      summary: Retrieve list of organizations
+      description: Get all organizations (admin only)
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      summary: Create new organization
+      description: Create a new organization (system admin only)
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+      responses:
+        '201':
+          description: Organization created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Organization'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /organizations/{id}:
+    get:
+      summary: Get organization details
+      description: Retrieve details of a specific organization
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Organization ID
+      responses:
+        '200':
+          description: Organization details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Organization'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      summary: Update organization settings
+      description: Update organization settings and branding
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Organization ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationRequest'
+      responses:
+        '200':
+          description: Organization updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Organization'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /courses:
+    get:
+      summary: Retrieve courses
+      description: Get courses for authenticated user's organization
+      tags:
+        - Courses
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Create new course
+      description: Create a new course (instructor/admin only)
+      tags:
+        - Courses
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCourseRequest'
+      responses:
+        '201':
+          description: Course created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Course'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /courses/{id}:
+    get:
+      summary: Get course details
+      description: Get course details with modules and lessons
+      tags:
+        - Courses
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Course ID
+      responses:
+        '200':
+          description: Course details with modules and lessons
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CourseWithModules'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      summary: Update course content
+      description: Update course content and settings
+      tags:
+        - Courses
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Course ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCourseRequest'
+      responses:
+        '200':
+          description: Course updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Course'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete course
+      description: Delete a course (admin only)
+      tags:
+        - Courses
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Course ID
+      responses:
+        '200':
+          description: Course deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /courses/{id}/enroll:
+    post:
+      summary: Enroll student in course
+      description: Enroll a student in a course
+      tags:
+        - Courses
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Course ID
+      responses:
+        '201':
+          description: Student enrolled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Enrollment'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /users/profile:
+    get:
+      summary: Get current user profile
+      description: Get the profile of the currently authenticated user
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      summary: Update user profile
+      description: Update the profile of the currently authenticated user
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /progress:
+    get:
+      summary: Get user's course progress
+      description: Get the progress of the currently authenticated user across all courses
+      tags:
+        - Progress
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User progress data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Progress'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /lessons/{id}/complete:
+    post:
+      summary: Mark lesson as completed
+      description: Mark a lesson as completed for the current user
+      tags:
+        - Progress
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Lesson ID
+      responses:
+        '200':
+          description: Lesson marked as completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Progress'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /quizzes/{id}:
+    get:
+      summary: Get quiz details
+      description: Get quiz details with questions
+      tags:
+        - Quizzes
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Quiz ID
+      responses:
+        '200':
+          description: Quiz details with questions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/QuizWithQuestions'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /quizzes/{id}/submit:
+    post:
+      summary: Submit quiz answers
+      description: Submit answers for a quiz
+      tags:
+        - Quizzes
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Quiz ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizSubmissionRequest'
+      responses:
+        '200':
+          description: Quiz submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/QuizAttempt'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /dashboard/stats:
+    get:
+      summary: Get dashboard statistics
+      description: Get dashboard statistics for administrators and instructors
+      tags:
+        - Dashboard
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/DashboardStats'
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        domain:
+          type: string
+          nullable: true
+        settings:
+          type: object
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateOrganizationRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        domain:
+          type: string
+        settings:
+          type: object
+    UpdateOrganizationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        domain:
+          type: string
+        settings:
+          type: object
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [ADMIN, INSTRUCTOR, STUDENT]
+        organizationId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+    Course:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, ARCHIVED]
+        organizationId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateCourseRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, ARCHIVED]
+    UpdateCourseRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, ARCHIVED]
+    CourseWithModules:
+      allOf:
+        - $ref: '#/components/schemas/Course'
+        - type: object
+          properties:
+            modules:
+              type: array
+              items:
+                $ref: '#/components/schemas/Module'
+    Module:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        order:
+          type: integer
+        courseId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        lessons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lesson'
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+          nullable: true
+        type:
+          type: string
+          enum: [TEXT, VIDEO, IMAGE, DOCUMENT, INTERACTIVE]
+        order:
+          type: integer
+        moduleId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Quiz:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        timeLimit:
+          type: integer
+          nullable: true
+        lessonId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    QuizWithQuestions:
+      allOf:
+        - $ref: '#/components/schemas/Quiz'
+        - type: object
+          properties:
+            questions:
+              type: array
+              items:
+                $ref: '#/components/schemas/Question'
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        type:
+          type: string
+          enum: [MULTIPLE_CHOICE, TRUE_FALSE, SHORT_ANSWER, ESSAY]
+        options:
+          type: object
+          nullable: true
+        correctAnswer:
+          type: object
+          nullable: true
+        order:
+          type: integer
+        quizId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Enrollment:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        courseId:
+          type: string
+        organizationId:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, COMPLETED, DROPPED, SUSPENDED]
+        enrolledAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+    Progress:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        lessonId:
+          type: string
+        status:
+          type: string
+          enum: [NOT_STARTED, IN_PROGRESS, COMPLETED]
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    QuizAttempt:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        quizId:
+          type: string
+        answers:
+          type: object
+        score:
+          type: number
+          nullable: true
+        submittedAt:
+          type: string
+          format: date-time
+    QuizSubmissionRequest:
+      type: object
+      required:
+        - answers
+      properties:
+        answers:
+          type: object
+    DashboardStats:
+      type: object
+      properties:
+        totalCourses:
+          type: integer
+        totalStudents:
+          type: integer
+        totalInstructors:
+          type: integer
+        activeEnrollments:
+          type: integer
+        completedCourses:
+          type: integer
+        averageCompletionRate:
+          type: number
+        recentActivity:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              description:
+                type: string
+              timestamp:
+                type: string
+                format: date-time
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+              status:
+                type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+              status:
+                type: string
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+              status:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              message:
+                type: string
+              status:
+                type: string

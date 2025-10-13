@@ -1,0 +1,15 @@
+[0;34m[2025-10-12 23:56:36][0m Validation started at: Sun Oct 12 23:56:36 +03 2025
+[0;34m[2025-10-12 23:56:36][0m Results directory: ./code-quality-results
+[0;34m[2025-10-12 23:56:36][0m Log file: ./code-quality.log
+[0;34m[2025-10-12 23:56:36][0m Checking TypeScript compilation...
+[0;31m[ERROR][0m TypeScript compilation failed (see ./code-quality-results/typescript-compilation.log)
+[0;31m[ERROR][0m Critical TypeScript errors found
+[0;34m[2025-10-12 23:56:39][0m Checking ESLint compliance...
+[0;31m[ERROR][0m ESLint errors found (see ./code-quality-results/eslint-compliance.log)
+[0;34m[2025-10-12 23:56:44][0m Checking build process...
+[0;31m[ERROR][0m Production build failed (see ./code-quality-results/build-check.log)
+[0;34m[2025-10-12 23:56:50][0m Generating code quality report...
+[0;32m[SUCCESS][0m Code quality report generated: ./code-quality-results/code-quality-report-20251012_235636.md
+[0;34m[2025-10-12 23:56:50][0m Code Quality Validation Summary
+[0;34m[2025-10-12 23:56:50][0m ==============================
+[0;31m[ERROR][0m ❌ Some code quality checks failed. Please review and fix issues.

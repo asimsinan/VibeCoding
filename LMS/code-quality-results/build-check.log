@@ -1,0 +1,24 @@
+
+> lms-app@0.1.0 build
+> next build --turbopack
+
+   ▲ Next.js 15.5.4 (Turbopack)
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Finished writing to disk in 614ms
+ ✓ Compiled successfully in 2.2s
+   Linting and checking validity of types ...
+Failed to compile.
+
+./tests/e2e/fixtures.ts:6:3
+Type error: Object literal may only specify known properties, and 'authenticatedPage' does not exist in type 'Fixtures<{}, {}, PlaywrightTestArgs & PlaywrightTestOptions, PlaywrightWorkerArgs & PlaywrightWorkerOptions>'.
+
+[0m [90m 4 |[39m [36mexport[39m [36mconst[39m test [33m=[39m base[33m.[39mextend({
+ [90m 5 |[39m   [90m// Custom fixture for authenticated pages[39m
+[31m[1m>[22m[39m[90m 6 |[39m   authenticatedPage[33m:[39m [36masync[39m ({ page }[33m,[39m use) [33m=>[39m {
+ [90m   |[39m   [31m[1m^[22m[39m
+ [90m 7 |[39m     [90m// Mock authentication for testing[39m
+ [90m 8 |[39m     [36mawait[39m page[33m.[39mgoto([32m'/auth/login'[39m)[33m;[39m
+ [90m 9 |[39m     [36mawait[39m page[33m.[39mfill([32m'input[type="email"]'[39m[33m,[39m [32m'test@example.com'[39m)[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null
