@@ -47,9 +47,11 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 ### [Challenge 12: Learning Management System](./LMS) (Built in 5 hours)
 **Prompt**: *"Create a multi-tenant LMS (learning management system) where different organizations host courses, quizzes, student progress, and admin dashboards, using Next.js, TypeScript, Tailwind, Prisma, PostgreSQL, NextAuth"*
 
+### [Challenge 13: AR Decorator](./ArDecorator) (Built in 8 hours)
+**Prompt**: *"Develop a web-based AR home decorator where users upload room photos and virtually place furniture/décor items and preview in augmented reality, using React, three.js or WebGL, backend image processing APIs."*
 
 
-Prompt: 
+
 ## 🎯 Learning Objectives
 
 This challenge demonstrates:

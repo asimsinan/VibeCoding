@@ -1,0 +1,13 @@
+{
+  "name": "Xenova/sam2-base",
+  "downloadedAt": "2025-10-15T23:49:59Z",
+  "files": [
+  "config.json",
+  "tokenizer.json",
+  "tokenizer_config.json",
+  "preprocessor_config.json",
+  "model.onnx",
+  "model_quantized.onnx"
+],
+  "localPath": "public/models/sam2-base"
+}

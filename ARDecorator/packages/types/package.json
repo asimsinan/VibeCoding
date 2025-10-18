@@ -1,0 +1,16 @@
+{
+  "name": "@ar-decorator/types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types for AR Home Decorator",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
+

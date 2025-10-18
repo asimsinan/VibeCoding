@@ -1,0 +1,21 @@
+{
+  "name": "@ar-decorator/3d-engine",
+  "version": "1.0.0",
+  "description": "Standalone 3D engine library for furniture placement and AR",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.160.0",
+    "typescript": "^5.3.3"
+  }
+}
+

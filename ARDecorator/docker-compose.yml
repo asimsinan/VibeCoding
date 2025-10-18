@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (Production)
+  postgres:
+    image: postgres:16-alpine
+    container_name: ardecorator-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ardecorator
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_DB: ardecorator
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ardecorator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ardecorator-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://ardecorator:${DB_PASSWORD:-changeme}@postgres:5432/ardecorator
+      PORT: 3001
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET:-your-production-secret-key-min-32-chars}
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend (Nginx)
+  frontend:
+    image: nginx:alpine
+    container_name: ardecorator-frontend
+    restart: unless-stopped
+    volumes:
+      - ./apps/web/dist:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  default:
+    name: ardecorator-network
+

@@ -1,0 +1,1251 @@
+openapi: 3.0.3
+info:
+  title: AR Home Decorator API
+  description: RESTful API for web-based augmented reality home decoration application
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api@ardecorator.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.ardecorator.com/api/v1
+    description: Production server
+  - url: https://staging-api.ardecorator.com/api/v1
+    description: Staging server
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Users
+    description: User profile management
+  - name: Room Photos
+    description: Room photo upload and management
+  - name: Furniture Catalog
+    description: Furniture items browsing and management
+  - name: Designs
+    description: Room design management
+  - name: Shared Designs
+    description: Design sharing functionality
+  - name: Reports
+    description: Design report generation
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authentication
+
+  schemas:
+    # Common schemas
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              enum:
+                - VALIDATION_ERROR
+                - NOT_FOUND
+                - UNAUTHORIZED
+                - FORBIDDEN
+                - INTERNAL_ERROR
+                - CONFLICT
+            message:
+              type: string
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  message:
+                    type: string
+
+    # User schemas
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - role
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        name:
+          type: string
+          minLength: 1
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      required:
+        - user
+        - token
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+
+    # Room Photo schemas
+    RoomPhoto:
+      type: object
+      required:
+        - id
+        - userId
+        - filename
+        - url
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        url:
+          type: string
+          format: uri
+        dimensions:
+          type: object
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+            depth:
+              type: number
+        surfaces:
+          type: array
+          items:
+            type: object
+        status:
+          type: string
+          enum: [processing, completed, failed]
+        createdAt:
+          type: string
+          format: date-time
+
+    # Furniture schemas
+    FurnitureItem:
+      type: object
+      required:
+        - id
+        - name
+        - category
+        - price
+        - dimensions
+        - modelUrl
+        - thumbnailUrl
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum: [seating, tables, storage, lighting, decor]
+        style:
+          type: string
+          enum: [modern, traditional, minimalist, industrial, scandinavian]
+        price:
+          type: number
+          format: float
+        dimensions:
+          type: object
+          required:
+            - width
+            - height
+            - depth
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+            depth:
+              type: number
+        modelUrl:
+          type: string
+          format: uri
+        thumbnailUrl:
+          type: string
+          format: uri
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    FurnitureListResponse:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - totalPages
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FurnitureItem'
+        total:
+          type: integer
+        page:
+          type: integer
+        totalPages:
+          type: integer
+
+    # Design schemas
+    PlacedFurniture:
+      type: object
+      required:
+        - id
+        - furnitureItem
+        - position
+        - rotation
+        - scale
+      properties:
+        id:
+          type: string
+          format: uuid
+        furnitureItem:
+          $ref: '#/components/schemas/FurnitureItem'
+        position:
+          type: object
+          required:
+            - x
+            - y
+            - z
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+            z:
+              type: number
+        rotation:
+          type: object
+          required:
+            - x
+            - y
+            - z
+          properties:
+            x:
+              type: number
+              minimum: 0
+              maximum: 360
+            y:
+              type: number
+              minimum: 0
+              maximum: 360
+            z:
+              type: number
+              minimum: 0
+              maximum: 360
+        scale:
+          type: number
+          minimum: 0.2
+          maximum: 3.0
+
+    Design:
+      type: object
+      required:
+        - id
+        - name
+        - roomPhotoId
+        - placedFurniture
+        - totalCost
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        roomPhotoId:
+          type: string
+          format: uuid
+        roomPhotoUrl:
+          type: string
+          format: uri
+        placedFurniture:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlacedFurniture'
+        totalCost:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateDesignRequest:
+      type: object
+      required:
+        - name
+        - roomPhotoId
+        - placedFurniture
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        roomPhotoId:
+          type: string
+          format: uuid
+        placedFurniture:
+          type: array
+          items:
+            type: object
+            required:
+              - furnitureId
+              - position
+              - rotation
+              - scale
+            properties:
+              furnitureId:
+                type: string
+                format: uuid
+              position:
+                type: object
+                required:
+                  - x
+                  - y
+                  - z
+                properties:
+                  x:
+                    type: number
+                  y:
+                    type: number
+                  z:
+                    type: number
+              rotation:
+                type: object
+                required:
+                  - x
+                  - y
+                  - z
+                properties:
+                  x:
+                    type: number
+                    minimum: 0
+                    maximum: 360
+                  y:
+                    type: number
+                    minimum: 0
+                    maximum: 360
+                  z:
+                    type: number
+                    minimum: 0
+                    maximum: 360
+              scale:
+                type: number
+                minimum: 0.2
+                maximum: 3.0
+
+    DesignListResponse:
+      type: object
+      required:
+        - designs
+        - total
+        - page
+        - totalPages
+      properties:
+        designs:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+              thumbnailUrl:
+                type: string
+                format: uri
+              furnitureCount:
+                type: integer
+              createdAt:
+                type: string
+                format: date-time
+              updatedAt:
+                type: string
+                format: date-time
+        total:
+          type: integer
+        page:
+          type: integer
+        totalPages:
+          type: integer
+
+    # Shared Design schemas
+    SharedDesign:
+      type: object
+      required:
+        - shareToken
+        - shareUrl
+        - expiresAt
+      properties:
+        shareToken:
+          type: string
+        shareUrl:
+          type: string
+          format: uri
+        expiresAt:
+          type: string
+          format: date-time
+
+    SharedDesignView:
+      type: object
+      required:
+        - design
+        - owner
+        - sharedAt
+      properties:
+        design:
+          type: object
+          properties:
+            name:
+              type: string
+            roomPhotoUrl:
+              type: string
+              format: uri
+            placedFurniture:
+              type: array
+              items:
+                $ref: '#/components/schemas/PlacedFurniture'
+            totalCost:
+              type: number
+        owner:
+          type: object
+          properties:
+            name:
+              type: string
+        sharedAt:
+          type: string
+          format: date-time
+
+    # Report schemas
+    ReportResponse:
+      type: object
+      required:
+        - reportId
+        - status
+      properties:
+        reportId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [generating, completed, failed]
+        downloadUrl:
+          type: string
+          format: uri
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+
+  responses: {}
+
+  parameters: {}
+
+paths:
+  # Authentication endpoints
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register new user
+      description: Create a new user account with email and password
+      operationId: registerUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      description: Authenticate user and return JWT token
+      operationId: loginUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout user
+      description: Invalidate user session
+      operationId: logoutUser
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  # User endpoints
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Get current user profile
+      description: Retrieve authenticated user's profile information
+      operationId: getCurrentUser
+      responses:
+        '200':
+          description: User profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Room Photo endpoints
+  /room-photos:
+    post:
+      tags:
+        - Room Photos
+      summary: Upload room photo
+      description: Upload a room photo for processing
+      operationId: uploadRoomPhoto
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - photo
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Photo uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomPhoto'
+        '400':
+          description: Invalid file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: File too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /room-photos/{id}:
+    get:
+      tags:
+        - Room Photos
+      summary: Get room photo details
+      description: Retrieve room photo details and processing status
+      operationId: getRoomPhoto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Room photo retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomPhoto'
+        '404':
+          description: Room photo not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Room Photos
+      summary: Delete room photo
+      description: Delete a room photo
+      operationId: deleteRoomPhoto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Photo deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Room photo not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Furniture Catalog endpoints
+  /furniture:
+    get:
+      tags:
+        - Furniture Catalog
+      summary: List furniture items
+      description: Get paginated list of furniture items with optional filters
+      operationId: listFurniture
+      security: []
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [seating, tables, storage, lighting, decor]
+        - name: style
+          in: query
+          schema:
+            type: string
+            enum: [modern, traditional, minimalist, industrial, scandinavian]
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Furniture list retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FurnitureListResponse'
+
+    post:
+      tags:
+        - Furniture Catalog
+      summary: Create furniture item (Admin only)
+      description: Add new furniture item to catalog
+      operationId: createFurniture
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - category
+                - price
+                - dimensions
+                - model
+                - thumbnail
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                  enum: [seating, tables, storage, lighting, decor]
+                style:
+                  type: string
+                  enum: [modern, traditional, minimalist, industrial, scandinavian]
+                price:
+                  type: number
+                dimensions:
+                  type: string
+                model:
+                  type: string
+                  format: binary
+                thumbnail:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Furniture created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FurnitureItem'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin only
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /furniture/{id}:
+    get:
+      tags:
+        - Furniture Catalog
+      summary: Get furniture item
+      description: Retrieve single furniture item details
+      operationId: getFurniture
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Furniture item retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FurnitureItem'
+        '404':
+          description: Furniture not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Furniture Catalog
+      summary: Update furniture item (Admin only)
+      description: Update furniture item details
+      operationId: updateFurniture
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                style:
+                  type: string
+                price:
+                  type: number
+                dimensions:
+                  type: object
+      responses:
+        '200':
+          description: Furniture updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FurnitureItem'
+        '404':
+          description: Furniture not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin only
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Furniture Catalog
+      summary: Delete furniture item (Admin only)
+      description: Remove furniture item from catalog
+      operationId: deleteFurniture
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Furniture deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Furniture not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Admin only
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Design endpoints
+  /designs:
+    get:
+      tags:
+        - Designs
+      summary: List user's designs
+      description: Get paginated list of user's room designs
+      operationId: listDesigns
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Design list retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DesignListResponse'
+
+    post:
+      tags:
+        - Designs
+      summary: Create new design
+      description: Create a new room design
+      operationId: createDesign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDesignRequest'
+      responses:
+        '201':
+          description: Design created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Design'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /designs/{id}:
+    get:
+      tags:
+        - Designs
+      summary: Get design details
+      description: Retrieve full design details
+      operationId: getDesign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Design retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Design'
+        '404':
+          description: Design not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Not owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Designs
+      summary: Update design
+      description: Update design details and furniture placement
+      operationId: updateDesign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDesignRequest'
+      responses:
+        '200':
+          description: Design updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Design'
+        '404':
+          description: Design not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Not owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Designs
+      summary: Delete design
+      description: Delete a room design
+      operationId: deleteDesign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Design deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Design not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Not owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Shared Design endpoints
+  /designs/{id}/share:
+    post:
+      tags:
+        - Shared Designs
+      summary: Generate shareable link
+      description: Create shareable link for design
+      operationId: shareDesign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: Share link created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedDesign'
+        '404':
+          description: Design not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Not owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /shared/{token}:
+    get:
+      tags:
+        - Shared Designs
+      summary: View shared design
+      description: View shared design (public access)
+      operationId: viewSharedDesign
+      security: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Shared design retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedDesignView'
+        '404':
+          description: Shared design not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '410':
+          description: Shared link expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Report endpoints
+  /designs/{id}/report:
+    post:
+      tags:
+        - Reports
+      summary: Generate design report
+      description: Generate PDF report for design
+      operationId: generateReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Report generation started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+        '404':
+          description: Design not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Not owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /reports/{id}:
+    get:
+      tags:
+        - Reports
+      summary: Get report status
+      description: Check report status and download URL
+      operationId: getReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Report status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+        '404':
+          description: Report not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+

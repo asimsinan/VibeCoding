@@ -5,3 +5,10 @@ dist
 .env.example
 .env.local
 config.env
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+dev.db
+prisma/dev.db

@@ -1,0 +1,149 @@
+// Prisma Schema for AR Home Decorator
+// Database: PostgreSQL (production) / SQLite (development)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("user") // user, admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  roomPhotos    RoomPhoto[]
+  designs       Design[]
+  sharedDesigns SharedDesign[]
+
+  @@map("users")
+}
+
+// Room Photo model
+model RoomPhoto {
+  id           String   @id @default(uuid())
+  userId       String
+  filename     String
+  url          String
+  dimensions   String? // JSON string for dimensions
+  surfaces     String? // JSON string for surfaces
+  depthGeometry String? // JSON string for 3D depth geometry
+  textureData  String? // JSON string for extracted texture data
+  status       String   @default("processing") // processing, completed, failed
+  createdAt    DateTime @default(now())
+
+  // Relations
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  designs Design[]
+
+  @@index([userId])
+  @@map("room_photos")
+}
+
+// Furniture Item model
+model FurnitureItem {
+  id           String   @id @default(uuid())
+  name         String
+  description  String?
+  category     String // seating, tables, storage, lighting, decor
+  style        String? // modern, traditional, minimalist, industrial, scandinavian
+  price        Float
+  dimensions   String // JSON string for dimensions {width, height, depth}
+  modelUrl     String
+  thumbnailUrl String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  placedFurniture PlacedFurniture[]
+
+  @@index([category])
+  @@index([price])
+  @@map("furniture_items")
+}
+
+// Design model
+model Design {
+  id          String   @id @default(uuid())
+  userId      String
+  roomPhotoId String
+  name        String
+  totalCost   Float    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roomPhoto       RoomPhoto         @relation(fields: [roomPhotoId], references: [id], onDelete: Cascade)
+  placedFurniture PlacedFurniture[]
+  sharedDesigns   SharedDesign[]
+  reports         DesignReport[]
+
+  @@index([userId])
+  @@index([roomPhotoId])
+  @@map("designs")
+}
+
+// Placed Furniture model (junction table with additional data)
+model PlacedFurniture {
+  id          String   @id @default(uuid())
+  designId    String
+  furnitureId String
+  position    String // JSON string for {x, y, z}
+  rotation    String // JSON string for {x, y, z}
+  scale       Float    @default(1.0)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  design        Design        @relation(fields: [designId], references: [id], onDelete: Cascade)
+  furnitureItem FurnitureItem @relation(fields: [furnitureId], references: [id], onDelete: Cascade)
+
+  @@index([designId])
+  @@index([furnitureId])
+  @@map("placed_furniture")
+}
+
+// Shared Design model
+model SharedDesign {
+  id         String   @id @default(uuid())
+  designId   String
+  userId     String
+  shareToken String   @unique
+  expiresAt  DateTime
+  viewCount  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  // Relations
+  design Design @relation(fields: [designId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([shareToken])
+  @@index([designId])
+  @@map("shared_designs")
+}
+
+// Design Report model
+model DesignReport {
+  id        String    @id @default(uuid())
+  designId  String
+  reportUrl String?
+  status    String    @default("generating") // generating, completed, failed
+  message   String?
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  // Relations
+  design Design @relation(fields: [designId], references: [id], onDelete: Cascade)
+
+  @@index([designId])
+  @@map("design_reports")
+}
