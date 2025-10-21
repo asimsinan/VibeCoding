@@ -1,0 +1,477 @@
+openapi: 3.0.0
+info:
+  title: Resume Reviewer API
+  version: 1.0.0
+  description: AI-powered resume analysis and feedback API
+  contact:
+    name: Resume Reviewer Support
+    email: support@resume-reviewer.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://resume-reviewer.vercel.app/api/v1
+    description: Production server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+paths:
+  /upload:
+    post:
+      summary: Upload resume file for AI analysis
+      description: Upload a resume file (PDF, DOC, DOCX) for AI-powered analysis and feedback generation
+      operationId: uploadResume
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Resume file (PDF, DOC, or DOCX format, max 10MB)
+            encoding:
+              file:
+                contentType: application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      responses:
+        '200':
+          description: Upload successful, processing started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+        '400':
+          description: Bad request - invalid file format or size
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: File too large (exceeds 10MB limit)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Resume Upload
+  /feedback/{uploadId}:
+    get:
+      summary: Retrieve AI feedback results
+      description: Get comprehensive AI analysis and feedback for an uploaded resume
+      operationId: getFeedback
+      parameters:
+        - name: uploadId
+          in: path
+          required: true
+          description: Unique identifier for the uploaded resume
+          schema:
+            type: string
+            format: uuid
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Feedback retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackResponse'
+        '202':
+          description: Processing still in progress
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessingResponse'
+        '404':
+          description: Upload ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Feedback
+  /upload/{uploadId}:
+    delete:
+      summary: Delete uploaded file and associated data
+      description: Remove uploaded resume file and all associated feedback data for privacy protection
+      operationId: deleteUpload
+      parameters:
+        - name: uploadId
+          in: path
+          required: true
+          description: Unique identifier for the uploaded resume
+          schema:
+            type: string
+            format: uuid
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: File and data deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '404':
+          description: Upload ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Resume Upload
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Check API availability and system status
+      operationId: healthCheck
+      responses:
+        '200':
+          description: System is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - System
+components:
+  schemas:
+    UploadResponse:
+      type: object
+      required:
+        - uploadId
+        - status
+        - timestamp
+      properties:
+        uploadId:
+          type: string
+          format: uuid
+          description: Unique identifier for the uploaded resume
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        status:
+          type: string
+          enum: [processing, completed, error]
+          description: Current processing status
+          example: "processing"
+        timestamp:
+          type: string
+          format: date-time
+          description: Upload timestamp
+          example: "2025-01-18T10:30:00Z"
+        fileInfo:
+          $ref: '#/components/schemas/FileInfo'
+    FileInfo:
+      type: object
+      required:
+        - fileName
+        - fileSize
+        - fileType
+      properties:
+        fileName:
+          type: string
+          description: Original filename
+          example: "john_doe_resume.pdf"
+        fileSize:
+          type: integer
+          format: int64
+          description: File size in bytes
+          example: 1048576
+        fileType:
+          type: string
+          enum: [application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document]
+          description: MIME type of the uploaded file
+          example: "application/pdf"
+    FeedbackResponse:
+      type: object
+      required:
+        - uploadId
+        - status
+        - feedback
+        - timestamp
+      properties:
+        uploadId:
+          type: string
+          format: uuid
+          description: Unique identifier for the uploaded resume
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        status:
+          type: string
+          enum: [completed]
+          description: Processing status
+          example: "completed"
+        timestamp:
+          type: string
+          format: date-time
+          description: Feedback generation timestamp
+          example: "2025-01-18T10:35:00Z"
+        feedback:
+          $ref: '#/components/schemas/Feedback'
+    ProcessingResponse:
+      type: object
+      required:
+        - uploadId
+        - status
+        - estimatedTime
+      properties:
+        uploadId:
+          type: string
+          format: uuid
+          description: Unique identifier for the uploaded resume
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        status:
+          type: string
+          enum: [processing]
+          description: Processing status
+          example: "processing"
+        estimatedTime:
+          type: integer
+          description: Estimated processing time remaining in seconds
+          example: 30
+        progress:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Processing progress percentage
+          example: 75
+    Feedback:
+      type: object
+      required:
+        - overallScore
+        - contentScore
+        - formattingScore
+        - keywordScore
+        - suggestions
+        - strengths
+        - improvements
+      properties:
+        overallScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Overall resume quality score
+          example: 85
+        contentScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Content quality and relevance score
+          example: 90
+        formattingScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Formatting and structure score
+          example: 80
+        keywordScore:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Keyword optimization score
+          example: 75
+        suggestions:
+          type: array
+          items:
+            type: string
+          description: Specific actionable recommendations for improvement
+          example: ["Add more quantifiable achievements", "Include relevant keywords from job descriptions", "Improve section organization"]
+        strengths:
+          type: array
+          items:
+            type: string
+          description: Identified strengths and positive aspects
+          example: ["Clear professional summary", "Strong work experience", "Relevant skills section"]
+        improvements:
+          type: array
+          items:
+            type: string
+          description: Areas that need improvement
+          example: ["Add more specific metrics", "Include industry keywords", "Improve formatting consistency"]
+        analysis:
+          $ref: '#/components/schemas/Analysis'
+    Analysis:
+      type: object
+      properties:
+        wordCount:
+          type: integer
+          description: Total word count in the resume
+          example: 450
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Section'
+        keywords:
+          type: array
+          items:
+            type: string
+          description: Extracted keywords and skills
+          example: ["JavaScript", "React", "Project Management", "Leadership"]
+        missingElements:
+          type: array
+          items:
+            type: string
+          description: Common resume elements that are missing
+          example: ["Quantified achievements", "Industry-specific keywords", "Professional summary"]
+    Section:
+      type: object
+      required:
+        - name
+        - present
+        - score
+      properties:
+        name:
+          type: string
+          description: Resume section name
+          example: "Professional Summary"
+        present:
+          type: boolean
+          description: Whether this section is present in the resume
+          example: true
+        score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Quality score for this section
+          example: 85
+        suggestions:
+          type: array
+          items:
+            type: string
+          description: Specific suggestions for this section
+          example: ["Make summary more specific", "Add quantifiable achievements"]
+    DeleteResponse:
+      type: object
+      required:
+        - success
+        - message
+        - timestamp
+      properties:
+        success:
+          type: boolean
+          description: Whether deletion was successful
+          example: true
+        message:
+          type: string
+          description: Confirmation message
+          example: "File and associated data deleted successfully"
+        timestamp:
+          type: string
+          format: date-time
+          description: Deletion timestamp
+          example: "2025-01-18T10:40:00Z"
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+        - version
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+          description: System health status
+          example: "healthy"
+        timestamp:
+          type: string
+          format: date-time
+          description: Health check timestamp
+          example: "2025-01-18T10:30:00Z"
+        version:
+          type: string
+          description: API version
+          example: "1.0.0"
+        services:
+          type: object
+          properties:
+            database:
+              type: string
+              enum: [up, down]
+              example: "up"
+            ai:
+              type: string
+              enum: [up, down]
+              example: "up"
+            storage:
+              type: string
+              enum: [up, down]
+              example: "up"
+        uptime:
+          type: integer
+          description: System uptime in seconds
+          example: 86400
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - code
+        - message
+        - timestamp
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: "ValidationError"
+        code:
+          type: string
+          description: Error code
+          example: "INVALID_FILE_FORMAT"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "File format not supported. Please upload a PDF, DOC, or DOCX file."
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: "2025-01-18T10:30:00Z"
+        details:
+          type: object
+          description: Additional error details
+          example: {"supportedFormats": ["pdf", "doc", "docx"], "maxFileSize": "10MB"}
+        requestId:
+          type: string
+          description: Unique request identifier for debugging
+          example: "req_123456789"
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+tags:
+  - name: Resume Upload
+    description: Operations for uploading and managing resume files
+  - name: Feedback
+    description: Operations for retrieving AI-generated feedback
+  - name: System
+    description: System health and status operations

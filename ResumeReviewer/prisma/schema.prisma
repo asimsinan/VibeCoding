@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Resume Upload Entity
+model ResumeUpload {
+  id        String   @id @default(uuid())
+  fileName  String
+  fileSize  Int
+  fileType  String
+  fileUrl   String?  // Vercel Blob URL
+  status    String   @default("PROCESSING") // PROCESSING, COMPLETED, ERROR, DELETED
+  sessionId String?  // Optional session reference
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  feedback  Feedback?
+  session   UserSession? @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+  
+  @@map("resume_uploads")
+  @@index([status])
+  @@index([createdAt])
+  @@index([sessionId])
+}
+
+// AI Feedback Entity
+model Feedback {
+  id           String   @id @default(uuid())
+  uploadId     String   @unique
+  overallScore Int
+  contentScore Int
+  formattingScore Int
+  keywordScore Int
+  suggestions  String   // JSON string of suggestion array
+  strengths    String   // JSON string of strength array
+  improvements String   // JSON string of improvement array
+  analysis     String?  // JSON string of detailed analysis data
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  upload       ResumeUpload @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+  
+  @@map("feedback")
+  @@index([uploadId])
+  @@index([overallScore])
+}
+
+// User Session Entity (for tracking uploads)
+model UserSession {
+  id        String   @id @default(uuid())
+  sessionId String   @unique
+  uploads   ResumeUpload[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("user_sessions")
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+// User Entity
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  sessions     Session[]
+  
+  @@map("users")
+  @@index([email])
+  @@index([createdAt])
+}
+
+// Session Entity
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+}
+
+// System Health Log Entity
+model HealthLog {
+  id        String   @id @default(uuid())
+  status    String   // healthy, degraded, unhealthy
+  services  String   // JSON string of service status object
+  uptime    Int      // Uptime in seconds
+  timestamp DateTime @default(now())
+  
+  @@map("health_logs")
+  @@index([timestamp])
+  @@index([status])
+}

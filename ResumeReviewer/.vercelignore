@@ -1,0 +1,67 @@
+# Development files
+.env.local
+.env.development
+.env.test
+test-reports/
+test-results/
+playwright-report/
+
+# Test files
+src/tests/
+tests/
+__tests__/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# Documentation
+*.md
+docs/
+
+# Development tools
+.eslintrc*
+.prettierrc*
+jest.config.*
+playwright.config.*
+
+# Build artifacts
+.next/
+out/
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Database files (for local development)
+dev.db
+dev.db-shm
+dev.db-wal
+prisma/dev.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Specs and planning files
+specs/
+sdd.db*
+
+# Large dependencies that might not be needed in production
+node_modules/@types/
+node_modules/typescript/
+node_modules/jest/
+node_modules/@playwright/
+node_modules/lighthouse-ci/
+node_modules/supertest/
+node_modules/@testing-library/
+node_modules/eslint/
+node_modules/prettier/

@@ -1,0 +1,10 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/v1/feedback/[uploadId]/route": "app/api/v1/feedback/[uploadId]/route.js",
+  "/api/v1/metrics/route": "app/api/v1/metrics/route.js",
+  "/api/v1/health/route": "app/api/v1/health/route.js",
+  "/api/v1/upload/route": "app/api/v1/upload/route.js",
+  "/api/v1/variants/route": "app/api/v1/variants/route.js",
+  "/api/v1/upload/[uploadId]/route": "app/api/v1/upload/[uploadId]/route.js",
+  "/page": "app/page.js"
+}

@@ -50,7 +50,11 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 ### [Challenge 13: AR Decorator](./ARDecorator) (Built in 8 hours)
 **Prompt**: *"Develop a web-based AR home decorator where users upload room photos and virtually place furniture/décor items and preview in augmented reality, using React, three.js or WebGL, backend image processing APIs."*
 
+### [Challenge 14: Resume Reviewer](./ResumeReviewer) (Built in 3 hours)
+**Prompt**: *"Prompt: Create an AI-powered résumé reviewer app where users upload resumes and receive AI feedback, using Next.js, TypeScript, Tailwind, Google Gemini API, file upload via Vercel Blob, and deploy on Vercel."*
 
+### [Challenge 15: Crowdfunding Platform](./Crowdfunding) (Built in x hours)
+**Prompt**: *"Prompt: Develop a crowdfunding / campaign platform where users can create campaigns, manage donations, comment, and track goals, using Next.js, TypeScript, Tailwind."*
 
 ## 🎯 Learning Objectives
 

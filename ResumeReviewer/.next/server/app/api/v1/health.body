@@ -1,0 +1,1 @@
+{"status":"healthy","timestamp":"2025-10-20T19:01:25.431Z","version":"1.0.0","uptime":0.703546708,"services":{"database":{"status":"healthy","message":"Database connection successful"},"ai_service":{"status":"healthy","message":"Google Gemini API reachable"},"file_storage":{"status":"healthy","message":"Vercel Blob storage accessible"}}}
