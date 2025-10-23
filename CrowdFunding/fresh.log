@@ -1,0 +1,17 @@
+
+> crowdfunding-platform@1.0.0 dev:api
+> PORT=3001 tsc --project tsconfig.backend.json && PORT=3001 node dist/server.js
+
+2025-10-23 21:29:23:2923 [32minfo[39m: [32mApplication started[39m
+🚀 Server running on port 3001
+📊 Environment: development
+🔗 API Base URL: http://localhost:3001/api/v1
+Updating campaign totals... 550e8400-e29b-41d4-a716-446655440009 2000
+CampaignRepository.addDonation called with: 550e8400-e29b-41d4-a716-446655440009 2000
+Found campaign: 550e8400-e29b-41d4-a716-446655440009 status: ACTIVE current: 45000
+Updating campaign: 550e8400-e29b-41d4-a716-446655440009 newCurrent: 47000 newStatus: ACTIVE
+Campaign updated successfully: 550e8400-e29b-41d4-a716-446655440009 current: 47000
+Campaign totals updated successfully
+2025-10-23 21:29:40:2940 [35mhttp[39m: [35m::1 - - [23/Oct/2025:18:29:40 +0000] "POST /api/v1/campaigns/550e8400-e29b-41d4-a716-446655440009/donations HTTP/1.1" 201 1217 "-" "curl/8.7.1"[39m
+2025-10-23 21:29:45:2945 [35mhttp[39m: [35m::1 - - [23/Oct/2025:18:29:45 +0000] "GET /api/v1/campaigns/550e8400-e29b-41d4-a716-446655440009 HTTP/1.1" 200 4706 "-" "curl/8.7.1"[39m
+sh: line 1:  1035 Killed: 9               PORT=3001 node dist/server.js

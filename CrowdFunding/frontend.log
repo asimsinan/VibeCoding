@@ -1,0 +1,152 @@
+
+> crowdfunding-platform@1.0.0 dev
+> next dev
+
+   ▲ Next.js 14.0.0
+   - Local:        http://localhost:3000
+   - Environments: .env
+
+ ✓ Ready in 1188ms
+ ○ Compiling /page ...
+ ✓ Compiled /page in 734ms (665 modules)
+ ✓ Compiled in 143ms (304 modules)
+ ✓ Compiled /not-found in 149ms (656 modules)
+ ✓ Compiled /auth/login/page in 116ms (664 modules)
+ ✓ Compiled /campaigns/page in 111ms (670 modules)
+ ✓ Compiled /my-campaigns/page in 151ms (676 modules)
+ ✓ Compiled /campaigns/create/page in 113ms (682 modules)
+ ✓ Compiled /campaigns/[id]/page in 138ms (688 modules)
+ ✓ Compiled in 219ms (698 modules)
+ ✓ Compiled in 137ms (698 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ✓ Compiled in 185ms (684 modules)
+My Campaigns Debug: {
+  filters: { status: '', page: 1, limit: 12 },
+  campaignsResponse: null,
+  campaigns: [],
+  campaignsLength: 0,
+  user: undefined,
+  timestamp: '2025-10-23T19:15:38.594Z'
+}
+ ✓ Compiled /campaigns/page in 81ms (385 modules)
+ ✓ Compiled in 91ms (688 modules)
+ ✓ Compiled in 229ms (688 modules)
+ ✓ Compiled in 66ms (688 modules)
+ ✓ Compiled in 270ms (702 modules)
+My Campaigns Debug: {
+  filters: { status: '', page: 1, limit: 12 },
+  campaignsResponse: null,
+  campaigns: [],
+  campaignsLength: 0,
+  user: undefined,
+  timestamp: '2025-10-23T19:16:26.463Z'
+}
+ ✓ Compiled in 186ms (702 modules)
+My Campaigns Debug: {
+  filters: { status: '', page: 1, limit: 12 },
+  campaignsResponse: null,
+  campaigns: [],
+  campaignsLength: 0,
+  user: undefined,
+  timestamp: '2025-10-23T19:16:52.600Z'
+}
+ ✓ Compiled in 209ms (702 modules)
+ ✓ Compiled in 283ms (702 modules)
+ ✓ Compiled in 159ms (702 modules)
+ ✓ Compiled in 179ms (702 modules)
+ ✓ Compiled in 222ms (693 modules)
+ ✓ Compiled in 161ms (693 modules)
+ ✓ Compiled in 178ms (693 modules)
+ ✓ Compiled in 156ms (315 modules)
+ ✓ Compiled in 98ms (315 modules)
+ ✓ Compiled in 119ms (315 modules)
+ ✓ Compiled in 109ms (315 modules)
+ ✓ Compiled /not-found in 72ms (684 modules)
+ ✓ Compiled in 90ms (317 modules)
+ ⨯ Error: Cannot find module './389.js'
+Require stack:
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/webpack-runtime.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/app/not-found.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/require.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/load-components.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/build/utils.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/dev/hot-middleware.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/lib/router-server.js
+- /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/lib/start-server.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1249:15)
+    at /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/require-hook.js:54:36
+    at Function._load (node:internal/modules/cjs/loader:1075:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1340:12)
+    at mod.require (/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/require-hook.js:64:28)
+    at require (node:internal/modules/helpers:138:16)
+    at __webpack_require__.f.require (/Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/webpack-runtime.js:198:28)
+    at /Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (/Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (/Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/webpack-runtime.js:162:22)
+    at /Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/app/my-campaigns/page.js:1:13213
+    at Object.<anonymous> (/Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/app/my-campaigns/page.js:1:13281)
+    at Module._compile (node:internal/modules/cjs/loader:1565:14)
+    at Object..js (node:internal/modules/cjs/loader:1708:10)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1340:12)
+    at mod.require (/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/require-hook.js:64:28)
+    at require (node:internal/modules/helpers:138:16)
+    at requirePage (/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/require.js:109:84)
+    at /Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/load-components.js:59:84
+    at async loadComponentsImpl (/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/load-components.js:59:26)
+    at async DevServer.findPageComponentsImpl (/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/next-server.js:666:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/webpack-runtime.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/.next/server/app/not-found.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/require.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/load-components.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/build/utils.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/dev/hot-middleware.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/dev/hot-reloader-webpack.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/lib/router-server.js',
+    '/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/next/dist/server/lib/start-server.js'
+  ],
+  page: '/my-campaigns'
+}
+ ✓ Compiled /_error in 145ms (849 modules)
+My Campaigns Debug: {
+  filters: { status: '', page: 1, limit: 12 },
+  campaignsResponse: null,
+  campaignsResponseType: 'object',
+  campaignsResponseIsArray: false,
+  campaignsResponseLength: undefined,
+  campaigns: [],
+  campaignsLength: 0,
+  user: undefined,
+  timestamp: '2025-10-23T19:21:09.813Z'
+}
+ ✓ Compiled in 192ms (863 modules)
+ ✓ Compiled in 167ms (863 modules)
+ ✓ Compiled in 194ms (863 modules)
+ ✓ Compiled in 143ms (863 modules)
+ ✓ Compiled in 131ms (863 modules)
+ ✓ Compiled in 129ms (863 modules)
+My Campaigns Debug: {
+  filters: { status: '', page: 1, limit: 12 },
+  campaignsResponse: null,
+  campaignsResponseType: 'object',
+  campaignsResponseIsArray: false,
+  campaignsResponseLength: 0,
+  campaigns: [],
+  campaignsLength: 0,
+  user: undefined,
+  timestamp: '2025-10-23T19:21:57.883Z'
+}
+ ✓ Compiled in 200ms (856 modules)
+ ✓ Compiled /not-found in 57ms (847 modules)

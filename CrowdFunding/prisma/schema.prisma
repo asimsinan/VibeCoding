@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  name      String
+  role      UserRole   @default(USER)
+  avatar    String?
+  bio       String?    @db.VarChar(500)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  campaigns Campaign[]
+  comments  Comment[]
+  donations Donation[]
+
+  @@map("users")
+}
+
+model Campaign {
+  id          String           @id @default(uuid())
+  title       String
+  description String
+  goal        Decimal          @db.Decimal(10, 2)
+  current     Decimal          @default(0) @db.Decimal(10, 2)
+  images      String[]
+  category    CampaignCategory
+  status      CampaignStatus   @default(DRAFT)
+  deadline    DateTime
+  isFeatured  Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  ownerId     String
+  owner       User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  donations   Donation[]
+
+  @@map("campaigns")
+}
+
+model Donation {
+  id            String         @id @default(uuid())
+  amount        Decimal        @db.Decimal(10, 2)
+  message       String?        @db.VarChar(500)
+  isAnonymous   Boolean        @default(false)
+  paymentMethod PaymentMethod  @default(CREDIT_CARD)
+  status        DonationStatus @default(PENDING)
+  createdAt     DateTime       @default(now())
+  campaignId    String
+  donorId       String
+  campaign      Campaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  donor         User           @relation(fields: [donorId], references: [id], onDelete: Cascade)
+
+  @@map("donations")
+}
+
+model Comment {
+  id         String    @id @default(uuid())
+  content    String    @db.VarChar(1000)
+  parentId   String?
+  isDeleted  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  campaignId String
+  authorId   String
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  campaign   Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Comment[] @relation("CommentReplies")
+
+  @@map("comments")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum CampaignCategory {
+  TECHNOLOGY
+  ART
+  MUSIC
+  FILM
+  GAMES
+  FOOD
+  TRAVEL
+  HEALTH
+  EDUCATION
+  BUSINESS
+  OTHER
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  SUSPENDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  PAYPAL
+  BANK_TRANSFER
+}
+
+enum DonationStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
+}

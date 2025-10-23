@@ -1,0 +1,910 @@
+openapi: 3.0.3
+info:
+  title: Crowdfunding Platform API
+  version: 1.0.0
+  description: RESTful API for crowdfunding platform operations
+  contact:
+    name: API Support
+    email: support@crowdfunding.com
+servers:
+  - url: https://api.crowdfunding.com/v1
+    description: Production server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+paths:
+  /campaigns:
+    get:
+      summary: List campaigns
+      description: Retrieve paginated list of campaigns with filtering options
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/CategoryParam'
+        - $ref: '#/components/parameters/StatusParam'
+        - $ref: '#/components/parameters/SearchParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Create campaign
+      description: Create a new campaign
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCampaign'
+      responses:
+        '201':
+          description: Campaign created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /campaigns/{id}:
+    get:
+      summary: Get campaign details
+      description: Retrieve specific campaign details with donor information and comments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campaign ID
+      responses:
+        '200':
+          description: Campaign details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Update campaign
+      description: Update campaign information (owner only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campaign ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaign'
+      responses:
+        '200':
+          description: Campaign updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Delete campaign
+      description: Delete campaign (owner or admin only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campaign ID
+      responses:
+        '204':
+          description: Campaign deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /campaigns/{id}/donate:
+    post:
+      summary: Process donation
+      description: Process donation with payment validation and campaign update
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campaign ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDonation'
+      responses:
+        '201':
+          description: Donation processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Donation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /campaigns/{id}/comments:
+    get:
+      summary: Get campaign comments
+      description: Retrieve campaign comments with pagination
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campaign ID
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Comments retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Add comment to campaign
+      description: Add comment to campaign (authenticated users only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campaign ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComment'
+      responses:
+        '201':
+          description: Comment added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/profile:
+    get:
+      summary: Get user profile
+      description: Retrieve authenticated user profile and campaign statistics
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Update user profile
+      description: Update user profile information
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                bio:
+                  type: string
+                  maxLength: 500
+                avatar:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/campaigns:
+    get:
+      summary: Get all campaigns for admin
+      description: Retrieve all campaigns for admin management
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/StatusParam'
+      responses:
+        '200':
+          description: Campaigns retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/campaigns/{id}/status:
+    put:
+      summary: Update campaign status
+      description: Update campaign status (approve, suspend, reject)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campaign ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [DRAFT, ACTIVE, COMPLETED, SUSPENDED, CANCELLED]
+                reason:
+                  type: string
+                  maxLength: 500
+      responses:
+        '200':
+          description: Campaign status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /health:
+    get:
+      summary: Health check
+      description: Check API health status
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [OK]
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - role
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+        email:
+          type: string
+          format: email
+          description: User email address
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: User display name
+        role:
+          type: string
+          enum: [USER, ADMIN, MODERATOR]
+          description: User role and permissions
+        avatar:
+          type: string
+          format: uri
+          description: User avatar image URL
+        bio:
+          type: string
+          maxLength: 500
+          description: User biography
+        isVerified:
+          type: boolean
+          description: Email verification status
+        createdAt:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    Campaign:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - goal
+        - current
+        - deadline
+        - category
+        - ownerId
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique campaign identifier
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Campaign title
+        description:
+          type: string
+          minLength: 1
+          maxLength: 5000
+          description: Campaign description
+        goal:
+          type: number
+          minimum: 1
+          description: Funding goal amount
+        current:
+          type: number
+          minimum: 0
+          description: Current funding amount
+        deadline:
+          type: string
+          format: date-time
+          description: Campaign end date
+        category:
+          type: string
+          enum: [TECHNOLOGY, ART, MUSIC, FILM, GAMES, FOOD, TRAVEL, HEALTH, EDUCATION, BUSINESS, OTHER]
+          description: Campaign category
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: Campaign image URLs
+        status:
+          type: string
+          enum: [DRAFT, ACTIVE, COMPLETED, SUSPENDED, CANCELLED]
+          description: Campaign status
+        ownerId:
+          type: string
+          format: uuid
+          description: Campaign owner user ID
+        createdAt:
+          type: string
+          format: date-time
+          description: Campaign creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    Donation:
+      type: object
+      required:
+        - id
+        - amount
+        - campaignId
+        - donorId
+        - paymentMethod
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique donation identifier
+        amount:
+          type: number
+          minimum: 1
+          description: Donation amount
+        campaignId:
+          type: string
+          format: uuid
+          description: Target campaign ID
+        donorId:
+          type: string
+          format: uuid
+          description: Donor user ID
+        paymentMethod:
+          type: string
+          enum: [CREDIT_CARD, PAYPAL, BANK_TRANSFER, STRIPE]
+          description: Payment method used
+        status:
+          type: string
+          enum: [PENDING, COMPLETED, FAILED, REFUNDED]
+          description: Payment status
+        isAnonymous:
+          type: boolean
+          description: Anonymous donation flag
+        message:
+          type: string
+          maxLength: 500
+          description: Donor message
+        createdAt:
+          type: string
+          format: date-time
+          description: Donation timestamp
+
+    Comment:
+      type: object
+      required:
+        - id
+        - content
+        - campaignId
+        - authorId
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique comment identifier
+        content:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: Comment content
+        campaignId:
+          type: string
+          format: uuid
+          description: Target campaign ID
+        authorId:
+          type: string
+          format: uuid
+          description: Comment author user ID
+        parentId:
+          type: string
+          format: uuid
+          description: Parent comment ID for replies
+        isDeleted:
+          type: boolean
+          description: Soft delete flag
+        createdAt:
+          type: string
+          format: date-time
+          description: Comment creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    Category:
+      type: object
+      required:
+        - id
+        - name
+        - slug
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique category identifier
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Category display name
+        slug:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+          description: URL-friendly category slug
+        description:
+          type: string
+          maxLength: 200
+          description: Category description
+        icon:
+          type: string
+          format: uri
+          description: Category icon URL
+        createdAt:
+          type: string
+          format: date-time
+          description: Category creation timestamp
+
+    Payment:
+      type: object
+      required:
+        - id
+        - donationId
+        - amount
+        - currency
+        - method
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique payment identifier
+        donationId:
+          type: string
+          format: uuid
+          description: Associated donation ID
+        amount:
+          type: number
+          minimum: 1
+          description: Payment amount
+        currency:
+          type: string
+          enum: [USD, EUR, GBP, CAD, AUD]
+          description: Payment currency
+        method:
+          type: string
+          enum: [CREDIT_CARD, PAYPAL, BANK_TRANSFER, STRIPE]
+          description: Payment method
+        status:
+          type: string
+          enum: [PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED]
+          description: Payment processing status
+        transactionId:
+          type: string
+          description: External payment processor transaction ID
+        processedAt:
+          type: string
+          format: date-time
+          description: Payment processing timestamp
+        createdAt:
+          type: string
+          format: date-time
+          description: Payment creation timestamp
+
+    CreateCampaign:
+      type: object
+      required:
+        - title
+        - description
+        - goal
+        - deadline
+        - category
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        goal:
+          type: number
+          minimum: 1
+        deadline:
+          type: string
+          format: date-time
+        category:
+          type: string
+          enum: [TECHNOLOGY, ART, MUSIC, FILM, GAMES, FOOD, TRAVEL, HEALTH, EDUCATION, BUSINESS, OTHER]
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    UpdateCampaign:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        goal:
+          type: number
+          minimum: 1
+        deadline:
+          type: string
+          format: date-time
+        category:
+          type: string
+          enum: [TECHNOLOGY, ART, MUSIC, FILM, GAMES, FOOD, TRAVEL, HEALTH, EDUCATION, BUSINESS, OTHER]
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    CreateDonation:
+      type: object
+      required:
+        - amount
+        - paymentMethod
+      properties:
+        amount:
+          type: number
+          minimum: 1
+        paymentMethod:
+          type: string
+          enum: [CREDIT_CARD, PAYPAL, BANK_TRANSFER, STRIPE]
+        isAnonymous:
+          type: boolean
+          default: false
+        message:
+          type: string
+          maxLength: 500
+
+    CreateComment:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        parentId:
+          type: string
+          format: uuid
+
+    CampaignList:
+      type: object
+      properties:
+        campaigns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Campaign'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        total:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+        details:
+          type: object
+          description: Additional error details
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+
+    SuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          description: Success status
+        data:
+          type: object
+          description: Response data
+        message:
+          type: string
+          description: Success message
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: Page number
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Items per page
+    CategoryParam:
+      name: category
+      in: query
+      schema:
+        type: string
+        enum: [TECHNOLOGY, ART, MUSIC, FILM, GAMES, FOOD, TRAVEL, HEALTH, EDUCATION, BUSINESS, OTHER]
+      description: Campaign category filter
+    StatusParam:
+      name: status
+      in: query
+      schema:
+        type: string
+        enum: [DRAFT, ACTIVE, COMPLETED, SUSPENDED, CANCELLED]
+      description: Campaign status filter
+    SearchParam:
+      name: search
+      in: query
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 100
+      description: Search query
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+tags: []

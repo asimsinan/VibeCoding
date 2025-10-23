@@ -1,0 +1,31 @@
+
+> crowdfunding-platform@1.0.0 dev:api
+> PORT=3001 tsc --project tsconfig.backend.json && PORT=3001 node dist/server.js
+
+2025-10-23 21:29:10:2910 [32minfo[39m: [32mApplication started[39m
+node:events:502
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+    at listenInCluster (node:net:1969:12)
+    at Server.listen (node:net:2074:7)
+    at Function.listen (/Users/asimsinanyuksel/Desktop/CrowdFunding/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/asimsinanyuksel/Desktop/CrowdFunding/dist/server.js:8:30)
+    at Module._compile (node:internal/modules/cjs/loader:1565:14)
+    at Object..js (node:internal/modules/cjs/loader:1708:10)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1948:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 3001
+}
+
+Node.js v22.12.0

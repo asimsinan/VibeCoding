@@ -1,0 +1,79 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e3]:
+    - generic [ref=e5]:
+      - heading "Fund Your Dreams" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Join thousands of creators and supporters making amazing projects come to life through crowdfunding.
+      - generic [ref=e8]:
+        - link "Start Your Campaign" [ref=e9] [cursor=pointer]:
+          - /url: /auth/register
+          - button "Start Your Campaign" [ref=e10]
+        - link "Browse Campaigns" [ref=e11] [cursor=pointer]:
+          - /url: /campaigns
+          - button "Browse Campaigns" [ref=e12]
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: $2.5M+
+        - generic [ref=e18]: Total Raised
+      - generic [ref=e19]:
+        - generic [ref=e20]: 1,200+
+        - generic [ref=e21]: Campaigns
+      - generic [ref=e22]:
+        - generic [ref=e23]: 15,000+
+        - generic [ref=e24]: Supporters
+      - generic [ref=e25]:
+        - generic [ref=e26]: 85%
+        - generic [ref=e27]: Success Rate
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - heading "Featured Campaigns" [level=2] [ref=e31]
+        - paragraph [ref=e32]: Discover amazing projects that are making a difference
+      - generic [ref=e33]:
+        - heading "No Featured Campaigns" [level=3] [ref=e34]
+        - paragraph [ref=e35]: Check back soon for amazing campaigns!
+        - link "Browse All Campaigns" [ref=e36] [cursor=pointer]:
+          - /url: /campaigns
+          - button "Browse All Campaigns" [ref=e37]
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - heading "Trending Now" [level=2] [ref=e41]
+        - paragraph [ref=e42]: Campaigns that are gaining momentum
+      - generic [ref=e43]:
+        - heading "No Trending Campaigns" [level=3] [ref=e44]
+        - paragraph [ref=e45]: Check back soon for trending campaigns!
+        - link "Browse All Campaigns" [ref=e46] [cursor=pointer]:
+          - /url: /campaigns
+          - button "Browse All Campaigns" [ref=e47]
+    - generic [ref=e49]:
+      - heading "Ready to Make a Difference?" [level=2] [ref=e50]
+      - paragraph [ref=e51]: Join our community of creators and supporters today
+      - generic [ref=e52]:
+        - link "Get Started" [ref=e53] [cursor=pointer]:
+          - /url: /auth/register
+          - button "Get Started" [ref=e54]
+        - link "Explore Campaigns" [ref=e55] [cursor=pointer]:
+          - /url: /campaigns
+          - button "Explore Campaigns" [ref=e56]
+  - alert [ref=e57]
+  - dialog "Failed to compile" [ref=e60]:
+    - generic [ref=e61]:
+      - generic [ref=e62]:
+        - heading "Failed to compile" [level=4] [ref=e63]
+        - generic [ref=e64]:
+          - text: Next.js (14.0.0) is outdated
+          - link "(learn more)" [ref=e66] [cursor=pointer]:
+            - /url: https://nextjs.org/docs/messages/version-staleness
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - link "./src/app/auth/login/page.tsx (6:0)" [ref=e69] [cursor=pointer]:
+            - text: ./src/app/auth/login/page.tsx (6:0)
+            - img [ref=e70]
+          - generic [ref=e74]:
+            - text: "Module not found: Can't resolve '../../contexts/AuthContext' 4 | import Link from 'next/link'; 5 | import { useRouter } from 'next/navigation'; > 6 | import { useAuth } from '../../contexts/AuthContext'; 7 | import { Button } from '../../../components/ui/button'; 8 | import { Input } from '../../../components/ui/input'; 9 | import { Card } from '../../../components/ui/card';"
+            - link "https://nextjs.org/docs/messages/module-not-found" [ref=e76] [cursor=pointer]:
+              - /url: https://nextjs.org/docs/messages/module-not-found
+        - contentinfo [ref=e77]:
+          - paragraph [ref=e78]: This error occurred during the build process and can only be dismissed by fixing the error.
+```

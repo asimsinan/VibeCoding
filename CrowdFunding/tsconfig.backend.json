@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/app/**/*",
+    "src/components/**/*",
+    "src/hooks/**/*",
+    "src/contexts/**/*",
+    "src/lib/api-client.ts",
+    "src/lib/api-services/**/*",
+    "src/lib/api.ts",
+    "src/lib/useApi.ts",
+    "tests/**/*",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}
