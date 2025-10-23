@@ -53,7 +53,7 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 ### [Challenge 14: Resume Reviewer](./ResumeReviewer) (Built in 3 hours)
 **Prompt**: *"Prompt: Create an AI-powered résumé reviewer app where users upload resumes and receive AI feedback, using Next.js, TypeScript, Tailwind, Google Gemini API, file upload via Vercel Blob, and deploy on Vercel."*
 
-### [Challenge 15: Crowdfunding Platform](./Crowdfunding) (Built in 3.5 hours)
+### [Challenge 15: Crowdfunding Platform](./CrowdFunding) (Built in 3.5 hours)
 **Prompt**: *"Prompt: Develop a crowdfunding / campaign platform where users can create campaigns, manage donations, comment, and track goals, using Next.js, TypeScript, Tailwind."*
 
 ## 🎯 Learning Objectives
