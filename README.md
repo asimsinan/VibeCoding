@@ -1,5 +1,9 @@
 # Vibe Coding Challenge with SDD-MCP
 
+## 📦 AI-SDD-MCP Package
+
+**npm**: [https://www.npmjs.com/package/ai-sdd-mcp](https://www.npmjs.com/package/ai-sdd-mcp)
+
 ## 🎯 Challenge Overview
 
 Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Development (SDD-MCP)** tool! This challenge demonstrates how AI can build complete, production-ready applications following rigorous software engineering principles.
@@ -55,6 +59,9 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 
 ### [Challenge 15: Crowdfunding Platform](./CrowdFunding) (Built in 3.5 hours)
 **Prompt**: *"Prompt: Develop a crowdfunding / campaign platform where users can create campaigns, manage donations, comment, and track goals, using Next.js, TypeScript, Tailwind."*
+
+### [Challenge 16: Legal Assistant](./LegalAssistant) (Built in x hours)
+**Prompt**: *"Build a Turkish-localized AI legal assistant web app where users upload contract templates (e.g., Gizlilik, Hizmet, Danışmanlık, Mesafeli Satış, Aydınlatma Metni) and ask questions in Turkish about risks, obligations, or KVKK compliance. The system analyzes clauses, generates tailored agreements, and explains legal context using retrieved sources. Use Next.js, TypeScript, and Tailwind for UI with PostgreSQL for storage; integrate Gemini API for text generation and retrieval-augmented answering."*
 
 ## 🎯 Learning Objectives
 
