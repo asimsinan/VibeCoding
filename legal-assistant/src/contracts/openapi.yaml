@@ -1,0 +1,540 @@
+openapi: 3.0.3
+info:
+  title: Turkish Legal Assistant API
+  description: AI-powered legal document analysis and assistance API with Turkish language support
+  version: 1.0.0
+  contact:
+    name: Legal Assistant Team
+    email: support@legal-assistant.com
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.legal-assistant.com/v1
+    description: Production server
+
+tags:
+  - name: documents
+    description: Document management endpoints
+  - name: chat
+    description: Chat session and message endpoints
+  - name: analysis
+    description: Document analysis endpoints
+
+security:
+  - bearerAuth: []
+
+paths:
+  /documents/upload:
+    post:
+      tags:
+        - documents
+      summary: Upload a legal document
+      description: Upload a PDF or DOCX document for analysis
+      operationId: uploadDocument
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - title
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The document file (PDF or DOCX, max 20MB)
+                title:
+                  type: string
+                  description: Document title
+                  example: "İş Sözleşmesi"
+                description:
+                  type: string
+                  description: Document description
+                  example: "Yıllık iş sözleşmesi"
+      responses:
+        '201':
+          description: Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '400':
+          description: Invalid file or request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Geçersiz dosya formatı. Sadece PDF ve DOCX dosyaları kabul edilir."
+        '401':
+          description: Unauthorized
+        '413':
+          description: File too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /documents:
+    get:
+      tags:
+        - documents
+      summary: List all documents
+      description: Retrieve a list of all uploaded documents
+      operationId: listDocuments
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentResponse'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          description: Unauthorized
+
+  /documents/{id}:
+    get:
+      tags:
+        - documents
+      summary: Get document by ID
+      description: Retrieve a specific document by its ID
+      operationId: getDocument
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Document details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+
+    delete:
+      tags:
+        - documents
+      summary: Delete document
+      description: Delete a document by its ID
+      operationId: deleteDocument
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Document deleted successfully
+        '404':
+          description: Document not found
+        '401':
+          description: Unauthorized
+
+  /chat/sessions:
+    post:
+      tags:
+        - chat
+      summary: Create a chat session
+      description: Create a new chat session for document analysis
+      operationId: createChatSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                documentId:
+                  type: string
+                  format: uuid
+                  description: Document ID to chat about
+      responses:
+        '201':
+          description: Chat session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionResponse'
+        '401':
+          description: Unauthorized
+
+    get:
+      tags:
+        - chat
+      summary: List chat sessions
+      description: Retrieve all chat sessions for the current user
+      operationId: listChatSessions
+      responses:
+        '200':
+          description: List of chat sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatSessionResponse'
+        '401':
+          description: Unauthorized
+
+  /chat/sessions/{sessionId}:
+    get:
+      tags:
+        - chat
+      summary: Get chat session details
+      description: Retrieve details of a specific chat session
+      operationId: getChatSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Chat session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionResponse'
+        '404':
+          description: Session not found
+        '401':
+          description: Unauthorized
+
+  /chat/sessions/{sessionId}/messages:
+    post:
+      tags:
+        - chat
+      summary: Send a message in a chat session
+      description: Send a user message to the AI assistant
+      operationId: sendMessage
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '201':
+          description: Message sent and AI response received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageResponse'
+        '400':
+          description: Invalid message
+        '404':
+          description: Session not found
+        '401':
+          description: Unauthorized
+
+    get:
+      tags:
+        - chat
+      summary: Get chat messages
+      description: Retrieve all messages in a chat session
+      operationId: getChatMessages
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of chat messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatMessageResponse'
+        '404':
+          description: Session not found
+        '401':
+          description: Unauthorized
+
+  /documents/{id}/analyze:
+    post:
+      tags:
+        - analysis
+      summary: Analyze document for KVKK compliance
+      description: Analyze a document for Turkish GDPR (KVKK) compliance
+      operationId: analyzeDocument
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                analysisType:
+                  type: string
+                  enum: [kvkk, data_mapping, clauses]
+                  description: Type of analysis to perform
+      responses:
+        '200':
+          description: Analysis completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentAnalysisResponse'
+        '404':
+          description: Document not found
+        '401':
+          description: Unauthorized
+
+  /agreements/generate:
+    post:
+      tags:
+        - analysis
+      summary: Generate agreement
+      description: Generate a legal agreement based on requirements
+      operationId: generateAgreement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgreementRequest'
+      responses:
+        '200':
+          description: Agreement generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgreementResponse'
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    DocumentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          example: "İş Sözleşmesi"
+        description:
+          type: string
+          example: "Yıllık iş sözleşmesi"
+        filePath:
+          type: string
+          example: "/uploads/documents/123.pdf"
+        fileSize:
+          type: integer
+          example: 245678
+        mimeType:
+          type: string
+          example: "application/pdf"
+        userId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ChatSessionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        documentId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ChatMessageRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          example: "Bu belgede hangi kişisel veriler işlenmekte?"
+        role:
+          type: string
+          enum: [user]
+          default: user
+
+    ChatMessageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        content:
+          type: string
+          example: "Bu belgede ad, soyad, telefon numarası gibi kişisel veriler işlenmektedir."
+        role:
+          type: string
+          enum: [user, assistant]
+        createdAt:
+          type: string
+          format: date-time
+
+    DocumentAnalysisResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        documentId:
+          type: string
+          format: uuid
+        analysisType:
+          type: string
+          enum: [kvkk, data_mapping, clauses]
+        results:
+          type: object
+          description: Analysis results as JSON
+        status:
+          type: string
+          enum: [pending, completed, failed]
+        createdAt:
+          type: string
+          format: date-time
+
+    AgreementRequest:
+      type: object
+      required:
+        - type
+        - language
+      properties:
+        type:
+          type: string
+          enum: [employment_contract, nda, service_agreement, data_processing]
+        language:
+          type: string
+          enum: [tr, en]
+          default: tr
+        requirements:
+          type: object
+          description: Specific requirements for the agreement
+
+    AgreementResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        content:
+          type: string
+          example: "Bu sözleşme..."
+        language:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message in Turkish
+          example: "Bir hata oluştu"
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        details:
+          type: object
+          description: Additional error details
+

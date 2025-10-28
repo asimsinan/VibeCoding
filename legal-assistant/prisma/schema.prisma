@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  documents     Document[]
+  chatSessions  ChatSession[]
+  
+  @@index([email])
+  @@map("users")
+}
+
+model Document {
+  id            String            @id @default(uuid())
+  title         String
+  description   String?
+  filePath      String
+  fileSize      Int
+  mimeType      String
+  extractedText String?           @db.Text
+  userId        String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatSessions  ChatSession[]
+  analyses      DocumentAnalysis[]
+  chunks        DocumentChunk[]
+  
+  @@index([userId])
+  @@map("documents")
+}
+
+model DocumentChunk {
+  id          String    @id @default(uuid())
+  documentId  String
+  chunkText   String    @db.Text
+  embedding   Json  // Using JSON storage with in-memory similarity (pgvector x86_64 compatibility issue)
+  chunkIndex  Int
+  startIndex  Int
+  endIndex    Int
+  createdAt   DateTime  @default(now())
+  
+  document    Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  @@index([documentId])
+  @@index([chunkIndex])
+  @@map("document_chunks")
+}
+
+model ChatSession {
+  id          String         @id @default(uuid())
+  userId      String
+  documentId  String?
+  title       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document    Document?      @relation(fields: [documentId], references: [id], onDelete: SetNull)
+  messages    ChatMessage[]
+  
+  @@index([userId])
+  @@index([documentId])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id          String        @id @default(uuid())
+  sessionId   String
+  role        ChatRole      @default(user)
+  content     String        @db.Text
+  metadata    Json?         @default("{}")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  session     ChatSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionId])
+  @@map("chat_messages")
+}
+
+model DocumentAnalysis {
+  id            String           @id @default(uuid())
+  documentId    String
+  analysisType  AnalysisType     @default(kvkk)
+  results       Json             @default("{}")
+  status        AnalysisStatus   @default(pending)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  
+  document      Document         @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  @@index([documentId])
+  @@index([status])
+  @@map("document_analyses")
+}
+
+enum ChatRole {
+  user
+  assistant
+}
+
+enum AnalysisType {
+  kvkk
+  data_mapping
+  clauses
+}
+
+enum AnalysisStatus {
+  pending
+  completed
+  failed
+}
+
