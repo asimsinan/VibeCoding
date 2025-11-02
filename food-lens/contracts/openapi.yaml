@@ -1,0 +1,717 @@
+openapi: 3.0.3
+info:
+  title: Food Label Scanner API
+  version: 1.0.0
+  description: |
+    API for scanning food labels and retrieving nutrition information.
+    This API provides endpoints for user authentication, food label scanning,
+    nutrition data retrieval, and healthier alternative suggestions.
+  contact:
+    name: Food Lens API Support
+    email: api-support@foodlens.app
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.foodlens.app/v1
+    description: Production server
+  - url: http://localhost:3000/v1
+    description: Development server
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Scans
+    description: Food label scanning operations
+  - name: AI Processing
+    description: AI-powered nutrition extraction
+  - name: Alternatives
+    description: Healthier alternative suggestions
+  - name: History
+    description: User scan history management
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate user with email/password and return Firebase tokens
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: User registration
+      description: Register a new user with email/password
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid request or user already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /scans:
+    post:
+      tags:
+        - Scans
+      summary: Submit food label scan
+      description: Submit a food label image for processing. Requires authentication.
+      operationId: createScan
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScanRequest'
+      responses:
+        '202':
+          description: Scan accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResponse'
+        '400':
+          description: Invalid request (image too large, invalid format)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      tags:
+        - History
+      summary: Get scan history
+      description: Retrieve user's scan history with pagination
+      operationId: getScanHistory
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number (default: 1)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page (default: 20, max: 100)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          description: Sort order (createdAt:asc or createdAt:desc)
+          required: false
+          schema:
+            type: string
+            enum: [createdAt:asc, createdAt:desc]
+            default: createdAt:desc
+      responses:
+        '200':
+          description: Scan history retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanHistoryResponse'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /scans/{scanId}:
+    get:
+      tags:
+        - Scans
+      summary: Get scan details
+      description: Retrieve processed nutrition data for a specific scan
+      operationId: getScanById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: scanId
+          in: path
+          required: true
+          description: Unique scan identifier
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9_-]+$'
+      responses:
+        '200':
+          description: Scan details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NutritionCard'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Scan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - History
+      summary: Delete scan
+      description: Delete a specific scan from user's history
+      operationId: deleteScan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: scanId
+          in: path
+          required: true
+          description: Unique scan identifier
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9_-]+$'
+      responses:
+        '204':
+          description: Scan deleted successfully
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Scan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ai/process:
+    post:
+      tags:
+        - AI Processing
+      summary: Direct AI processing
+      description: Direct endpoint for Vercel AI Gateway integration. Requires authentication.
+      operationId: processWithAI
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIProcessRequest'
+      responses:
+        '200':
+          description: AI processing completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NutritionCard'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: AI service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /alternatives/{foodId}:
+    get:
+      tags:
+        - Alternatives
+      summary: Get healthier alternatives
+      description: Retrieve healthier alternative suggestions for a scanned food item
+      operationId: getAlternatives
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: foodId
+          in: path
+          required: true
+          description: Food item identifier
+          schema:
+            type: string
+        - name: language
+          in: query
+          description: Response language (en or tr)
+          required: false
+          schema:
+            type: string
+            enum: [en, tr]
+            default: en
+      responses:
+        '200':
+          description: Alternatives retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlternativesResponse'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Food item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Firebase Authentication JWT token
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          minLength: 6
+          example: password123
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - displayName
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          minLength: 6
+          example: password123
+        displayName:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: John Doe
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+          description: Firebase JWT authentication token
+        refreshToken:
+          type: string
+          description: Firebase refresh token
+        expiresIn:
+          type: string
+          description: Token expiration time in seconds
+          example: "3600"
+
+    ScanRequest:
+      type: object
+      required:
+        - image
+      properties:
+        image:
+          type: string
+          format: base64
+          description: Base64 encoded food label image (JPEG or PNG, max 10MB)
+          example: "/9j/4AAQSkZJRgABAQAAAQ..."
+        language:
+          type: string
+          enum: [en, tr]
+          default: en
+          description: Preferred response language
+
+    ScanResponse:
+      type: object
+      properties:
+        scanId:
+          type: string
+          description: Unique scan identifier
+          example: "scan_abc123xyz"
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+          example: "pending"
+        message:
+          type: string
+          example: "Scan accepted for processing"
+
+    AIProcessRequest:
+      type: object
+      required:
+        - image
+      properties:
+        image:
+          type: string
+          format: base64
+          description: Base64 encoded food label image
+        language:
+          type: string
+          enum: [en, tr]
+          default: en
+
+    NutritionCard:
+      type: object
+      properties:
+        scanId:
+          type: string
+          example: "scan_abc123xyz"
+        foodName:
+          type: string
+          example: "Organic Whole Wheat Bread"
+        brand:
+          type: string
+          example: "Healthy Bakery"
+        servingSize:
+          type: string
+          example: "1 slice (28g)"
+        calories:
+          type: number
+          example: 70
+        nutrients:
+          $ref: '#/components/schemas/Nutrients'
+        allergens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Allergen'
+        vitamins:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vitamin'
+        minerals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mineral'
+        alternatives:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alternative'
+        language:
+          type: string
+          enum: [en, tr]
+          example: "en"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-11-01T10:30:00Z"
+
+    Nutrients:
+      type: object
+      properties:
+        protein:
+          type: number
+          unit: grams
+          example: 3
+        carbs:
+          type: number
+          unit: grams
+          example: 12
+        fat:
+          type: number
+          unit: grams
+          example: 1
+        fiber:
+          type: number
+          unit: grams
+          example: 2
+        sodium:
+          type: number
+          unit: milligrams
+          example: 180
+        sugar:
+          type: number
+          unit: grams
+          example: 1
+        saturatedFat:
+          type: number
+          unit: grams
+          example: 0
+        transFat:
+          type: number
+          unit: grams
+          example: 0
+
+    Allergen:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Gluten"
+        severity:
+          type: string
+          enum: [high, medium, low]
+          example: "high"
+        description:
+          type: string
+          example: "Contains wheat"
+
+    Vitamin:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Vitamin D"
+        amount:
+          type: number
+          example: 0.5
+        unit:
+          type: string
+          example: "mcg"
+        dailyValue:
+          type: number
+          description: Percentage of daily value
+          example: 2.5
+
+    Mineral:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Iron"
+        amount:
+          type: number
+          example: 0.8
+        unit:
+          type: string
+          example: "mg"
+        dailyValue:
+          type: number
+          example: 4.4
+
+    Alternative:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "alt_123"
+        name:
+          type: string
+          example: "Whole Grain Bread"
+        reason:
+          type: string
+          example: "Higher fiber content and lower sodium"
+        nutritionComparison:
+          type: object
+          properties:
+            calories:
+              type: object
+              properties:
+                current:
+                  type: number
+                alternative:
+                  type: number
+                difference:
+                  type: number
+            protein:
+              type: object
+              properties:
+                current:
+                  type: number
+                alternative:
+                  type: number
+                difference:
+                  type: number
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+
+    AlternativesResponse:
+      type: object
+      properties:
+        foodId:
+          type: string
+        alternatives:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alternative'
+        language:
+          type: string
+          enum: [en, tr]
+
+    ScanHistoryResponse:
+      type: object
+      properties:
+        scans:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScanHistoryItem'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    ScanHistoryItem:
+      type: object
+      properties:
+        scanId:
+          type: string
+        foodName:
+          type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+        total:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+
+    User:
+      type: object
+      properties:
+        uid:
+          type: string
+          example: "user_abc123"
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        displayName:
+          type: string
+          example: "John Doe"
+        language:
+          type: string
+          enum: [en, tr]
+          default: en
+        createdAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "INVALID_REQUEST"
+        message:
+          type: string
+          example: "The provided image format is not supported"
+        details:
+          type: object
+          additionalProperties: true
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-11-01T10:30:00Z"
+

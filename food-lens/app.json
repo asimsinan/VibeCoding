@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "Food Lens",
+    "slug": "food-lens",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.foodlens.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Food Lens needs access to your camera to scan food labels and extract nutrition information.",
+        "NSPhotoLibraryUsageDescription": "Food Lens needs access to your photo library to select food label images.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.foodlens.app",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Food Lens to access your camera to scan food labels."
+        }
+      ]
+    ],
+    "scheme": "foodlens",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/4f804c34-f237-470b-9ee6-b8fce1e1dc3d"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4f804c34-f237-470b-9ee6-b8fce1e1dc3d"
+      }
+    },
+    "install": {
+      "exclude": []
+    },
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-i18n"
+        ]
+      }
+    },
+    "owner": "asy83"
+  }
+}
