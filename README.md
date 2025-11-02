@@ -63,6 +63,12 @@ Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Develo
 ### [Challenge 16: Legal Assistant](./legal-assistant) (Built in 3 hours)
 **Prompt**: *"Build a Turkish-localized AI legal assistant web app where users upload contract templates (e.g., Gizlilik, Hizmet, Danışmanlık, Mesafeli Satış, Aydınlatma Metni) and ask questions in Turkish about risks, obligations, or KVKK compliance. The system analyzes clauses, generates tailored agreements, and explains legal context using retrieved sources. Use Next.js, TypeScript, and Tailwind for UI with PostgreSQL for storage; integrate Gemini API for text generation and retrieval-augmented answering."*
 
+### [Challenge 17: FoodLens](./food-lens) (Built in 2.5 hours)
+**Prompt**: *"Build a cross-platform React Native (Expo) app that scans food labels via camera and—using Vercel AI Gateway returns a beautiful, human-readable nutrition and allergen info card (EN/TR) with healthier alternatives, powered by a Firebase backend for secure model calls, auth, and image storage."*
+
+### [Challenge 18: Uncle Taxim](./uncle-taxim) (Built in X hours)
+**Prompt**: *"Build an iOS ride-hailing app (like BiTaksi/Uber) using SwiftUI and Firebase backend, featuring AI voice-based booking (“Heloooğ, Hav ken ay get tu taksiim. Havargi. Eloğ. hevhug aasdedef tahsiim” → GPT-4o parses to JSON), dynamic ride suggestions ranked by ETA + cost + preferences, smart chat support for cancellations and ETAs, and contextual trip summaries (cost, route, CO₂ footprint, best travel time), all routed securely through the Vercel AI Gateway for model calls."*
+
 ## 🎯 Learning Objectives
 
 This challenge demonstrates:
