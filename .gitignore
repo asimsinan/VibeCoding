@@ -12,3 +12,9 @@ config.env
 *.sqlite3
 dev.db
 prisma/dev.db
+
+# Swift Package Manager build artifacts
+.build/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
