@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>332670815128-3bcm79v6n4oo2l8gea9iofec1leho475.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.332670815128-3bcm79v6n4oo2l8gea9iofec1leho475</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBU-VZL2JmLcjL_L4NC48LYJufQTlmyoyU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>332670815128</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.uncletaxim.app</string>
+	<key>PROJECT_ID</key>
+	<string>foodlens-91ccd</string>
+	<key>STORAGE_BUCKET</key>
+	<string>foodlens-91ccd.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:332670815128:ios:c03bbf81e0cf0d412bf9ed</string>
+</dict>
+</plist>

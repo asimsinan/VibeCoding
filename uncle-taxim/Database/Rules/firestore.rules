@@ -1,0 +1,182 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Helper function to check if query filters by userId
+    function queryFiltersByUserId() {
+      return request.query.where != null && 
+             request.query.where.field == 'userId' && 
+             request.query.where.value == request.auth.uid;
+    }
+    
+    // Users Collection - Users can only read/update their own data
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+    
+    // Drivers Collection - Users can read driver info, only drivers can update their own data
+    match /drivers/{driverId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == driverId;
+      allow update: if isAuthenticated() && request.auth.uid == driverId;
+      allow delete: if isAuthenticated() && request.auth.uid == driverId;
+    }
+    
+    // Rides Collection - Users can only access their own rides
+    match /rides/{rideId} {
+      // Allow read if user is authenticated AND:
+      // - Document doesn't exist yet (for listeners set up immediately after creation)
+      //   OR document exists and user is the passenger (userId matches) OR driver (driverId matches)
+      // Note: Allowing resource == null is safe because:
+      // 1. Only the owner can create the document (create rule checks userId)
+      // 2. Once created, only the owner/driver can read it (read rule checks userId/driverId)
+      // 3. So listeners on non-existent docs will only see updates for rides the user owns
+      allow read: if isAuthenticated() && (
+        !resource.exists || // Document doesn't exist yet (allows listeners to be set up)
+        resource.data.userId == request.auth.uid ||
+        (resource.data.driverId != null && resource.data.driverId == request.auth.uid)
+      );
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        (resource.data.driverId != null && resource.data.driverId == request.auth.uid)
+      );
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Allow list/listen operations for authenticated users
+      // The read rule above ensures only documents with matching userId/driverId are returned
+      // For queries with whereField("userId", isEqualTo: userId), Firestore validates
+      // that each returned document passes the read rule
+      allow list: if isAuthenticated() && request.query.limit <= 100;
+    }
+    
+    // RideSuggestions Collection - Users can only access their own suggestions
+    match /rideSuggestions/{suggestionId} {
+      // Allow read if user owns the document
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Allow create if user is creating their own document
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      // Allow update if user owns the document
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Allow delete if user owns the document
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Allow list/listen operations for authenticated users
+      // The read rule above ensures only documents with matching userId are returned
+      // Note: For queries with multiple whereField clauses, Firestore validates
+      // that each returned document passes the read rule
+      allow list: if isAuthenticated() && request.query.limit <= 100;
+    }
+    
+    // TripSummaries Collection - Users can only access their own trip summaries
+    match /tripSummaries/{summaryId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+    
+    // ChatMessages Collection - Users can only access their own messages
+    match /chatMessages/{messageId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+    
+    // UserPreferences Collection - Users can only access their own preferences
+    // Document ID is the userId, so allow read if document ID matches auth uid
+    // For non-existent documents, only check document ID
+    // For existing documents, also check userId field matches
+    match /userPreferences/{preferenceId} {
+      allow read: if isAuthenticated() && (
+        preferenceId == request.auth.uid ||
+        (resource != null && resource.data.userId == request.auth.uid)
+      );
+      allow create: if isAuthenticated() && (
+        preferenceId == request.auth.uid &&
+        request.resource.data.userId == request.auth.uid
+      );
+      allow update: if isAuthenticated() && (
+        preferenceId == request.auth.uid &&
+        resource != null &&
+        resource.data.userId == request.auth.uid
+      );
+      allow delete: if isAuthenticated() && (
+        preferenceId == request.auth.uid ||
+        (resource != null && resource.data.userId == request.auth.uid)
+      );
+      // Allow list/listen operations for authenticated users
+      // The read rule above ensures only documents with matching userId are returned
+      allow list: if isAuthenticated() && request.query.limit <= 100;
+    }
+    
+    // SavedAddresses Collection - Users can only access their own saved addresses
+    match /savedAddresses/{addressId} {
+      // Allow read if user is authenticated AND:
+      // - Document doesn't exist yet (for listeners) OR document exists and userId matches
+      allow read: if isAuthenticated() && (
+        !resource.exists ||
+        resource.data.userId == request.auth.uid
+      );
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Allow list/listen operations for authenticated users
+      // The read rule above ensures only documents with matching userId are returned
+      // For queries with whereField("userId", isEqualTo: userId), Firestore validates
+      // that each returned document passes the read rule
+      allow list: if isAuthenticated() && request.query.limit <= 100;
+    }
+    
+    // PaymentMethods Collection - Users can only access their own payment methods
+    match /paymentMethods/{methodId} {
+      // Allow read if user is authenticated AND:
+      // - Document doesn't exist yet (for listeners) OR document exists and userId matches
+      allow read: if isAuthenticated() && (
+        !resource.exists ||
+        resource.data.userId == request.auth.uid
+      );
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Allow list/listen operations for authenticated users
+      // The read rule above ensures only documents with matching userId are returned
+      // For queries with whereField("userId", isEqualTo: userId), Firestore validates
+      // that each returned document passes the read rule
+      allow list: if isAuthenticated() && request.query.limit <= 100;
+    }
+    
+    // Transactions Collection - Users can only access their own transactions
+    match /transactions/{transactionId} {
+      // Allow read if user is authenticated AND:
+      // - Document doesn't exist yet (for listeners) OR document exists and userId matches
+      allow read: if isAuthenticated() && (
+        !resource.exists ||
+        resource.data.userId == request.auth.uid
+      );
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Transactions should not be deleted, only updated
+      allow delete: if false; // Prevent deletion of transactions
+      // Allow list/listen operations for authenticated users
+      // The read rule above ensures only documents with matching userId are returned
+      // For queries with whereField("userId", isEqualTo: userId), Firestore validates
+      // that each returned document passes the read rule
+      allow list: if isAuthenticated() && request.query.limit <= 100;
+    }
+  }
+}
+

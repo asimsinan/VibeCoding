@@ -1,0 +1,809 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0AEDBEE1244F4648A6098B9E /* Core/DesignSystem/StyledPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3154B70F9379413B94973D00 /* Core/DesignSystem/StyledPopupView.swift */; };
+		1983563E60EE4678A0163E2A /* Core/Services/ChatRetrievalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BB6F3F68B0437B8088B31C /* Core/Services/ChatRetrievalService.swift */; };
+		AA000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002 /* AppDelegate.swift */; };
+		AA000003 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000004 /* SceneDelegate.swift */; };
+		AA000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000006 /* Assets.xcassets */; };
+		AA000007 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		AA000114 /* 1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = AA000115 /* 1.mp4 */; };
+		AA000066 /* Config/FirebaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000065 /* Config/FirebaseConfig.swift */; };
+		AA000068 /* Config/Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000067 /* Config/Environment.swift */; };
+		AA00006A /* UncleTaximApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000069 /* UncleTaximApp.swift */; };
+		AA000070 /* Features/Views/VoiceBooking/VoiceBookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006B /* Features/Views/VoiceBooking/VoiceBookingView.swift */; };
+		AA000071 /* Features/Views/RideSuggestions/RideSuggestionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006C /* Features/Views/RideSuggestions/RideSuggestionsListView.swift */; };
+		AA000072 /* Features/Views/ChatSupport/ChatSupportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006D /* Features/Views/ChatSupport/ChatSupportView.swift */; };
+		AA000111 /* Features/Views/Splash/VideoSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000110 /* Features/Views/Splash/VideoSplashView.swift */; };
+		AA000112 /* Features/Views/Shared/PaymentSuccessPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000113 /* Features/Views/Shared/PaymentSuccessPopupView.swift */; };
+		AA000116 /* Features/Views/RideSuggestions/RideSuggestionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000117 /* Features/Views/RideSuggestions/RideSuggestionDetailView.swift */; };
+		AA000073 /* Features/Views/Profile/ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006E /* Features/Views/Profile/ProfileView.swift */; };
+		AA000074 /* Core/UX/AccessibilityHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00006F /* Core/UX/AccessibilityHelpers.swift */; };
+		AA00007A /* Core/DesignSystem/Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000075 /* Core/DesignSystem/Spacing.swift */; };
+		AA00007B /* Core/DesignSystem/Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000076 /* Core/DesignSystem/Typography.swift */; };
+		AA00007C /* Core/DesignSystem/Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000077 /* Core/DesignSystem/Colors.swift */; };
+		AA00007D /* Core/DesignSystem/LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000078 /* Core/DesignSystem/LoadingIndicator.swift */; };
+		AA00007E /* Core/DesignSystem/CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000079 /* Core/DesignSystem/CardView.swift */; };
+		AA000080 /* Features/ViewModels/VoiceBookingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00007F /* Features/ViewModels/VoiceBookingViewModel.swift */; };
+		AA000082 /* Features/Views/VoiceBooking/VoiceRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000081 /* Features/Views/VoiceBooking/VoiceRecordingView.swift */; };
+		AA000084 /* Features/ViewModels/ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000083 /* Features/ViewModels/ProfileViewModel.swift */; };
+		AA000086 /* Features/Views/Profile/PaymentMethodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000085 /* Features/Views/Profile/PaymentMethodsView.swift */; };
+		AA000088 /* Features/Views/Profile/RideHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000087 /* Features/Views/Profile/RideHistoryView.swift */; };
+		AA00008A /* Core/Models/User.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000089 /* Core/Models/User.swift */; };
+		AA00008C /* Core/Models/UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008B /* Core/Models/UserPreferences.swift */; };
+		AA00008E /* Core/Services/FirebaseDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008D /* Core/Services/FirebaseDataService.swift */; };
+		AA000090 /* Core/Protocols/FirestoreCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00008F /* Core/Protocols/FirestoreCodable.swift */; };
+		AA000092 /* Core/Validation/Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000091 /* Core/Validation/Validators.swift */; };
+		AA000094 /* Core/Services/VoiceProcessingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000093 /* Core/Services/VoiceProcessingService.swift */; };
+		AA000096 /* Core/Utilities/BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000095 /* Core/Utilities/BaseViewModel.swift */; };
+		AA000098 /* Features/ViewModels/RideSuggestionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000097 /* Features/ViewModels/RideSuggestionsViewModel.swift */; };
+		AA00009A /* Features/ViewModels/ChatSupportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000099 /* Features/ViewModels/ChatSupportViewModel.swift */; };
+		AA00009C /* Core/Models/Contracts/VoiceProcessResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00009B /* Core/Models/Contracts/VoiceProcessResponse.swift */; };
+		AA00009E /* Features/ViewModels/TripSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00009D /* Features/ViewModels/TripSummaryViewModel.swift */; };
+		AA0000A0 /* Core/Models/Contracts/VoiceProcessRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00009F /* Core/Models/Contracts/VoiceProcessRequest.swift */; };
+		AA0000A2 /* Core/Models/Contracts/ChatMessageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000A1 /* Core/Models/Contracts/ChatMessageRequest.swift */; };
+		AA0000A4 /* Core/Models/Contracts/ChatMessageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000A3 /* Core/Models/Contracts/ChatMessageResponse.swift */; };
+		AA0000A6 /* Core/Services/AIGatewayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000A5 /* Core/Services/AIGatewayService.swift */; };
+		AA0000A8 /* Core/Models/ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000A7 /* Core/Models/ChatMessage.swift */; };
+		AA0000AA /* Core/Models/TripSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000A9 /* Core/Models/TripSummary.swift */; };
+		AA0000AC /* Core/Services/ChatSupportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000AB /* Core/Services/ChatSupportService.swift */; };
+		AA0000AE /* Core/Services/TripSummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000AD /* Core/Services/TripSummaryService.swift */; };
+		AA0000B0 /* Core/Models/Ride.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000AF /* Core/Models/Ride.swift */; };
+		AA0000B2 /* Core/Security/AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000B1 /* Core/Security/AuthorizationService.swift */; };
+		AA0000B4 /* Core/Security/FirebaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000B3 /* Core/Security/FirebaseAuthService.swift */; };
+		AA0000B6 /* Core/Models/Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000B5 /* Core/Models/Driver.swift */; };
+		AA0000B8 /* Core/Models/RideSuggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000B7 /* Core/Models/RideSuggestion.swift */; };
+		AA0000BA /* Core/Utilities/NetworkRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000B9 /* Core/Utilities/NetworkRequestBuilder.swift */; };
+		AA0000BC /* Core/Security/KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000BB /* Core/Security/KeychainService.swift */; };
+		AA0000BE /* Core/Services/RideRankingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000BD /* Core/Services/RideRankingService.swift */; };
+		AA0000C0 /* Core/Utilities/CoordinateCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000BF /* Core/Utilities/CoordinateCalculator.swift */; };
+		AA0000C2 /* Core/ErrorHandling/ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000C1 /* Core/ErrorHandling/ErrorHandler.swift */; };
+		AA0000C4 /* Core/Performance/ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000C3 /* Core/Performance/ArrayExtension.swift */; };
+		AA0000C6 /* Core/UX/SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000C5 /* Core/UX/SkeletonView.swift */; };
+		AA0000C8 /* Core/UX/HapticFeedbackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000C7 /* Core/UX/HapticFeedbackManager.swift */; };
+		AA0000CA /* Features/Views/RideSuggestions/RideSuggestionCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000C9 /* Features/Views/RideSuggestions/RideSuggestionCardView.swift */; };
+		AA000116 /* Features/Views/RideSuggestions/RideSuggestionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000117 /* Features/Views/RideSuggestions/RideSuggestionDetailView.swift */; };
+		AA0000CC /* Features/Views/ChatSupport/ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000CB /* Features/Views/ChatSupport/ChatMessageView.swift */; };
+		AA000118 /* Features/Views/ChatSupport/ChatRideSuggestionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000119 /* Features/Views/ChatSupport/ChatRideSuggestionCard.swift */; };
+		AA00011A /* Features/Views/ChatSupport/ChatBookedRideCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011B /* Features/Views/ChatSupport/ChatBookedRideCard.swift */; };
+		AA0000CE /* Core/DesignSystem/ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000CD /* Core/DesignSystem/ButtonStyles.swift */; };
+		AA0000D0 /* Features/Views/Authentication/AuthenticationRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000CF /* Features/Views/Authentication/AuthenticationRootView.swift */; };
+		AA0000D2 /* Features/Views/Authentication/LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000D1 /* Features/Views/Authentication/LoginView.swift */; };
+		AA0000D4 /* Features/Views/Authentication/RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000D3 /* Features/Views/Authentication/RegistrationView.swift */; };
+		AA0000D6 /* Features/ViewModels/AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000D5 /* Features/ViewModels/AuthenticationViewModel.swift */; };
+		AA0000D8 /* Core/Services/RidePricingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000D7 /* Core/Services/RidePricingService.swift */; };
+		AA0000D9 /* Core/Services/LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000DA /* Core/Services/LocationService.swift */; };
+		AA0000DB /* Features/Views/Booking/ActiveRideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000DC /* Features/Views/Booking/ActiveRideView.swift */; };
+		AA0000DD /* Features/Views/Booking/RideTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000DE /* Features/Views/Booking/RideTrackingView.swift */; };
+		AA0000DF /* Features/ViewModels/BookingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000E0 /* Features/ViewModels/BookingViewModel.swift */; };
+		AA0000E1 /* Core/Services/DriverAssignmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000E2 /* Core/Services/DriverAssignmentService.swift */; };
+		AA0000E3 /* Features/ViewModels/DriverDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000E4 /* Features/ViewModels/DriverDashboardViewModel.swift */; };
+		AA0000E5 /* Features/Views/Driver/DriverDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000E6 /* Features/Views/Driver/DriverDashboardView.swift */; };
+		AA0000E7 /* Features/Views/Booking/RideMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000E8 /* Features/Views/Booking/RideMapView.swift */; };
+		AA0000E9 /* Features/Views/Shared/LocationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000EA /* Features/Views/Shared/LocationRow.swift */; };
+		AA0000EB /* Features/Views/TripSummary/TripSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000EC /* Features/Views/TripSummary/TripSummaryView.swift */; };
+		AA0000ED /* Features/Views/TripSummary/TripSummaryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000EE /* Features/Views/TripSummary/TripSummaryDetailView.swift */; };
+		AA0000EF /* Features/Views/TripSummary/TripSummaryMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000F0 /* Features/Views/TripSummary/TripSummaryMapView.swift */; };
+		AA0000F1 /* Core/Services/NetworkMonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000F2 /* Core/Services/NetworkMonitorService.swift */; };
+		AA0000F3 /* Core/Services/OfflineSyncQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000F4 /* Core/Services/OfflineSyncQueueService.swift */; };
+		AA0000F5 /* Features/Views/Shared/OfflineIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000F6 /* Features/Views/Shared/OfflineIndicatorView.swift */; };
+		AA0000F7 /* Core/Models/SavedAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000F8 /* Core/Models/SavedAddress.swift */; };
+		AA0000F9 /* Features/ViewModels/SavedAddressesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000FA /* Features/ViewModels/SavedAddressesViewModel.swift */; };
+		AA0000FB /* Features/Views/Profile/SavedAddressesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000FC /* Features/Views/Profile/SavedAddressesView.swift */; };
+		AA0000FD /* Features/Views/Profile/AddEditAddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000FE /* Features/Views/Profile/AddEditAddressView.swift */; };
+		AA0000FF /* Features/Views/VoiceBooking/SavedAddressQuickButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000100 /* Features/Views/VoiceBooking/SavedAddressQuickButton.swift */; };
+		AA000101 /* Core/Models/PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000102 /* Core/Models/PaymentMethod.swift */; };
+		AA000103 /* Core/Services/PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000104 /* Core/Services/PaymentService.swift */; };
+		AA000105 /* Features/ViewModels/PaymentMethodsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000106 /* Features/ViewModels/PaymentMethodsViewModel.swift */; };
+		AA000107 /* Features/Views/Profile/AddEditPaymentMethodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000108 /* Features/Views/Profile/AddEditPaymentMethodView.swift */; };
+		AA000109 /* Features/ViewModels/TransactionHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00010A /* Features/ViewModels/TransactionHistoryViewModel.swift */; };
+		AA00010B /* Features/Views/Profile/TransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00010C /* Features/Views/Profile/TransactionHistoryView.swift */; };
+		AA00010D /* Features/Views/TripSummary/DriverRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00010E /* Features/Views/TripSummary/DriverRatingView.swift */; };
+		B5D441B5CD4C611F8377C9EF /* Pods_UncleTaxim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D169044E30DB614A8E590B3 /* Pods_UncleTaxim.framework */; };
+		D2CAA787279045EEB6A40AA1 /* Core/Config/StripeConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CAA787279045EEB6A40AA0 /* Core/Config/StripeConfig.swift */; };
+		E3F1B2C3D4E5F6A7B8C9D0E1 /* Core/Models/Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1B2C3D4E5F6A7B8C9D0E0 /* Core/Models/Transaction.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2E70DBC207E8BC5B74EF73E7 /* Pods-UncleTaxim.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UncleTaxim.debug.xcconfig"; path = "Target Support Files/Pods-UncleTaxim/Pods-UncleTaxim.debug.xcconfig"; sourceTree = "<group>"; };
+		3154B70F9379413B94973D00 /* Core/DesignSystem/StyledPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/DesignSystem/StyledPopupView.swift; sourceTree = SOURCE_ROOT; };
+		5641D3E7B0A9724487AA0352 /* Pods-UncleTaxim.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UncleTaxim.release.xcconfig"; path = "Target Support Files/Pods-UncleTaxim/Pods-UncleTaxim.release.xcconfig"; sourceTree = "<group>"; };
+		6D169044E30DB614A8E590B3 /* Pods_UncleTaxim.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UncleTaxim.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2BB6F3F68B0437B8088B31C /* Core/Services/ChatRetrievalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/ChatRetrievalService.swift; sourceTree = SOURCE_ROOT; };
+		AA000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA000004 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		AA000006 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000115 /* 1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "1.mp4"; sourceTree = SOURCE_ROOT; };
+		AA000009 /* UncleTaxim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UncleTaxim.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA00000B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000065 /* Config/FirebaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config/FirebaseConfig.swift; sourceTree = SOURCE_ROOT; };
+		AA000067 /* Config/Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config/Environment.swift; sourceTree = SOURCE_ROOT; };
+		AA000069 /* UncleTaximApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncleTaximApp.swift; sourceTree = "<group>"; };
+		AA00006B /* Features/Views/VoiceBooking/VoiceBookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/VoiceBooking/VoiceBookingView.swift; sourceTree = SOURCE_ROOT; };
+		AA00006C /* Features/Views/RideSuggestions/RideSuggestionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/RideSuggestions/RideSuggestionsListView.swift; sourceTree = SOURCE_ROOT; };
+		AA00006D /* Features/Views/ChatSupport/ChatSupportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/ChatSupport/ChatSupportView.swift; sourceTree = SOURCE_ROOT; };
+		AA000110 /* Features/Views/Splash/VideoSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Splash/VideoSplashView.swift; sourceTree = SOURCE_ROOT; };
+		AA000113 /* Features/Views/Shared/PaymentSuccessPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Shared/PaymentSuccessPopupView.swift; sourceTree = SOURCE_ROOT; };
+		AA000117 /* Features/Views/RideSuggestions/RideSuggestionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/RideSuggestions/RideSuggestionDetailView.swift; sourceTree = SOURCE_ROOT; };
+		AA00006E /* Features/Views/Profile/ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Profile/ProfileView.swift; sourceTree = SOURCE_ROOT; };
+		AA00006F /* Core/UX/AccessibilityHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/UX/AccessibilityHelpers.swift; sourceTree = SOURCE_ROOT; };
+		AA000075 /* Core/DesignSystem/Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/DesignSystem/Spacing.swift; sourceTree = SOURCE_ROOT; };
+		AA000076 /* Core/DesignSystem/Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/DesignSystem/Typography.swift; sourceTree = SOURCE_ROOT; };
+		AA000077 /* Core/DesignSystem/Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/DesignSystem/Colors.swift; sourceTree = SOURCE_ROOT; };
+		AA000078 /* Core/DesignSystem/LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/DesignSystem/LoadingIndicator.swift; sourceTree = SOURCE_ROOT; };
+		AA000079 /* Core/DesignSystem/CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/DesignSystem/CardView.swift; sourceTree = SOURCE_ROOT; };
+		AA00007F /* Features/ViewModels/VoiceBookingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/VoiceBookingViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA000081 /* Features/Views/VoiceBooking/VoiceRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/VoiceBooking/VoiceRecordingView.swift; sourceTree = SOURCE_ROOT; };
+		AA000083 /* Features/ViewModels/ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/ProfileViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA000085 /* Features/Views/Profile/PaymentMethodsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Profile/PaymentMethodsView.swift; sourceTree = SOURCE_ROOT; };
+		AA000087 /* Features/Views/Profile/RideHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Profile/RideHistoryView.swift; sourceTree = SOURCE_ROOT; };
+		AA000089 /* Core/Models/User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/User.swift; sourceTree = SOURCE_ROOT; };
+		AA00008B /* Core/Models/UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/UserPreferences.swift; sourceTree = SOURCE_ROOT; };
+		AA00008D /* Core/Services/FirebaseDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/FirebaseDataService.swift; sourceTree = SOURCE_ROOT; };
+		AA00008F /* Core/Protocols/FirestoreCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Protocols/FirestoreCodable.swift; sourceTree = SOURCE_ROOT; };
+		AA000091 /* Core/Validation/Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Validation/Validators.swift; sourceTree = SOURCE_ROOT; };
+		AA000093 /* Core/Services/VoiceProcessingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/VoiceProcessingService.swift; sourceTree = SOURCE_ROOT; };
+		AA000095 /* Core/Utilities/BaseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Utilities/BaseViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA000097 /* Features/ViewModels/RideSuggestionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/RideSuggestionsViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA000099 /* Features/ViewModels/ChatSupportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/ChatSupportViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA00009B /* Core/Models/Contracts/VoiceProcessResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/Contracts/VoiceProcessResponse.swift; sourceTree = SOURCE_ROOT; };
+		AA00009D /* Features/ViewModels/TripSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/TripSummaryViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA00009F /* Core/Models/Contracts/VoiceProcessRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/Contracts/VoiceProcessRequest.swift; sourceTree = SOURCE_ROOT; };
+		AA0000A1 /* Core/Models/Contracts/ChatMessageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/Contracts/ChatMessageRequest.swift; sourceTree = SOURCE_ROOT; };
+		AA0000A3 /* Core/Models/Contracts/ChatMessageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/Contracts/ChatMessageResponse.swift; sourceTree = SOURCE_ROOT; };
+		AA0000A5 /* Core/Services/AIGatewayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/AIGatewayService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000A7 /* Core/Models/ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/ChatMessage.swift; sourceTree = SOURCE_ROOT; };
+		AA0000A9 /* Core/Models/TripSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/TripSummary.swift; sourceTree = SOURCE_ROOT; };
+		AA0000AB /* Core/Services/ChatSupportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/ChatSupportService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000AD /* Core/Services/TripSummaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/TripSummaryService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000AF /* Core/Models/Ride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/Ride.swift; sourceTree = SOURCE_ROOT; };
+		AA0000B1 /* Core/Security/AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Security/AuthorizationService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000B3 /* Core/Security/FirebaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Security/FirebaseAuthService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000B5 /* Core/Models/Driver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/Driver.swift; sourceTree = SOURCE_ROOT; };
+		AA0000B7 /* Core/Models/RideSuggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/RideSuggestion.swift; sourceTree = SOURCE_ROOT; };
+		AA0000B9 /* Core/Utilities/NetworkRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Utilities/NetworkRequestBuilder.swift; sourceTree = SOURCE_ROOT; };
+		AA0000BB /* Core/Security/KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Security/KeychainService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000BD /* Core/Services/RideRankingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/RideRankingService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000BF /* Core/Utilities/CoordinateCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Utilities/CoordinateCalculator.swift; sourceTree = SOURCE_ROOT; };
+		AA0000C1 /* Core/ErrorHandling/ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/ErrorHandling/ErrorHandler.swift; sourceTree = SOURCE_ROOT; };
+		AA0000C3 /* Core/Performance/ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Performance/ArrayExtension.swift; sourceTree = SOURCE_ROOT; };
+		AA0000C5 /* Core/UX/SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/UX/SkeletonView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000C7 /* Core/UX/HapticFeedbackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/UX/HapticFeedbackManager.swift; sourceTree = SOURCE_ROOT; };
+		AA0000C9 /* Features/Views/RideSuggestions/RideSuggestionCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/RideSuggestions/RideSuggestionCardView.swift; sourceTree = SOURCE_ROOT; };
+		AA000117 /* Features/Views/RideSuggestions/RideSuggestionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/RideSuggestions/RideSuggestionDetailView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000CB /* Features/Views/ChatSupport/ChatMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/ChatSupport/ChatMessageView.swift; sourceTree = SOURCE_ROOT; };
+		AA000119 /* Features/Views/ChatSupport/ChatRideSuggestionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/ChatSupport/ChatRideSuggestionCard.swift; sourceTree = SOURCE_ROOT; };
+		AA00011B /* Features/Views/ChatSupport/ChatBookedRideCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/ChatSupport/ChatBookedRideCard.swift; sourceTree = SOURCE_ROOT; };
+		AA0000CD /* Core/DesignSystem/ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/DesignSystem/ButtonStyles.swift; sourceTree = SOURCE_ROOT; };
+		AA0000CF /* Features/Views/Authentication/AuthenticationRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Authentication/AuthenticationRootView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000D1 /* Features/Views/Authentication/LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Authentication/LoginView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000D3 /* Features/Views/Authentication/RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Authentication/RegistrationView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000D5 /* Features/ViewModels/AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/AuthenticationViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA0000D7 /* Core/Services/RidePricingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/RidePricingService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000DA /* Core/Services/LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/LocationService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000DC /* Features/Views/Booking/ActiveRideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Booking/ActiveRideView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000DE /* Features/Views/Booking/RideTrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Booking/RideTrackingView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000E0 /* Features/ViewModels/BookingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/BookingViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA0000E2 /* Core/Services/DriverAssignmentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/DriverAssignmentService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000E4 /* Features/ViewModels/DriverDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/DriverDashboardViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA0000E6 /* Features/Views/Driver/DriverDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Driver/DriverDashboardView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000E8 /* Features/Views/Booking/RideMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Booking/RideMapView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000EA /* Features/Views/Shared/LocationRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Shared/LocationRow.swift; sourceTree = SOURCE_ROOT; };
+		AA0000EC /* Features/Views/TripSummary/TripSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/TripSummary/TripSummaryView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000EE /* Features/Views/TripSummary/TripSummaryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/TripSummary/TripSummaryDetailView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000F0 /* Features/Views/TripSummary/TripSummaryMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/TripSummary/TripSummaryMapView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000F2 /* Core/Services/NetworkMonitorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/NetworkMonitorService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000F4 /* Core/Services/OfflineSyncQueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/OfflineSyncQueueService.swift; sourceTree = SOURCE_ROOT; };
+		AA0000F6 /* Features/Views/Shared/OfflineIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Shared/OfflineIndicatorView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000F8 /* Core/Models/SavedAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/SavedAddress.swift; sourceTree = SOURCE_ROOT; };
+		AA0000FA /* Features/ViewModels/SavedAddressesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/SavedAddressesViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA0000FC /* Features/Views/Profile/SavedAddressesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Profile/SavedAddressesView.swift; sourceTree = SOURCE_ROOT; };
+		AA0000FE /* Features/Views/Profile/AddEditAddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Profile/AddEditAddressView.swift; sourceTree = SOURCE_ROOT; };
+		AA000100 /* Features/Views/VoiceBooking/SavedAddressQuickButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/VoiceBooking/SavedAddressQuickButton.swift; sourceTree = SOURCE_ROOT; };
+		AA000102 /* Core/Models/PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/PaymentMethod.swift; sourceTree = SOURCE_ROOT; };
+		AA000104 /* Core/Services/PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/PaymentService.swift; sourceTree = SOURCE_ROOT; };
+		AA000106 /* Features/ViewModels/PaymentMethodsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/PaymentMethodsViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA000108 /* Features/Views/Profile/AddEditPaymentMethodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Profile/AddEditPaymentMethodView.swift; sourceTree = SOURCE_ROOT; };
+		AA00010A /* Features/ViewModels/TransactionHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/ViewModels/TransactionHistoryViewModel.swift; sourceTree = SOURCE_ROOT; };
+		AA00010C /* Features/Views/Profile/TransactionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/Profile/TransactionHistoryView.swift; sourceTree = SOURCE_ROOT; };
+		AA00010E /* Features/Views/TripSummary/DriverRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Views/TripSummary/DriverRatingView.swift; sourceTree = SOURCE_ROOT; };
+		D2CAA787279045EEB6A40AA0 /* Core/Config/StripeConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Config/StripeConfig.swift; sourceTree = SOURCE_ROOT; };
+		E3F1B2C3D4E5F6A7B8C9D0E0 /* Core/Models/Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/Transaction.swift; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA00000C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5D441B5CD4C611F8377C9EF /* Pods_UncleTaxim.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00D679FEABB58582A6912A59 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2E70DBC207E8BC5B74EF73E7 /* Pods-UncleTaxim.debug.xcconfig */,
+				5641D3E7B0A9724487AA0352 /* Pods-UncleTaxim.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A66734CD2EBC98DB00D067A7 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				AA00006B /* Features/Views/VoiceBooking/VoiceBookingView.swift */,
+				AA00006C /* Features/Views/RideSuggestions/RideSuggestionsListView.swift */,
+				AA00006D /* Features/Views/ChatSupport/ChatSupportView.swift */,
+				AA000110 /* Features/Views/Splash/VideoSplashView.swift */,
+				AA00006E /* Features/Views/Profile/ProfileView.swift */,
+				AA0000DC /* Features/Views/Booking/ActiveRideView.swift */,
+				AA0000DE /* Features/Views/Booking/RideTrackingView.swift */,
+				AA00006F /* Core/UX/AccessibilityHelpers.swift */,
+				AA000075 /* Core/DesignSystem/Spacing.swift */,
+				AA000076 /* Core/DesignSystem/Typography.swift */,
+				AA000077 /* Core/DesignSystem/Colors.swift */,
+				3154B70F9379413B94973D00 /* Core/DesignSystem/StyledPopupView.swift */,
+				AA000078 /* Core/DesignSystem/LoadingIndicator.swift */,
+				AA000079 /* Core/DesignSystem/CardView.swift */,
+				AA0000CD /* Core/DesignSystem/ButtonStyles.swift */,
+				AA00007F /* Features/ViewModels/VoiceBookingViewModel.swift */,
+				AA0000E0 /* Features/ViewModels/BookingViewModel.swift */,
+				AA000081 /* Features/Views/VoiceBooking/VoiceRecordingView.swift */,
+				AA000100 /* Features/Views/VoiceBooking/SavedAddressQuickButton.swift */,
+				AA000083 /* Features/ViewModels/ProfileViewModel.swift */,
+				AA0000FA /* Features/ViewModels/SavedAddressesViewModel.swift */,
+				AA000106 /* Features/ViewModels/PaymentMethodsViewModel.swift */,
+				AA00010A /* Features/ViewModels/TransactionHistoryViewModel.swift */,
+				AA000085 /* Features/Views/Profile/PaymentMethodsView.swift */,
+				AA000087 /* Features/Views/Profile/RideHistoryView.swift */,
+				AA00010C /* Features/Views/Profile/TransactionHistoryView.swift */,
+				AA0000FC /* Features/Views/Profile/SavedAddressesView.swift */,
+				AA0000FE /* Features/Views/Profile/AddEditAddressView.swift */,
+				AA000108 /* Features/Views/Profile/AddEditPaymentMethodView.swift */,
+				AA0000EC /* Features/Views/TripSummary/TripSummaryView.swift */,
+				AA0000EE /* Features/Views/TripSummary/TripSummaryDetailView.swift */,
+				AA00010E /* Features/Views/TripSummary/DriverRatingView.swift */,
+				AA0000F0 /* Features/Views/TripSummary/TripSummaryMapView.swift */,
+				AA0000F2 /* Core/Services/NetworkMonitorService.swift */,
+				AA0000F4 /* Core/Services/OfflineSyncQueueService.swift */,
+				AA000104 /* Core/Services/PaymentService.swift */,
+				D2CAA787279045EEB6A40AA0 /* Core/Config/StripeConfig.swift */,
+				AA0000F8 /* Core/Models/SavedAddress.swift */,
+				AA000102 /* Core/Models/PaymentMethod.swift */,
+				E3F1B2C3D4E5F6A7B8C9D0E0 /* Core/Models/Transaction.swift */,
+				AA000089 /* Core/Models/User.swift */,
+				AA00008B /* Core/Models/UserPreferences.swift */,
+				AA00008D /* Core/Services/FirebaseDataService.swift */,
+				AA00008F /* Core/Protocols/FirestoreCodable.swift */,
+				AA000091 /* Core/Validation/Validators.swift */,
+				AA000093 /* Core/Services/VoiceProcessingService.swift */,
+				AA000095 /* Core/Utilities/BaseViewModel.swift */,
+				AA000097 /* Features/ViewModels/RideSuggestionsViewModel.swift */,
+				AA000099 /* Features/ViewModels/ChatSupportViewModel.swift */,
+				AA00009B /* Core/Models/Contracts/VoiceProcessResponse.swift */,
+				AA00009D /* Features/ViewModels/TripSummaryViewModel.swift */,
+				AA00009F /* Core/Models/Contracts/VoiceProcessRequest.swift */,
+				AA0000A1 /* Core/Models/Contracts/ChatMessageRequest.swift */,
+				AA0000A3 /* Core/Models/Contracts/ChatMessageResponse.swift */,
+				AA0000A5 /* Core/Services/AIGatewayService.swift */,
+				AA0000A7 /* Core/Models/ChatMessage.swift */,
+				AA0000A9 /* Core/Models/TripSummary.swift */,
+				AA0000AB /* Core/Services/ChatSupportService.swift */,
+				AA0000AD /* Core/Services/TripSummaryService.swift */,
+				AA0000D7 /* Core/Services/RidePricingService.swift */,
+				AA0000DA /* Core/Services/LocationService.swift */,
+				A2BB6F3F68B0437B8088B31C /* Core/Services/ChatRetrievalService.swift */,
+				AA0000E2 /* Core/Services/DriverAssignmentService.swift */,
+				AA0000E4 /* Features/ViewModels/DriverDashboardViewModel.swift */,
+				AA0000E6 /* Features/Views/Driver/DriverDashboardView.swift */,
+				AA0000E8 /* Features/Views/Booking/RideMapView.swift */,
+				AA0000EA /* Features/Views/Shared/LocationRow.swift */,
+				AA000113 /* Features/Views/Shared/PaymentSuccessPopupView.swift */,
+				AA0000F6 /* Features/Views/Shared/OfflineIndicatorView.swift */,
+				AA0000AF /* Core/Models/Ride.swift */,
+				AA0000B1 /* Core/Security/AuthorizationService.swift */,
+				AA0000B3 /* Core/Security/FirebaseAuthService.swift */,
+				AA0000B5 /* Core/Models/Driver.swift */,
+				AA0000B7 /* Core/Models/RideSuggestion.swift */,
+				AA0000B9 /* Core/Utilities/NetworkRequestBuilder.swift */,
+				AA0000BB /* Core/Security/KeychainService.swift */,
+				AA0000BD /* Core/Services/RideRankingService.swift */,
+				AA0000BF /* Core/Utilities/CoordinateCalculator.swift */,
+				AA0000C1 /* Core/ErrorHandling/ErrorHandler.swift */,
+				AA0000C3 /* Core/Performance/ArrayExtension.swift */,
+				AA0000C5 /* Core/UX/SkeletonView.swift */,
+				AA0000C7 /* Core/UX/HapticFeedbackManager.swift */,
+				AA0000C9 /* Features/Views/RideSuggestions/RideSuggestionCardView.swift */,
+				AA000117 /* Features/Views/RideSuggestions/RideSuggestionDetailView.swift */,
+				AA0000CB /* Features/Views/ChatSupport/ChatMessageView.swift */,
+				AA000119 /* Features/Views/ChatSupport/ChatRideSuggestionCard.swift */,
+				AA00011B /* Features/Views/ChatSupport/ChatBookedRideCard.swift */,
+				AA0000CF /* Features/Views/Authentication/AuthenticationRootView.swift */,
+				AA0000D1 /* Features/Views/Authentication/LoginView.swift */,
+				AA0000D3 /* Features/Views/Authentication/RegistrationView.swift */,
+				AA0000D5 /* Features/ViewModels/AuthenticationViewModel.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		AA00000D = {
+			isa = PBXGroup;
+			children = (
+				AA00000E /* UncleTaxim */,
+				AA00000F /* Products */,
+				00D679FEABB58582A6912A59 /* Pods */,
+				D1CFB238266E81D90F9416B0 /* Frameworks */,
+				A66734CD2EBC98DB00D067A7 /* Recovered References */,
+			);
+			sourceTree = "<group>";
+		};
+		AA00000E /* UncleTaxim */ = {
+			isa = PBXGroup;
+			children = (
+				AA000069 /* UncleTaximApp.swift */,
+				AA000002 /* AppDelegate.swift */,
+				AA000004 /* SceneDelegate.swift */,
+				AA000006 /* Assets.xcassets */,
+				AA000115 /* 1.mp4 */,
+				AA00000B /* Info.plist */,
+				AA000065 /* Config/FirebaseConfig.swift */,
+				AA000067 /* Config/Environment.swift */,
+			);
+			path = UncleTaxim;
+			sourceTree = "<group>";
+		};
+		AA00000F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000009 /* UncleTaxim.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D1CFB238266E81D90F9416B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6D169044E30DB614A8E590B3 /* Pods_UncleTaxim.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA000010 /* UncleTaxim */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000011 /* Build configuration list for PBXNativeTarget "UncleTaxim" */;
+			buildPhases = (
+				FAC2E516433EE576E93C2CDB /* [CP] Check Pods Manifest.lock */,
+				AA000012 /* Sources */,
+				AA00000C /* Frameworks */,
+				AA000013 /* Resources */,
+				4F301058B445135A2F305677 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UncleTaxim;
+			productName = UncleTaxim;
+			productReference = AA000009 /* UncleTaxim.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA000014 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					AA000010 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = AA000015 /* Build configuration list for PBXProject "UncleTaxim" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA00000D;
+			productRefGroup = AA00000F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA000010 /* UncleTaxim */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA000013 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000007 /* (null) in Resources */,
+				AA000005 /* Assets.xcassets in Resources */,
+				AA000114 /* 1.mp4 in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4F301058B445135A2F305677 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UncleTaxim/Pods-UncleTaxim-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UncleTaxim/Pods-UncleTaxim-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UncleTaxim/Pods-UncleTaxim-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FAC2E516433EE576E93C2CDB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-UncleTaxim-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA000012 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA00006A /* UncleTaximApp.swift in Sources */,
+				AA000001 /* AppDelegate.swift in Sources */,
+				AA000003 /* SceneDelegate.swift in Sources */,
+				AA000066 /* Config/FirebaseConfig.swift in Sources */,
+				AA000068 /* Config/Environment.swift in Sources */,
+				AA000070 /* Features/Views/VoiceBooking/VoiceBookingView.swift in Sources */,
+				AA000071 /* Features/Views/RideSuggestions/RideSuggestionsListView.swift in Sources */,
+				AA000072 /* Features/Views/ChatSupport/ChatSupportView.swift in Sources */,
+				AA000111 /* Features/Views/Splash/VideoSplashView.swift in Sources */,
+				AA000112 /* Features/Views/Shared/PaymentSuccessPopupView.swift in Sources */,
+				AA000073 /* Features/Views/Profile/ProfileView.swift in Sources */,
+				AA0000DB /* Features/Views/Booking/ActiveRideView.swift in Sources */,
+				AA0000DD /* Features/Views/Booking/RideTrackingView.swift in Sources */,
+				AA000074 /* Core/UX/AccessibilityHelpers.swift in Sources */,
+				AA00007A /* Core/DesignSystem/Spacing.swift in Sources */,
+				AA00007B /* Core/DesignSystem/Typography.swift in Sources */,
+				AA00007C /* Core/DesignSystem/Colors.swift in Sources */,
+				0AEDBEE1244F4648A6098B9E /* Core/DesignSystem/StyledPopupView.swift in Sources */,
+				AA00007D /* Core/DesignSystem/LoadingIndicator.swift in Sources */,
+				AA00007E /* Core/DesignSystem/CardView.swift in Sources */,
+				AA000080 /* Features/ViewModels/VoiceBookingViewModel.swift in Sources */,
+				AA0000DF /* Features/ViewModels/BookingViewModel.swift in Sources */,
+				AA000082 /* Features/Views/VoiceBooking/VoiceRecordingView.swift in Sources */,
+				AA0000FF /* Features/Views/VoiceBooking/SavedAddressQuickButton.swift in Sources */,
+				AA000084 /* Features/ViewModels/ProfileViewModel.swift in Sources */,
+				AA0000F9 /* Features/ViewModels/SavedAddressesViewModel.swift in Sources */,
+				AA000105 /* Features/ViewModels/PaymentMethodsViewModel.swift in Sources */,
+				AA000109 /* Features/ViewModels/TransactionHistoryViewModel.swift in Sources */,
+				AA000086 /* Features/Views/Profile/PaymentMethodsView.swift in Sources */,
+				AA000088 /* Features/Views/Profile/RideHistoryView.swift in Sources */,
+				AA00010B /* Features/Views/Profile/TransactionHistoryView.swift in Sources */,
+				AA0000FB /* Features/Views/Profile/SavedAddressesView.swift in Sources */,
+				AA0000FD /* Features/Views/Profile/AddEditAddressView.swift in Sources */,
+				AA000107 /* Features/Views/Profile/AddEditPaymentMethodView.swift in Sources */,
+				AA0000F5 /* Features/Views/Shared/OfflineIndicatorView.swift in Sources */,
+				AA0000EB /* Features/Views/TripSummary/TripSummaryView.swift in Sources */,
+				AA0000ED /* Features/Views/TripSummary/TripSummaryDetailView.swift in Sources */,
+				AA00010D /* Features/Views/TripSummary/DriverRatingView.swift in Sources */,
+				AA0000EF /* Features/Views/TripSummary/TripSummaryMapView.swift in Sources */,
+				AA0000F1 /* Core/Services/NetworkMonitorService.swift in Sources */,
+				AA0000F3 /* Core/Services/OfflineSyncQueueService.swift in Sources */,
+				AA000103 /* Core/Services/PaymentService.swift in Sources */,
+				D2CAA787279045EEB6A40AA1 /* Core/Config/StripeConfig.swift in Sources */,
+				AA0000F7 /* Core/Models/SavedAddress.swift in Sources */,
+				AA000101 /* Core/Models/PaymentMethod.swift in Sources */,
+				E3F1B2C3D4E5F6A7B8C9D0E1 /* Core/Models/Transaction.swift in Sources */,
+				AA00008A /* Core/Models/User.swift in Sources */,
+				AA00008C /* Core/Models/UserPreferences.swift in Sources */,
+				AA00008E /* Core/Services/FirebaseDataService.swift in Sources */,
+				AA000090 /* Core/Protocols/FirestoreCodable.swift in Sources */,
+				AA000092 /* Core/Validation/Validators.swift in Sources */,
+				AA000094 /* Core/Services/VoiceProcessingService.swift in Sources */,
+				AA000096 /* Core/Utilities/BaseViewModel.swift in Sources */,
+				AA000098 /* Features/ViewModels/RideSuggestionsViewModel.swift in Sources */,
+				AA00009A /* Features/ViewModels/ChatSupportViewModel.swift in Sources */,
+				AA00009C /* Core/Models/Contracts/VoiceProcessResponse.swift in Sources */,
+				AA00009E /* Features/ViewModels/TripSummaryViewModel.swift in Sources */,
+				AA0000A0 /* Core/Models/Contracts/VoiceProcessRequest.swift in Sources */,
+				AA0000A2 /* Core/Models/Contracts/ChatMessageRequest.swift in Sources */,
+				AA0000A4 /* Core/Models/Contracts/ChatMessageResponse.swift in Sources */,
+				AA0000A6 /* Core/Services/AIGatewayService.swift in Sources */,
+				AA0000A8 /* Core/Models/ChatMessage.swift in Sources */,
+				AA0000AA /* Core/Models/TripSummary.swift in Sources */,
+				AA0000AC /* Core/Services/ChatSupportService.swift in Sources */,
+				AA0000AE /* Core/Services/TripSummaryService.swift in Sources */,
+				AA0000D8 /* Core/Services/RidePricingService.swift in Sources */,
+				AA0000D9 /* Core/Services/LocationService.swift in Sources */,
+				1983563E60EE4678A0163E2A /* Core/Services/ChatRetrievalService.swift in Sources */,
+				AA0000E1 /* Core/Services/DriverAssignmentService.swift in Sources */,
+				AA0000E3 /* Features/ViewModels/DriverDashboardViewModel.swift in Sources */,
+				AA0000E5 /* Features/Views/Driver/DriverDashboardView.swift in Sources */,
+				AA0000E7 /* Features/Views/Booking/RideMapView.swift in Sources */,
+				AA0000E9 /* Features/Views/Shared/LocationRow.swift in Sources */,
+				AA0000B0 /* Core/Models/Ride.swift in Sources */,
+				AA0000B2 /* Core/Security/AuthorizationService.swift in Sources */,
+				AA0000B4 /* Core/Security/FirebaseAuthService.swift in Sources */,
+				AA0000B6 /* Core/Models/Driver.swift in Sources */,
+				AA0000B8 /* Core/Models/RideSuggestion.swift in Sources */,
+				AA0000BA /* Core/Utilities/NetworkRequestBuilder.swift in Sources */,
+				AA0000BC /* Core/Security/KeychainService.swift in Sources */,
+				AA0000BE /* Core/Services/RideRankingService.swift in Sources */,
+				AA0000C0 /* Core/Utilities/CoordinateCalculator.swift in Sources */,
+				AA0000C2 /* Core/ErrorHandling/ErrorHandler.swift in Sources */,
+				AA0000C4 /* Core/Performance/ArrayExtension.swift in Sources */,
+				AA0000C6 /* Core/UX/SkeletonView.swift in Sources */,
+				AA0000C8 /* Core/UX/HapticFeedbackManager.swift in Sources */,
+				AA0000CA /* Features/Views/RideSuggestions/RideSuggestionCardView.swift in Sources */,
+				AA000116 /* Features/Views/RideSuggestions/RideSuggestionDetailView.swift in Sources */,
+				AA0000CC /* Features/Views/ChatSupport/ChatMessageView.swift in Sources */,
+				AA000118 /* Features/Views/ChatSupport/ChatRideSuggestionCard.swift in Sources */,
+				AA00011A /* Features/Views/ChatSupport/ChatBookedRideCard.swift in Sources */,
+				AA0000CE /* Core/DesignSystem/ButtonStyles.swift in Sources */,
+				AA0000D0 /* Features/Views/Authentication/AuthenticationRootView.swift in Sources */,
+				AA0000D2 /* Features/Views/Authentication/LoginView.swift in Sources */,
+				AA0000D4 /* Features/Views/Authentication/RegistrationView.swift in Sources */,
+				AA0000D6 /* Features/ViewModels/AuthenticationViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA000016 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA000017 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		AA000018 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E70DBC207E8BC5B74EF73E7 /* Pods-UncleTaxim.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4T3S44432P;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = UncleTaxim/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.uncletaxim.app1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA000019 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5641D3E7B0A9724487AA0352 /* Pods-UncleTaxim.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9AU7U9ACN4;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = UncleTaxim/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.uncletaxim.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA000011 /* Build configuration list for PBXNativeTarget "UncleTaxim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000018 /* Debug */,
+				AA000019 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000015 /* Build configuration list for PBXProject "UncleTaxim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000016 /* Debug */,
+				AA000017 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA000014 /* Project object */;
+}

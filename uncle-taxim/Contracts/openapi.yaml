@@ -1,0 +1,269 @@
+openapi: 3.0.3
+info:
+  title: UncleTaxim AI Gateway API
+  description: API for voice processing and chat support in UncleTaxim ride-hailing app
+  version: 1.0.0
+  contact:
+    name: UncleTaxim API Support
+    email: support@uncletaxim.com
+
+servers:
+  - url: https://ai-gateway.vercel.sh/v1
+    description: Production server
+  - url: https://ai-gateway.vercel.sh/v1
+    description: Staging server
+
+paths:
+  /voice/process:
+    post:
+      summary: Process voice input for ride requests
+      description: Accepts audio input and processes it to extract ride request information
+      operationId: processVoice
+      tags:
+        - Voice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoiceProcessRequest'
+            examples:
+              basic:
+                value:
+                  audio: "base64_encoded_audio_data"
+                  userId: "user123"
+                  timestamp: "2024-01-01T12:00:00Z"
+      responses:
+        '200':
+          description: Successful voice processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceProcessResponse'
+        '400':
+          description: Bad request - invalid audio format or missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chat/message:
+    post:
+      summary: Send chat message for support
+      description: Processes chat messages for customer support and ride assistance
+      operationId: sendChatMessage
+      tags:
+        - Chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+            examples:
+              basic:
+                value:
+                  message: "I need a ride to the airport"
+                  userId: "user123"
+                  sessionId: "session456"
+                  timestamp: "2024-01-01T12:00:00Z"
+      responses:
+        '200':
+          description: Successful chat message processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageResponse'
+        '400':
+          description: Bad request - invalid message format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    VoiceProcessRequest:
+      type: object
+      required:
+        - audio
+        - userId
+      properties:
+        audio:
+          type: string
+          format: base64
+          description: Base64 encoded audio data
+        userId:
+          type: string
+          description: Unique user identifier
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the voice input
+      example:
+        audio: "base64_encoded_audio_data"
+        userId: "user123"
+        timestamp: "2024-01-01T12:00:00Z"
+
+    VoiceProcessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the voice processing was successful
+        transcript:
+          type: string
+          description: Transcribed text from the audio
+        intent:
+          type: string
+          description: Detected intent (e.g., "request_ride", "cancel_ride", "update_ride")
+        entities:
+          type: object
+          description: Extracted entities from the voice input
+          properties:
+            pickupLocation:
+              type: string
+            dropoffLocation:
+              type: string
+            rideType:
+              type: string
+            scheduledTime:
+              type: string
+              format: date-time
+        rideSuggestion:
+          $ref: '#/components/schemas/RideSuggestion'
+        timestamp:
+          type: string
+          format: date-time
+      example:
+        success: true
+        transcript: "I need a ride to the airport at 3 PM"
+        intent: "request_ride"
+        entities:
+          pickupLocation: "Current location"
+          dropoffLocation: "Airport"
+          scheduledTime: "2024-01-01T15:00:00Z"
+        rideSuggestion:
+          estimatedPrice: 25.50
+          estimatedDuration: 30
+          rideType: "standard"
+
+    ChatMessageRequest:
+      type: object
+      required:
+        - message
+        - userId
+      properties:
+        message:
+          type: string
+          description: Chat message text
+        userId:
+          type: string
+          description: Unique user identifier
+        sessionId:
+          type: string
+          description: Chat session identifier
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the message
+      example:
+        message: "I need a ride to the airport"
+        userId: "user123"
+        sessionId: "session456"
+        timestamp: "2024-01-01T12:00:00Z"
+
+    ChatMessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the chat message was processed successfully
+        reply:
+          type: string
+          description: AI-generated reply message
+        intent:
+          type: string
+          description: Detected intent from the message
+        suggestedActions:
+          type: array
+          items:
+            type: string
+          description: Suggested actions for the user
+        rideSuggestion:
+          $ref: '#/components/schemas/RideSuggestion'
+        timestamp:
+          type: string
+          format: date-time
+      example:
+        success: true
+        reply: "I can help you book a ride to the airport. Would you like to schedule it now?"
+        intent: "request_ride"
+        suggestedActions:
+          - "Book ride"
+          - "View pricing"
+          - "Schedule for later"
+        rideSuggestion:
+          estimatedPrice: 25.50
+          estimatedDuration: 30
+
+    RideSuggestion:
+      type: object
+      properties:
+        estimatedPrice:
+          type: number
+          format: float
+          description: Estimated ride price in local currency
+        estimatedDuration:
+          type: integer
+          description: Estimated ride duration in minutes
+        rideType:
+          type: string
+          description: Suggested ride type (e.g., "standard", "premium", "shared")
+        pickupLocation:
+          type: string
+          description: Suggested pickup location
+        dropoffLocation:
+          type: string
+          description: Dropoff location
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp when the error occurred
+      example:
+        error: "Invalid audio format"
+        code: "INVALID_AUDIO_FORMAT"
+        timestamp: "2024-01-01T12:00:00Z"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+
+security:
+  - ApiKeyAuth: []
+
