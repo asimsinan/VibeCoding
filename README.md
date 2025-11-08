@@ -1,16 +1,16 @@
-# Vibe Coding Challenge with SDD-MCP
+# Vibe Coding Challenge with Spec2Code
 
-## 📦 AI-SDD-MCP Package
+## 📦 Spec2Code Package
 
-**npm**: [https://www.npmjs.com/package/ai-sdd-mcp](https://www.npmjs.com/package/ai-sdd-mcp)
+**npm**: [https://www.npmjs.com/package/spec2code](https://www.npmjs.com/package/spec2code)
 
 ## 🎯 Challenge Overview
 
-Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Development (SDD-MCP)** tool! This challenge demonstrates how AI can build complete, production-ready applications following rigorous software engineering principles.
+Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Development (Spec2Code)** tool! This challenge demonstrates how AI can build complete, production-ready applications following rigorous software engineering principles.
 
-## 🛠️ What is SDD-MCP?
+## 🛠️ What is Spec2Code?
 
-**SDD-MCP** (Specification-Driven Development - Model Context Protocol) is a revolutionary development methodology that enforces:
+**Spec2Code** (Specification-Driven Development) is a revolutionary development methodology that enforces:
 
 - **Test-Driven Development (TDD)** with strict ordering: Contract → Integration → E2E → Unit → Implementation
 - **Constitutional Gates** that prevent over-engineering and ensure quality
@@ -99,4 +99,4 @@ MIT License - feel free to use this code for learning and experimentation.
 
 **Happy Coding! 🚀**
 
-*Built with ❤️ using SDD-MCP methodology*
+*Built with ❤️ using Spec2Code methodology*
