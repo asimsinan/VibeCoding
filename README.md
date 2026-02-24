@@ -1,9 +1,5 @@
 # Vibe Coding Challenge with Spec2Code
 
-## 📦 Spec2Code Package
-
-**npm**: [https://www.npmjs.com/package/spec2code](https://www.npmjs.com/package/spec2code)
-
 ## 🎯 Challenge Overview
 
 Welcome to the **Vibe Coding Challenge** using the **Specification-Driven Development (Spec2Code)** tool! This challenge demonstrates how AI can build complete, production-ready applications following rigorous software engineering principles.
